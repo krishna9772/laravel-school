@@ -18,7 +18,6 @@ class Classes extends Model
         'capacity',
     ];
 
-
     public function timetable()
     {
         return $this->hasOne(Timetable::class, 'class_id');
@@ -29,4 +28,8 @@ class Classes extends Model
         return $this->hasMany(UserGradeClass::class, 'class_id', 'id');
     }
 
+    public function grade()
+    {
+        return $this->belongsTo(Grade::class, 'grade_id');
+    }
 }

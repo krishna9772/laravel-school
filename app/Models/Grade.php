@@ -24,4 +24,9 @@ class Grade extends Model
     {
         return $this->hasMany(UserGradeClass::class, 'grade_id', 'id');
     }
+
+    public function classes()
+    {
+        return $this->hasMany(Classes::class, 'grade_id');
+    }
 }

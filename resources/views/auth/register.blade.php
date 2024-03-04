@@ -8,30 +8,44 @@
 
 <div class="register-box">
     <div class="register-logo">
-        <a href="../../index2.html"><b>Admin</b>LTE</a>
+        {{-- <a href="../../index2.html"><b>Admin</b>LTE</a> --}}
+        School Management System
     </div>
 
     <div class="card">
         <div class="card-body register-card-body">
             <p class="login-box-msg">Register a new membership</p>
 
+
             <form action="{{route('register')}}" method="post">
                 @csrf
-                <div class="input-group mb-3">
+                <div class="mb-3">
                     <label for="" class="form-label">Name</label>
-                    <input type="text" name="name" class="form-control" placeholder="Full name">
+                    <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" placeholder="Full name">
+                    @error('name')
+                        <p class="text-danger">{{$message}}</p>
+                    @enderror
                 </div>
-                <div class="input-group mb-3">
+                <div class="mb-3">
                     <label for="" class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" placeholder="Email">
+                    <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" placeholder="Email">
+                    @error('email')
+                        <p class="text-danger">{{$message}}</p>
+                    @enderror
                 </div>
-                <div class="input-group mb-3">
+                <div class="mb-3">
                     <label for="" class="form-label">Password</label>
-                    <input type="password" name="password" class="form-control" placeholder="Password">
+                    <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password">
+                    @error('password')
+                        <p class="text-danger">{{$message}}</p>
+                    @enderror
                 </div>
-                <div class="input-group mb-3">
+                <div class="mb-3">
                     <label for="" class="form-label">Confirm Password</label>
-                    <input type="password" name="confirm_password" class="form-control" placeholder="Retype password">
+                    <input type="password" name="confirm_password" class="form-control @error('confirm_password') is-invalid @enderror" placeholder="Retype password">
+                    @error('confirm_password')
+                        <p class="text-danger">{{$message}}</p>
+                    @enderror
                 </div>
                 <div class="row">
                     {{-- <div class="col-8">
@@ -43,12 +57,16 @@
                         </div>
                     </div> --}}
                     <!-- /.col -->
-                    <div class="col-4">
+                     <div class="col-4">
                         <button type="submit" class="btn btn-primary btn-block">Register</button>
                     </div>
                     <!-- /.col -->
-                </div>
+                 </div>
             </form>
+
+            <p class="mt-2">
+            <a href="{{route('loginPage')}}" class="text-center">Already Have An Account? Login</a>
+            </p>
 
             {{-- <div class="social-auth-links text-center">
                 <p>- OR -</p>

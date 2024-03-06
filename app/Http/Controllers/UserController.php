@@ -97,14 +97,11 @@ class UserController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         $data = User::where('user_id',$id)->with('userGradeClasses')->first();
 
-        $grades = Grade::all();
+        $grades = Grade::with('classes')->get();
 
         return view('registrations.edit',compact('data','grades'));
     }
@@ -140,12 +137,13 @@ class UserController extends Controller
     public function search(Request $request){
         $query = $request->input('query');
 
-        $users = User::where('user_name', 'like', "%{$query}%")
-                     ->orWhere('user_id', 'like', "%{$query}%")
-                     ->with(['userGradeClasses.grade', 'userGradeClasses.class'])
-                     ->get();
+        $users = User::whereIn('user_type', ['teacher', 'student'])
+            ->where('user_name', 'like', '%'.$query.'%')
+            ->orWhere('user_id', 'like', '%'.$query.'%')
+            ->with(['userGradeClasses.grade', 'userGradeClasses.class'])
+            ->get();
 
-        Log::info($users);
+        // Log::info($users);
 
         return response()->json($users);
     }

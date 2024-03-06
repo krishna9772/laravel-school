@@ -130,23 +130,22 @@
                                 <p class="text-danger" id=""></p>
                             </div>
 
-                            <div class="form-group">
-                                <label for="" class="form-label">Father Name</label>
-                                <input type="text" name="father_name"  value="{{$data->father_name}}" id="fatherNameInputBox" class="form-control" placeholder="Enter Father Name">
-                                <p class="text-danger" id=""></p>
+                            <div class="form-group student-fields">
+                                <label for="fatherNameInputBox" class="form-label">Father Name</label>
+                                <input type="text" name="father_name" value="{{$data->father_name}}" id="fatherNameInputBox" class="form-control" placeholder="Enter Father Name">
+                                <p class="text-danger" id="fatherNameError"></p>
                             </div>
-
-                            <div class="form-group">
-                                <label for="" class="form-label">Mother Name</label>
-                                <input type="text" name="mother_name"  value="{{$data->mother_name}}" id="motherNameInputBox" class="form-control" placeholder="Enter Mother Name">
-                                <p class="text-danger" id=""></p>
+                            <div class="form-group student-fields">
+                                <label for="motherNameInputBox" class="form-label">Mother Name</label>
+                                <input type="text" name="mother_name" value="{{$data->mother_name}}" id="motherNameInputBox" class="form-control" placeholder="Enter Mother Name">
+                                <p class="text-danger" id="motherNameError"></p>
                             </div>
-
-                            <div class="form-group">
-                                <label for="" class="form-label">Transfered School</label>
+                            <div class="form-group student-fields">
+                                <label for="transferedSchoolInputBox" class="form-label">Transferred School</label>
                                 <input type="text" name="former_school" value="{{$data->former_school}}" id="transferedSchoolInputBox" class="form-control" placeholder="Enter Former School">
-                                <p class="text-danger" id=""></p>
+                                <p class="text-danger" id="transferedSchoolError"></p>
                             </div>
+
 
                             <div class="">
                                 <button type="submit" class="btn btn-info mr-2">Update</button>
@@ -166,19 +165,77 @@
 @section('scripts')
 
 <script>
+
     $(document).ready(function() {
+
+        var initialGradeId = $('#gradeSelect').val();
+        var initialClassId = "{{ $data->userGradeClasses->isEmpty() ? '' : $data->userGradeClasses[0]->class_id }}";
+        updateClassOptions(initialGradeId, initialClassId);
+
+        $('#gradeSelect').change(function() {
+            var gradeId = $(this).val();
+            updateClassOptions(gradeId, '');
+        });
+
+        function updateClassOptions(gradeId, selectedClassId) {
+            $('#classSelect').empty();
+
+            if (gradeId === '') {
+                $('#classSelect').append($('<option>', {
+                    value: '',
+                    text: 'Select Class',
+                }));
+                return;
+            }
+
+            @foreach ($grades as $grade)
+            if ('{{$grade->id}}' === gradeId) {
+                @foreach ($grade->classes as $class)
+                    // console.log({{$class->id}});
+
+                var selected = selectedClassId == '{{$class->id}}';
+                console.log(selectedClassId);
+                $('#classSelect').append($('<option>', {
+                    value: '{{$class->id}}',
+                    text: '{{$class->class_name}}',
+                    selected: selected
+                }));
+                @endforeach
+            }
+            @endforeach
+
+            if ($('#classSelect option').length === 0) {
+                $('#classSelect').append($('<option>', {
+                    value: '',
+                    text: 'No Classes in this grade'
+                }));
+            }
+        }
+    });
+
+    $('#typeSelect').change(function() {
+        var userType = $(this).val();
+        if (userType === 'student') {
+            $('.student-fields').show();
+        } else {
+            $('.student-fields').hide();
+        }
+    });
+
+    $(document).ready(function() {
+        var userTypeFromServer = "{{ $data->user_type }}";
+        if (userTypeFromServer !== 'teacher') {
+            $('.student-fields').show();
+        } else {
+            $('.student-fields').hide();
+        }
+
 
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
-        $('input[id="reservationdate"]').daterangepicker({
-            opens: 'left'
-          }, function(start, end, label) {
-            console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-          });
 
         $('#typeSelect').change(function() {
             var userType = $(this).val();
@@ -277,63 +334,10 @@
             });
         });
 
-
-        $('#gradeSelect').change(function() {
-            var gradeId = $(this).val();
-            $('#classSelect').empty();
-            $('#selectBoxError1').text('');
-
-
-            if (gradeId === '') {
-                $('#classSelect').append($('<option>', {
-                    value: '',
-                    text : 'Select Class',
-                }));
-            } else {
-
-                var classesFound = false;
-
-                @if(count($data->userGradeClasses) != 0)
-                        @if ($grade->id === $data->userGradeClasses[0]->grade_id)
-                            @foreach ($grade->classes as $class)
-                                @php
-                                    $selected = '';
-                                    if ($class->id == $data->userGradeClasses[0]->class_id) {
-                                        $selected = 'selected';
-                                    }
-                                @endphp
-                                <option value="{{ $class->id }}" {{ $selected }}>{{ $class->class_name }}</option>
-                            @endforeach
-                        @endif
-                    @endif
-
-                    @foreach ($grades as $grade)
-                        if ('{{$grade->id}}' === gradeId) {
-                            @foreach ($grade->classes as $class)
-                                $('#classSelect').append($('<option>', {
-                                    value: '{{$class->id}}',
-                                    text : '{{$class->class_name}}'
-                                }).attr('data-description', '{{$class->description}}'));
-                                classesFound = true;
-                            @endforeach
-                        }
-                    @endforeach
-
-                $('#selectBoxError2').text('');
-
-                if (!classesFound) {
-                    $('#classSelect').append($('<option>', {
-                        value: '',
-                        text : 'No Classes in this grade'
-                    }));
-                }
-            }
-        });
-
         $('#classSelect').click(function() {
             var selectedGrade = $('#gradeSelect').val();
             if (selectedGrade === '') {
-                $('#selectBoxError2').text('First select a grade to modify a class');
+                $('#selectBoxError2').text('First select a grade');
             } else {
                 $('#selectBoxError2').text('');
             }

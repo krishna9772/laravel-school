@@ -113,7 +113,7 @@
             </li>
 
             {{-- registration section --}}
-            <li class="nav-item">
+            <li class="nav-item {{ Route::is('users.*') ? 'menu-open'  : '' }}">
                 <a href="#" class="nav-link">
                     <i class="nav-icon fa fa-address-card"></i>
                     <p>
@@ -123,21 +123,15 @@
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item activ">
-                    <a href="#" class="nav-link active">
+                    <a href="{{route('users.index')}}" class="nav-link {{ Route::is('users.index') ? 'active'  : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>All Registrations</p>
                     </a>
                     </li>
                     <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="{{route('users.create')}}" class="nav-link {{ Route::is('users.create') ? 'active'  : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>New Registration</p>
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>Update or Delete</p>
                     </a>
                     </li>
                 </ul>

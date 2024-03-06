@@ -6,6 +6,7 @@ use App\Http\Requests\ClassesRequest;
 use App\Models\Classes;
 use App\Models\Grade;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ClassesController extends Controller
 {
@@ -15,7 +16,8 @@ class ClassesController extends Controller
     public function index()
     {
         $classes = Classes::with('grade')->get();
-        return view('classes.all_classes',compact('classes'));
+        $grades = Grade::with('classes')->get();
+        return view('classes.all_classes',compact('grades'));
     }
 
     /**
@@ -75,7 +77,14 @@ class ClassesController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+
+        Classes::where('id',$id)->update([
+            'grade_id' => $request->grade_id,
+            'class_name' => $request->name,
+            'description' => $request->description,
+        ]);
+
+        return response()->json('success');
     }
 
     /**
@@ -83,6 +92,11 @@ class ClassesController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+             Classes::where('id', $id)->delete();
+            return response()->json('success');
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred while deleting the grade'], 500);
+        }
     }
 }

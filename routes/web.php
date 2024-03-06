@@ -4,6 +4,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GradeController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserControlller;
 use Illuminate\Support\Facades\Route;
 
 
@@ -17,8 +19,6 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/',[DashboardController::class,'index'])->name('dashboard');
     Route::post('logout',[AuthController::class,'logout'])->name('logout');
 
-
-
     // grades
     Route::get('grades/modify',[GradeController::class,'modify'])->name('grades.modify');
     Route::get('/grade/{grade}/classes', [GradeController::class,'showClasses'])->name('grades.classes');
@@ -27,6 +27,10 @@ Route::middleware(['auth'])->group(function(){
     // classes
     Route::get('classes/modify',[ClassesController::class,'modify'])->name('classes.modify');
     Route::resource('classes',ClassesController::class);
+
+    // user management
+    Route::get('users/filter/{user_type}',[UserController::class,'filterUser'])->name('users.filter');
+    Route::resource('users',UserController::class);
 
 
 });

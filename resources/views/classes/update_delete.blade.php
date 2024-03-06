@@ -4,32 +4,6 @@
     <div class="row justify-content-center">
         <div class="col-md-4 mt-5">
 
-            {{-- <div id="selectSection">
-                <h4>Update or Delete Class</h4>
-                <select name="" id="gradeSelect" class="form-control">
-                    <option value="">Select Grade</option>
-                    @foreach ($grades as $grade)
-                        <option value="{{$grade->id}}" data-description="{{$grade->description}}">{{$grade->grade_name}}</option>
-                    @endforeach
-                </select>
-                <p class="text-danger mt-1" id="selectBoxError"></p>
-
-                <select name="" id="gradeSelect" class="form-control">
-                    <option value="">Select Class</option>
-                    @foreach ($grades as $grade)
-                        @foreach ($grade->classes as $class)
-                            <option value="{{$class->id}}" data-description="{{$class->description}}">{{$class->class_name}}</option>
-                        @endforeach
-                    @endforeach
-                </select>
-                <p class="text-danger mt-1" id="selectBoxError"></p>
-
-                <div class="mt-4">
-                    <button id="updateBtn" class="btn btn-primary mr-2">Update</button>
-                    <button id="deleteBtn" class="btn btn-danger">Delete</button>
-                </div>
-            </div> --}}
-
             <div id="selectSection">
                 <h4>Update or Delete Class</h4>
                 <label for="" class="form-label">Select Grade</label>
@@ -54,16 +28,22 @@
             </div>
 
             <form id="updateClassForm" style="display: none">
+                @csrf
+
+                @method('PATCH')
+
+                <input type="hidden" name="" id="classId" value="">
+
                 <div class="card-body">
                   <div class="form-group">
                       <label for="" class="form-label">Select Grade</label>
-                      <select name="grade_id" id="gradeSelect" class="form-control">
+                      <select name="grade_id" class="form-control" id="grade_id">
                           <option value="">Select Grade</option>
                           @foreach ($grades as $grade)
                               <option value="{{$grade->id}}">{{$grade->grade_name}}</option>
                           @endforeach
                       </select>
-                      <p class="text-danger" id="gradeIdErrorMessage"></p>
+                      <p class="text-danger" id="gradeErrorMessage"></p>
                   </div>
 
                   <p class="text-danger mt-1" id="selectBoxError"></p>
@@ -116,12 +96,20 @@
 
                 if ($('#gradeSelect').val() != '' && $('#classSelect').val() != '') {
                     var selectedGradeId = $('#gradeSelect').val();
+                    // console.log(selectedGradeId);
                     var selectedGradeName = $('#gradeSelect option:selected').text();
                     // var selectedGradeDescription = $('#gradeSelect option:selected').data('description');
 
-                    $('#gradeId').val(selectedGradeId);
+                    // $('#gradeId').val(selectedGradeId);
                     $('#gradeInputBox').val(selectedGradeName);
                     // $('#descInputBox').val(selectedGradeDescription);
+
+                    $('#grade_id option').each(function() {
+                        // If the value of the option matches the selectedGradeId, set it as selected
+                        if ($(this).val() == selectedGradeId) {
+                            $(this).prop('selected', true);
+                        }
+                    });
 
                     var selectedClassId = $('#classSelect').val();
                     var selectedClassName = $('#classSelect option:selected').text();
@@ -148,16 +136,16 @@
 
 
             $('#deleteBtn').click(function(){
-                if($('#gradeSelect').val() != ''){
-                    var selectedGradeId = $('#gradeSelect').val();
+                if ($('#gradeSelect').val() != '' && $('#classSelect').val() != '') {
+                    var selectedClassId = $('#classSelect').val();
 
                     $.ajax({
                         type: 'DELETE',
-                        url: '{{ route('grades.destroy', ['grade' => ':grade']) }}'.replace(':grade', selectedGradeId),
+                        url: '{{ route('classes.destroy', ['class' => ':class']) }}'.replace(':class', selectedClassId),
                         data: $(this).serialize(),
                         success: function (response) {
                             if(response == 'success'){
-                                window.location.href = '{{ route('grades.index') }}';
+                                window.location.href = '{{ route('classes.index') }}';
                             }
                         },
                         error: function(xhr, status, error) {
@@ -180,20 +168,21 @@
                 $('#updateClassForm').hide();
             });
 
-            $('#updateGradeForm').submit(function (e) {
+            $('#updateClassForm').submit(function (e) {
                 // alert('hello');
                 e.preventDefault();
 
-                var gradeId = $('#gradeId').val();
+                var classId = $('#classId').val();
+                console.log(classId);
 
                 $.ajax({
                     type: 'POST',
-                    url: '{{ route('grades.update', ['grade' => ':grade']) }}'.replace(':grade', gradeId),
+                    url: '{{ route('classes.update', ['class' => ':class']) }}'.replace(':class', classId),
                     data: $(this).serialize(),
                     success: function (response) {
                         // alert('hello');
                         if(response == 'success'){
-                            window.location.href = '{{ route('grades.index') }}';
+                            window.location.href = '{{ route('classes.index') }}';
                         }
                         },
                     error: function(xhr, status, error) {

@@ -32,6 +32,9 @@
                     <p class="text-danger">{{$message}}</p>
                 @enderror
             </div>
+            @error('error')
+                <p class="text-danger">{{$message}}</p>
+            @enderror
           <div class="row">
 
             <!-- /.col -->
@@ -53,12 +56,12 @@
         </div> --}}
         <!-- /.social-auth-links -->
 
-        <p class="mb-1 mt-2">
+        {{-- <p class="mb-1 mt-2">
           <a href="forgot-password.html">I forgot my password</a>
         </p>
         <p class="mb-0">
           <a href="{{route('registerPage')}}" class="text-center">Don't Have An Account? Register</a>
-        </p>
+        </p> --}}
       </div>
       <!-- /.login-card-body -->
     </div>

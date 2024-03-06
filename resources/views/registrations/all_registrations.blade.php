@@ -6,7 +6,7 @@
         <h4 class="text-center" id="listTitle">All Registrations</h4>
         <div>
             <label for="">Filter:</label>
-            <select id="filter" name="filter">
+            <select id="filter" name="filter" class="form-select">
                 <option value="all">All</option>
                 <option value="student">Student</option>
                 <option value="teacher">Teacher</option>
@@ -103,6 +103,8 @@
                             if (user.user_grade_classes && user.user_grade_classes.length > 0) {
                                 gradeName = user.user_grade_classes[0].grade ? user.user_grade_classes[0].grade.grade_name : 'No grade assigned';
                                 className = user.user_grade_classes[0].class ? user.user_grade_classes[0].class.class_name : 'No class assigned';
+                                console.log(gradeName);
+                                console.log(className);
                             } else {
                                 gradeName = 'No grade assigned';
                                 className = 'No class assigned';

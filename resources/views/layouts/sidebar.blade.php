@@ -134,6 +134,12 @@
                         <p>New Registration</p>
                     </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{route('users.modify')}}" class="nav-link {{ Route::is('users.create') ? 'active'  : '' }}">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Update Or Delete</p>
+                        </a>
+                        </li>
                 </ul>
                 </li>
 

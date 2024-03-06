@@ -133,6 +133,24 @@ class UserController extends Controller
 
     }
 
+    public function modify(){
+        return view('registrations.update_delete');
+    }
+
+    public function search(Request $request){
+        $query = $request->input('query');
+
+        $users = User::where('user_name', 'like', "%{$query}%")
+                     ->orWhere('user_id', 'like', "%{$query}%")
+                     ->with(['userGradeClasses.grade', 'userGradeClasses.class'])
+                     ->get();
+
+        Log::info($users);
+
+        return response()->json($users);
+    }
+
+
     /**
      * Remove the specified resource from storage.
      */

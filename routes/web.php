@@ -30,6 +30,8 @@ Route::middleware(['auth'])->group(function(){
 
     // user management
     Route::get('users/filter/{user_type}',[UserController::class,'filterUser'])->name('users.filter');
+    Route::get('users/modify',[UserController::class,'modify'])->name('users.modify');
+    Route::get('search',[UserController::class,'search'])->name('users.search');
     Route::resource('users',UserController::class);
 
 

@@ -2,8 +2,19 @@
 
 @section('content')
 
-    <div class=" mx-3 py-5">
-        <div class="">
+    <div class=" mx-5 py-4">
+
+        <div class="d-flex justify-content-between ">
+            <h3>All Classes</h3>
+            <div class="">
+                <a href="{{route('classes.create')}}">
+                    <button class="btn btn-primary"> <i class="fa fa-plus"></i> New Class</button>
+                </a>
+            </div>
+        </div>
+
+
+        <div class="mt-5">
             @foreach ($grades as $grade)
 
                 <div class="mb-5">
@@ -14,7 +25,7 @@
                         @if (count($grade->classes) != 0)
                             @foreach ($grade->classes as $class)
                                 <div class="col-12 col-sm-6 col-md-3">
-                                    <a href="">
+                                    <a href="" class="text-decoration-none">
                                         <div class="info-box">
                                         <span class="info-box-icon bg-info elevation-1">
                                             <i class="fa fa-university" aria-hidden="true"></i>

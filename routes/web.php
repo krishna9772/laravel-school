@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClassesController;
+use App\Http\Controllers\ClassworkController;
+use App\Http\Controllers\CurriculumController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\UserController;
@@ -33,6 +35,16 @@ Route::middleware(['auth'])->group(function(){
     Route::get('users/modify',[UserController::class,'modify'])->name('users.modify');
     Route::get('search',[UserController::class,'search'])->name('users.search');
     Route::resource('users',UserController::class);
+
+    // curriculums
+    Route::get('curricula/modify',[CurriculumController::class,'modify']);
+    Route::resource('curricula',CurriculumController::class);
+
+    // class work
+    Route::get('search',[ClassworkController::class,'search'])->name('classworks.search');
+    Route::post('search-results',[ClassworkController::class,'searchResults'])->name('classworks.search_results');
+    Route::resource('classworks',ClassworkController::class);
+
 
 
 });

@@ -6,7 +6,7 @@
       content:" *";
       color: rgba(255, 0, 0, 0.765);
     }
-</style>
+  </style>
 @endsection
 
 @section('content')
@@ -19,12 +19,14 @@
           <!-- general form elements -->
           <div class="card card-primary">
             <div class="card-header">
-              <h3 class="card-title">Add A New Class</h3>
+              <h3 class="card-title">Add New Curriculum</h3>
             </div>
             <!-- /.card-header -->
             <!-- form start -->
-            <form id="addNewGradeForm">
+            <form id="addCurriculumForm">
+
               <div class="card-body">
+
                 <div class="form-group">
                     <label for="" class="form-label required">Select Grade</label>
                     <select name="grade_id" id="gradeSelect" class="form-control">
@@ -33,38 +35,44 @@
                             <option value="{{$grade->id}}">{{$grade->grade_name}}</option>
                         @endforeach
                     </select>
-                    <p class="text-danger" id="gradeIdErrorMessage"></p>
+                    <p class="text-danger mt-1" id="gradeSelectBoxError"></p>
                 </div>
 
-                <p class="text-danger mt-1" id="selectBoxError"></p>
+
                 <div class="form-group">
-                    <label for="" class="form-label required">Name</label>
-                    <input type="text" name="name" id="nameInputBox" class="form-control" placeholder="Enter Class Name">
+                    <label for="" class="form-label required">Curriculum Name</label>
+                    <input type="text" name="curriculum_name" id="nameInputBox" class="form-control" placeholder="Enter Curriculum Name">
                     <p class="text-danger" id="nameErrorMessage"></p>
                 </div>
-                <div class="form-group">
-                    <label for="" class="form-label required">Description</label>
-                    <textarea name="description" id="descInputBox" class="form-control" placeholder="Enter Description">{{ old('description') }}</textarea>
-                    <p class="text-danger" id="descErrorMessage"></p>
-              </div>
 
-              <!-- /.card-body -->
-              <div class="">
-                <button type="submit" class="btn btn-info mr-2">Save</button>
-                <button type="button" id="cancelBtn" class="btn btn-default">Cancel</button>
+                <div class="form-group">
+                    <label for="" class="form-label required">Select Teacher</label>
+                    <select name="teacher_id" id="teacherSelect" class="form-control">
+                        <option value="">Select Teacher</option>
+                        @foreach ($teachers as $teacher)
+                            <option value="{{$teacher->user_id}}">{{$teacher->user_name}}</option>
+                        @endforeach
+                    </select>
+                    <p class="text-danger mt-1" id="teacherSelectBoxError"></p>
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-success"><i class="fa fa-plus"></i> Add More</button>
+                    <button class="btn btn-danger"> <i class="fa fa-minus"></i> Remove</button>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-info mr-2">Save</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default">Cancel</button>
+                </div>
               </div>
-              <!-- /.card-footer -->
             </form>
           </div>
-          <!-- /.card -->
+
 
         </div>
-        <!--/.col (left) -->
-        <!-- right column -->
-        <!--/.col (right) -->
       </div>
-      <!-- /.row -->
-    </div><!-- /.container-fluid -->
+    </div>
 </section>
 
 @endsection
@@ -108,31 +116,35 @@ $(document).ready(function () {
         $('#descErrorMessage').text('');
     }
 
-    $('#addNewGradeForm').submit(function (e) {
+    // Event handler for input fields to clear error message and remove 'is-invalid' class
+
+
+
+    $('#addCurriculumForm').submit(function (e) {
         e.preventDefault();
 
         $.ajax({
             type: 'POST',
-            url: '{{ route('classes.store') }}',
+            url: '{{ route('curricula.store') }}',
             data: $(this).serialize(),
             success: function (response) {
                 if(response == 'success'){
-                    window.location.href = '{{ route('classes.index') }}';
+                    window.location.href = '{{ route('curricula.index') }}';
                 }
             },
             error: function(xhr, status, error) {
                 var err = eval("(" + xhr.responseText + ")");
                 var response = JSON.parse(xhr.responseText);
+                    // console.log(response);
+                let gradeSelectBoxError = response.errors.grade_id ? response.errors.grade_id[0] : '';
+                let nameErrorMessage = response.errors.curriculum_name ? response.errors.curriculum_name[0] : '';
+                let teacherSelectBoxError = response.errors.teacher_id ? response.errors.teacher_id[0] : '';
 
-                let gradeIdErrorMessage = response.errors.grade_id ? response.errors.grade_id[0] : '';
-                let nameErrorMessage = response.errors.name ? response.errors.name[0] : '';
-                let descErrorMessage = response.errors.description ? response.errors.description[0] : '';
-
-                if (gradeIdErrorMessage) {
-                    $('#gradeIdErrorMessage').html(gradeIdErrorMessage);
+                if (gradeSelectBoxError) {
+                    $('#gradeSelectBoxError').html(gradeSelectBoxError);
                     $('#gradeSelect').addClass('is-invalid');
                 } else {
-                    $('#gradeIdErrorMessage').html('');
+                    $('#gradeSelectBoxError').html('');
                     $('#gradeSelect').removeClass('is-invalid');
                 }
 
@@ -144,12 +156,12 @@ $(document).ready(function () {
                     $('#nameInputBox').removeClass('is-invalid');
                 }
 
-                if (descErrorMessage) {
-                    $('#descErrorMessage').html(descErrorMessage);
-                    $('#descInputBox').addClass('is-invalid');
+                if (teacherSelectBoxError) {
+                    $('#teacherSelectBoxError').html(teacherSelectBoxError);
+                    $('#teacherSelect').addClass('is-invalid');
                 } else {
-                    $('#descErrorMessage').html('');
-                    $('#descInputBox').removeClass('is-invalid');
+                    $('#teacherSelectBoxError').html('');
+                    $('#teacherSelect').removeClass('is-invalid');
                 }
 
             },

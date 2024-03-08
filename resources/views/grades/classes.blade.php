@@ -31,10 +31,17 @@
     </div>
     @else
         <div class="containter ">
-            <div class="text-center pt-5 d-flex justify-content-center align-items-center" >
+            <div class="text-center pt-5" >
                 <h4>
                     No Classes Created In this Grade
                 </h4>
+
+                <div class="mt-5">
+                    <a href="{{route('classes.create')}}">
+                        <button class="btn btn-primary"> <i class="fa fa-plus"></i> Create Class</button>
+                    </a>
+                </div>
+
             </div>
         </div>
 

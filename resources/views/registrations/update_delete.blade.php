@@ -21,15 +21,6 @@
                         </div>
                     </div>
 
-                    {{-- <div class="">
-                        <button type="button" class="btn btn-lg btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-search"></i>
-                        </button>
-                        <div class="dropdown-menu" id="searchDropdown" aria-labelledby="dropdownMenuButton">
-                            <!-- Dropdown items will be dynamically generated here -->
-                        </div>
-                    </div> --}}
-
                 </div>
 
 

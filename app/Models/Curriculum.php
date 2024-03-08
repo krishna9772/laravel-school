@@ -19,7 +19,7 @@ class Curriculum extends Model
 
     public function grade()
     {
-        return $this->hasOne(Grade::class);
+        return $this->belongsTo(Grade::class);
     }
 
     public function classWorks()

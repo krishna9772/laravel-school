@@ -26,6 +26,7 @@ class User extends Authenticatable
         'user_type',
         'nrc',
         'admission_date',
+        'date_of_birth',
         'father_name',
         'mother_name',
         'phone_number',

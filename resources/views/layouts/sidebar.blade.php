@@ -22,25 +22,12 @@
         </div>
       </div>
 
-      <!-- SidebarSearch Form -->
-      {{-- <div class="form-inline">
-        <div class="input-group" data-widget="sidebar-search">
-          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-          <div class="input-group-append">
-            <button class="btn btn-sidebar">
-              <i class="fas fa-search fa-fw"></i>
-            </button>
-          </div>
-        </div>c
-      </div> --}}
 
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
 
-               <li class="nav-item">
+            <li class="nav-item">
                 <a href="{{route('dashboard')}}" class="nav-link {{ Route::is('dashboard') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-tachometer-alt"></i>
                 <p>
@@ -123,38 +110,88 @@
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item activ">
-                    <a href="{{route('users.index')}}" class="nav-link {{ Route::is('users.index') ? 'active'  : '' }}">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>All Registrations</p>
-                    </a>
+                      <a href="{{route('users.index')}}" class="nav-link {{ Route::is('users.index') ? 'active'  : '' }}">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>All Registrations</p>
+                      </a>
                     </li>
                     <li class="nav-item">
-                    <a href="{{route('users.create')}}" class="nav-link {{ Route::is('users.create') ? 'active'  : '' }}">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>New Registration</p>
-                    </a>
+                      <a href="{{route('users.create')}}" class="nav-link {{ Route::is('users.create') ? 'active'  : '' }}">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>New Registration</p>
+                      </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{route('users.modify')}}" class="nav-link {{ Route::is('users.modify') ? 'active'  : '' }}">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Update Or Delete</p>
-                        </a>
-                        </li>
+                      <a href="{{route('users.modify')}}" class="nav-link {{ Route::is('users.modify') ? 'active'  : '' }}">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Update Or Delete</p>
+                      </a>
+                    </li>
                 </ul>
+            </li>
+
+            {{-- curriculum section --}}
+            <li class="nav-item {{ Route::is('curricula.*') ? 'menu-open'  : '' }}">
+              <a href="#" class="nav-link {{ Route::is('curricula.*') ? 'active'  : '' }}">
+                  <i class="nav-icon fa fa-address-card"></i>
+                  <p>
+                  Curricula
+                  <i class="right fas fa-angle-left"></i>
+                  </p>
+              </a>
+              <ul class="nav nav-treeview">
+                  <li class="nav-item activ">
+                    <a href="{{route('curricula.index')}}" class="nav-link {{ Route::is('curricula.index') ? 'active'  : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>All Curricula</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{{route('curricula.create')}}" class="nav-link {{ Route::is('curricula.create') ? 'active'  : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Add Curriculum</p>
+                    </a>
+                  </li>
+                  {{-- <li class="nav-item">
+                    <a href="{{route('curricula.modify')}}" class="nav-link {{ Route::is('curricula.modify') ? 'active'  : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Update Or Delete</p>
+                    </a>
+                  </li> --}}
+              </ul>
+            </li>
+
+          {{-- classwork section --}}
+            <li class="nav-item {{ Route::is('classworks.*') ? 'menu-open'  : '' }}">
+
+                <a href="#" class="nav-link {{ Route::is('classworks.*') ? 'active'  : '' }}">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                    Classwork
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+                </a>
+                <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="{{route('classworks.index')}}" class="nav-link {{ Route::is('classworks.index') ? 'active'  : '' }}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>All Classworks</p>
+                    </a>
                 </li>
-
-              {{-- curriculum section --}}
-
-
-          {{-- <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
-              <p>
-                Simple Link
-                <span class="right badge badge-danger">New</span>
-              </p>
-            </a>
-          </li> --}}
+                <li class="nav-item">
+                    <a href="{{route('classworks.create')}}" class="nav-link {{ Route::is('classworks.create') ? 'active'  : '' }}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>New Classwork</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link {{ Route::is('classworks.edit') ? 'active'  : '' }}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Update or Delete</p>
+                    </a>
+                </li>
+              </ul>
+            </li>
         </ul>
 
         <ul class="nav nav-pills nav-sidebar flex-column" style="position: absolute; bottom : 20px">

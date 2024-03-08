@@ -14,7 +14,7 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="{{asset('dist/css/adminlte.min.css')}}">
     {{-- date range picker --}}
-    <link rel="stylesheet" href="{{asset('plugins/daterangepicker/daterangepicker.css')}}">
+    {{-- <link rel="stylesheet" href="{{asset('plugins/daterangepicker/daterangepicker.css')}}"> --}}
 
     {{-- data table --}}
     <!-- DataTable -->
@@ -52,7 +52,7 @@
         <script src="{{asset('dist/js/adminlte.min.js')}}"></script>
 
         {{-- date range picker --}}
-        <script src="{{asset('plugins/daterangepicker/daterangepicker.js')}}"></script>
+        {{-- <script src="{{asset('plugins/daterangepicker/daterangepicker.js')}}"></script> --}}
 
         {{-- datatable --}}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>

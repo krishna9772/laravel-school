@@ -1,5 +1,14 @@
 @extends('layouts.app')
 
+@section('styles')
+<style>
+    .required:after {
+      content:" *";
+      color: rgba(255, 0, 0, 0.765);
+    }
+</style>
+@endsection
+
 @section('content')
 
 <section class="content">
@@ -17,12 +26,12 @@
             <form id="addNewGradeForm">
               <div class="card-body">
                 <div class="form-group">
-                    <label for="" class="form-label">Name</label>
+                    <label for="" class="form-label required">Name</label>
                     <input type="text" name="name" id="nameInputBox" class="form-control" placeholder="Name of Grade">
                     <p class="text-danger" id="nameErrorMessage"></p>
                 </div>
                 <div class="form-group">
-                    <label for="" class="form-label">Description</label>
+                    <label for="" class="form-label required">Description</label>
                     <textarea name="description" id="descInputBox" class="form-control" placeholder="Enter Description">{{ old('description') }}</textarea>
                     <p class="text-danger" id="descErrorMessage"></p>
               </div>

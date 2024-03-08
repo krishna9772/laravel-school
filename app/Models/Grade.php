@@ -16,8 +16,8 @@ class Grade extends Model
         'updated_date',
     ];
 
-    public function curriculum(){
-        return $this->belongsTo(Curriculum::class);
+    public function curricula(){
+        return $this->hasMany(Curriculum::class);
     }
 
     public function userGradeClasses()

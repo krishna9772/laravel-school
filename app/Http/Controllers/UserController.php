@@ -101,6 +101,8 @@ class UserController extends Controller
     {
         $data = User::where('user_id',$id)->with('userGradeClasses')->first();
 
+        // dd($data->toArray());
+
         $grades = Grade::with('classes')->get();
 
         return view('registrations.edit',compact('data','grades'));

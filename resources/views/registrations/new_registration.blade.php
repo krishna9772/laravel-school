@@ -1,11 +1,30 @@
 @extends('layouts.app')
 
 @section('styles')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css" rel="stylesheet"/>
 <style>
     .required:after {
       content:" *";
-      color: rgba(255, 0, 0, 0.549);
+      color: rgba(255, 0, 0, 0.765);
     }
+
+    .datepicker {
+    font-size: 14px; /* Change font size */
+    }
+    .datepicker-dropdown:after, .datepicker-dropdown:before {
+        display: none !important;
+    }
+
+    .custom-placeholder::placeholder {
+      font-size: 16px;
+    }
+
+    #changeInputStyle {
+        text-indent: 8px;
+        font-size: 16px;
+    }
+
+
   </style>
 @endsection
 
@@ -60,8 +79,13 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="" class="form-label">Admission Date</label>
-                                <input type="date" name="admission_date" id="" class="form-control">
+                                <label for="datepicker">Admission Date:</label>
+                                <div class="input-group">
+                                  <input type="text" class="form-control custom-placeholder changeInputStyle" name="admission_date"  id="adm-datepicker" placeholder="Enter Admission Date">
+                                  <div class="input-group-append">
+                                    <span class="input-group-text" id="adm-datepicker-icon" style="cursor: pointer"><i class="fas fa-calendar-alt"></i></span>
+                                  </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -75,10 +99,15 @@
                         <div class="card-body">
 
                             <div class="form-group">
-                                <label for="" class="form-label">Date Of Birth</label>
-                                <input type="date" name="date_of_birth" id="" class="form-control">
+                                <label for="">Date Of Birth</label>
+                                <div class="input-group">
+                                  <input type="text" class="form-control custom-placeholder changeInputStyle" name="date_of_birth" id="dob-datepicker" placeholder="Enter Date Of Birth">
+                                  <div class="input-group-append">
+                                    <span class="input-group-text" id="dob-datepicker-icon" style="cursor: pointer"><i class="fas fa-calendar-alt"></i></span>
+                                  </div>
+                                </div>
+                                <p class="text-danger" id="dobErrorMessage"></p>
                             </div>
-
 
                             <div class="form-group">
                                 <label for="">Gender</label>
@@ -99,13 +128,11 @@
                             <div class="form-group">
                                 <label for="" class="form-label">Address</label>
                                 <textarea name="address" class="form-control" id="addressInputBox" placeholder="Enter Adress"></textarea>
-                                {{-- <input type="text" name="user_name" id="nameInputBox" class="form-control" placeholder="Enter User Name"> --}}
                                 <p class="text-danger" id=""></p>
                             </div>
 
                             <div class="form-group">
                                 <label for="" class="form-label">NRC</label>
-                                {{-- <textarea name="address" id="" cols="30" rows="10" placeholder="Enter Adress"></textarea> --}}
                                 <input type="text" name="nrc" id="nrcInputBox" class="form-control" placeholder="Enter User NRC">
                                 <p class="text-danger" id=""></p>
                             </div>
@@ -145,6 +172,7 @@
 
 @section('scripts')
 
+<script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
 <script>
     $(document).ready(function() {
 
@@ -154,11 +182,25 @@
             }
         });
 
-        $('input[id="reservationdate"]').daterangepicker({
-            opens: 'left'
-          }, function(start, end, label) {
-            console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-          });
+        $('#dob-datepicker').datepicker({
+          format: 'yyyy-mm-dd',
+          autoclose: true
+        });
+
+        $('#adm-datepicker').datepicker({
+          format: 'yyyy-mm-dd',
+          autoclose: true
+        });
+
+        // Trigger Datepicker on icon click
+        $('#adm-datepicker-icon').click(function() {
+          $('#adm-datepicker').datepicker('show');
+        });
+
+        $('#dob-datepicker-icon').click(function() {
+          $('#dob-datepicker').datepicker('show');
+        });
+
 
         $('#typeSelect').change(function() {
             var userType = $(this).val();
@@ -221,6 +263,7 @@
                     let userTypeErrorMessage = response.errors.user_type ? response.errors.user_type[0] : '';
                     let gradeSelectErrorMessage = response.errors.grade_select ? response.errors.grade_select[0] : '';
                     let classSelectErrorMessage = response.errors.class_select ? response.errors.class_select[0] : '';
+                    let dobErrorMessage = response.errors.date_of_birth ? response.errors.date_of_birth[0] : '';
 
                     if (userNameErrorMessage) {
                         $('#userNameErrorMessage').html(userNameErrorMessage);
@@ -253,6 +296,14 @@
                     }else{
                         $('#selectBoxError2').html('');
                         $('#classSelect').removeClass('is-invalid');
+                    }
+
+                    if(dobErrorMessage){
+                        $('#dobErrorMessage').html(dobErrorMessage);
+                        $('#dob-datepicker').addClass('is-invalid');
+                    }else{
+                        $('#dobErrorMessage').html('');
+                        $('#dob-datepicker').removeClass('is-invalid');
                     }
 
                 },

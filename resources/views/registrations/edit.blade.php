@@ -1,10 +1,27 @@
 @extends('layouts.app')
 
 @section('styles')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css" rel="stylesheet"/>
 <style>
     .required:after {
       content:" *";
-      color: rgba(255, 0, 0, 0.549);
+      color: rgba(255, 0, 0, 0.765);
+    }
+
+    .required:after {
+      content:" *";
+      color: rgba(255, 0, 0, 0.765);
+    }
+
+    .datepicker {
+    font-size: 14px;
+    }
+    .datepicker-dropdown:after, .datepicker-dropdown:before {
+        display: none !important;
+    }
+
+    .custom-placeholder::placeholder {
+      font-size: 16px;
     }
   </style>
 @endsection
@@ -79,8 +96,13 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="" class="form-label">Admission Date</label>
-                                <input type="date" name="admission_date" id="" value="{{$data->admission_date}}" class="form-control">
+                                <label for="datepicker">Admission Date:</label>
+                                <div class="input-group">
+                                  <input type="text" class="form-control custom-placeholder changeInputStyle" value="{{$data->admission_date}}" name="admission_date"  id="adm-datepicker" placeholder="Enter Admission Date">
+                                  <div class="input-group-append">
+                                    <span class="input-group-text" id="adm-datepicker-icon" style="cursor: pointer"><i class="fas fa-calendar-alt"></i></span>
+                                  </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -95,8 +117,13 @@
                         <div class="card-body">
 
                             <div class="form-group">
-                                <label for="" class="form-label">Date Of Birth</label>
-                                <input type="date" name="date_of_birth" value="{{$data->date_of_birth}}" id="" class="form-control">
+                                <label for="">Date Of Birth</label>
+                                <div class="input-group">
+                                  <input type="text" class="form-control custom-placeholder changeInputStyle" value="{{$data->date_of_birth}}" name="date_of_birth" id="dob-datepicker" placeholder="Enter Date Of Birth">
+                                  <div class="input-group-append">
+                                    <span class="input-group-text" id="dob-datepicker-icon" style="cursor: pointer"><i class="fas fa-calendar-alt"></i></span>
+                                  </div>
+                                </div>
                             </div>
 
 
@@ -164,9 +191,30 @@
 
 @section('scripts')
 
+<script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
 <script>
 
     $(document).ready(function() {
+
+
+        $('#dob-datepicker').datepicker({
+          format: 'yyyy-mm-dd',
+          autoclose: true
+        });
+
+        $('#adm-datepicker').datepicker({
+          format: 'yyyy-mm-dd',
+          autoclose: true
+        });
+
+        $('#adm-datepicker-icon').click(function() {
+          $('#adm-datepicker').datepicker('show');
+        });
+
+        $('#dob-datepicker-icon').click(function() {
+          $('#dob-datepicker').datepicker('show');
+        });
+
 
         var initialGradeId = $('#gradeSelect').val();
         var initialClassId = "{{ $data->userGradeClasses->isEmpty() ? '' : $data->userGradeClasses[0]->class_id }}";

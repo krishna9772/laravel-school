@@ -194,9 +194,26 @@
 <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
 <script>
 
-    $(document).ready(function() {
+$(document).ready(function() {
 
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
 
+    var initialFormHTML = $('#updateRegistrationForm').html();
+
+    // Restores the saved initial HTML content of the form
+    function restoreInitialForm() {
+        $('#updateRegistrationForm').html(initialFormHTML);
+
+        attachEventHandlers();
+    }
+
+    attachEventHandlers();
+
+    function attachEventHandlers(){
         $('#dob-datepicker').datepicker({
           format: 'yyyy-mm-dd',
           autoclose: true
@@ -259,18 +276,16 @@
                 }));
             }
         }
-    });
 
-    $('#typeSelect').change(function() {
-        var userType = $(this).val();
-        if (userType === 'student') {
-            $('.student-fields').show();
-        } else {
-            $('.student-fields').hide();
-        }
-    });
+        $('#typeSelect').change(function() {
+            var userType = $(this).val();
+            if (userType === 'student') {
+                $('.student-fields').show();
+            } else {
+                $('.student-fields').hide();
+            }
+        });
 
-    $(document).ready(function() {
         var userTypeFromServer = "{{ $data->user_type }}";
         if (userTypeFromServer !== 'teacher') {
             $('.student-fields').show();
@@ -278,12 +293,6 @@
             $('.student-fields').hide();
         }
 
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
 
         $('#typeSelect').change(function() {
             var userType = $(this).val();
@@ -310,10 +319,6 @@
 
         $('#gradeSelect').change(function() {
             clearError();
-        });
-
-        $('#cancelBtn').click(function() {
-            window.location.href = '{{ route('users.index') }}';
         });
 
         $('#updateRegistrationForm').submit(function (e) {
@@ -391,7 +396,16 @@
             }
         });
 
+        $('#cancelBtn').click(function() {
+            restoreInitialForm();
+        });
+    }
+
+    $('#cancelBtn').click(function() {
+        restoreInitialForm();
     });
+
+});
 </script>
 
 @endsection

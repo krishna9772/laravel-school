@@ -182,193 +182,207 @@
             }
         });
 
-        $('#dob-datepicker').datepicker({
-          format: 'yyyy-mm-dd',
-          autoclose: true
-        });
+        var initialFormHTML = $('#newRegistrationForm').html();
 
-        $('#adm-datepicker').datepicker({
-          format: 'yyyy-mm-dd',
-          autoclose: true
-        });
+        // Restores the saved initial HTML content of the form
+        function restoreInitialForm() {
+            $('#newRegistrationForm').html(initialFormHTML);
 
-        // Trigger Datepicker on icon click
-        $('#adm-datepicker-icon').click(function() {
-          $('#adm-datepicker').datepicker('show');
-        });
-
-        $('#dob-datepicker-icon').click(function() {
-          $('#dob-datepicker').datepicker('show');
-        });
-
-
-        $('#typeSelect').change(function() {
-            var userType = $(this).val();
-            if (userType === 'teacher') {
-
-                $('#fatherNameInputBox').closest('.form-group').hide();
-                $('#motherNameInputBox').closest('.form-group').hide();
-                $('#transferedSchoolInputBox').closest('.form-group').hide();
-            } else {
-
-                $('#fatherNameInputBox').closest('.form-group').show();
-                $('#motherNameInputBox').closest('.form-group').show();
-                $('#transferedSchoolInputBox').closest('.form-group').show();
-            }
-        });
-
-
-
-        function clearError() {
-            $('#gradeSelect').removeClass('is-invalid');
-            $('#selectBoxError1').text('');
-
-            $('#classSelect').removeClass('is-invalid');
-            $('#selectBoxError2').text('');
+            attachEventHandlers();
         }
 
-        $('#gradeSelect').change(function() {
-            clearError();
-        });
+        attachEventHandlers();
+
+        function attachEventHandlers(){
+            $('#dob-datepicker').datepicker({
+              format: 'yyyy-mm-dd',
+              autoclose: true
+            });
+
+            $('#adm-datepicker').datepicker({
+              format: 'yyyy-mm-dd',
+              autoclose: true
+            });
+
+            // Trigger Datepicker on icon click
+            $('#adm-datepicker-icon').click(function() {
+              $('#adm-datepicker').datepicker('show');
+            });
+
+            $('#dob-datepicker-icon').click(function() {
+              $('#dob-datepicker').datepicker('show');
+            });
 
 
+            $('#typeSelect').change(function() {
+                var userType = $(this).val();
+                if (userType === 'teacher') {
 
-        $('#cancelBtn').click(function() {
-            // $('#selectSection').show();
-            // $('#updateClassForm').hide();
-        });
+                    $('#fatherNameInputBox').closest('.form-group').hide();
+                    $('#motherNameInputBox').closest('.form-group').hide();
+                    $('#transferedSchoolInputBox').closest('.form-group').hide();
+                } else {
 
-        $('#newRegistrationForm').submit(function (e) {
-            // alert('hello');
-            e.preventDefault();
-
-            // var classId = $('#classId').val();
-            // console.log(classId);
-
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('users.store')}}',
-                data: $(this).serialize(),
-                success: function (response) {
-                    // alert('hello');
-                    if(response == 'success'){
-                        window.location.href = '{{ route('users.index') }}';
-                    }
-                    },
-                error: function(xhr, status, error) {
-                    var err = eval("(" + xhr.responseText + ")");
-                    var response = JSON.parse(xhr.responseText);
-                        console.log(response);
-                    let userNameErrorMessage = response.errors.user_name ? response.errors.user_name[0] : '';
-                    let userTypeErrorMessage = response.errors.user_type ? response.errors.user_type[0] : '';
-                    let gradeSelectErrorMessage = response.errors.grade_select ? response.errors.grade_select[0] : '';
-                    let classSelectErrorMessage = response.errors.class_select ? response.errors.class_select[0] : '';
-                    let dobErrorMessage = response.errors.date_of_birth ? response.errors.date_of_birth[0] : '';
-
-                    if (userNameErrorMessage) {
-                        $('#userNameErrorMessage').html(userNameErrorMessage);
-                        $('#userNameInputBox').addClass('is-invalid');
-                    } else {
-                        $('#userNameErrorMessage').html('');
-                        $('#userNameInputBox').removeClass('is-invalid');
-                    }
-
-
-                    if (userTypeErrorMessage) {
-                        $('#userTypeErrorMessage').html(userTypeErrorMessage);
-                        $('#typeSelect').addClass('is-invalid');
-                    } else {
-                        $('#userTypeErrorMessage').html('');
-                        $('#typeSelect').removeClass('is-invalid');
-                    }
-
-                    if(gradeSelectErrorMessage){
-                        $('#selectBoxError1').html(gradeSelectErrorMessage);
-                        $('#gradeSelect').addClass('is-invalid');
-                    }else{
-                        $('#selectBoxError1').html('');
-                        $('#gradeSelect').removeClass('is-invalid');
-                    }
-
-                    if(classSelectErrorMessage){
-                        $('#selectBoxError2').html(classSelectErrorMessage);
-                        $('#classSelect').addClass('is-invalid');
-                    }else{
-                        $('#selectBoxError2').html('');
-                        $('#classSelect').removeClass('is-invalid');
-                    }
-
-                    if(dobErrorMessage){
-                        $('#dobErrorMessage').html(dobErrorMessage);
-                        $('#dob-datepicker').addClass('is-invalid');
-                    }else{
-                        $('#dobErrorMessage').html('');
-                        $('#dob-datepicker').removeClass('is-invalid');
-                    }
-
-                },
-                failure: function (response) {
-                    console.log('faliure');
+                    $('#fatherNameInputBox').closest('.form-group').show();
+                    $('#motherNameInputBox').closest('.form-group').show();
+                    $('#transferedSchoolInputBox').closest('.form-group').show();
                 }
             });
-        });
 
 
-        $('#gradeSelect').change(function() {
-            var gradeId = $(this).val();
-            $('#classSelect').empty(); // Clear previous options
-            $('#selectBoxError1').text('');
 
-            // var selectedGrade = $(this).val();
-            // if (selectedGrade !== '') {
-            //     $('#classSelect').prop('disabled', false);
-            //     $('#selectBoxError1').text('');
-            // } else {
-            //     $('#classSelect').prop('disabled', true);
-            //     $('#selectBoxError1').text('Please select a grade first');
-            //     $('#selectBoxError2').text('');
-            // }
+            function clearError() {
+                $('#gradeSelect').removeClass('is-invalid');
+                $('#selectBoxError1').text('');
 
-            if (gradeId === '') {
-                // If 'Select Grade' is selected, show 'Select Class' in class select box
-                $('#classSelect').append($('<option>', {
-                    value: '',
-                    text : 'Select Class',
-                }));
-            } else {
-                // Filter classes based on selected grade
-                var classesFound = false;
-                @foreach ($grades as $grade)
-                    if ('{{$grade->id}}' === gradeId) {
-                        @foreach ($grade->classes as $class)
-                            $('#classSelect').append($('<option>', {
-                                value: '{{$class->id}}',
-                                text : '{{$class->class_name}}'
-                            }).attr('data-description', '{{$class->description}}'));
-                            classesFound = true;
-                        @endforeach
-                    }
-                @endforeach
-
+                $('#classSelect').removeClass('is-invalid');
                 $('#selectBoxError2').text('');
+            }
 
-                if (!classesFound) {
+            $('#gradeSelect').change(function() {
+                clearError();
+            });
+
+            $('#newRegistrationForm').submit(function (e) {
+                // alert('hello');
+                e.preventDefault();
+
+                // var classId = $('#classId').val();
+                // console.log(classId);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('users.store')}}',
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        // alert('hello');
+                        if(response == 'success'){
+                            window.location.href = '{{ route('users.index') }}';
+                        }
+                        },
+                    error: function(xhr, status, error) {
+                        var err = eval("(" + xhr.responseText + ")");
+                        var response = JSON.parse(xhr.responseText);
+                            console.log(response);
+                        let userNameErrorMessage = response.errors.user_name ? response.errors.user_name[0] : '';
+                        let userTypeErrorMessage = response.errors.user_type ? response.errors.user_type[0] : '';
+                        let gradeSelectErrorMessage = response.errors.grade_select ? response.errors.grade_select[0] : '';
+                        let classSelectErrorMessage = response.errors.class_select ? response.errors.class_select[0] : '';
+                        let dobErrorMessage = response.errors.date_of_birth ? response.errors.date_of_birth[0] : '';
+
+                        if (userNameErrorMessage) {
+                            $('#userNameErrorMessage').html(userNameErrorMessage);
+                            $('#userNameInputBox').addClass('is-invalid');
+                        } else {
+                            $('#userNameErrorMessage').html('');
+                            $('#userNameInputBox').removeClass('is-invalid');
+                        }
+
+
+                        if (userTypeErrorMessage) {
+                            $('#userTypeErrorMessage').html(userTypeErrorMessage);
+                            $('#typeSelect').addClass('is-invalid');
+                        } else {
+                            $('#userTypeErrorMessage').html('');
+                            $('#typeSelect').removeClass('is-invalid');
+                        }
+
+                        if(gradeSelectErrorMessage){
+                            $('#selectBoxError1').html(gradeSelectErrorMessage);
+                            $('#gradeSelect').addClass('is-invalid');
+                        }else{
+                            $('#selectBoxError1').html('');
+                            $('#gradeSelect').removeClass('is-invalid');
+                        }
+
+                        if(classSelectErrorMessage){
+                            $('#selectBoxError2').html(classSelectErrorMessage);
+                            $('#classSelect').addClass('is-invalid');
+                        }else{
+                            $('#selectBoxError2').html('');
+                            $('#classSelect').removeClass('is-invalid');
+                        }
+
+                        if(dobErrorMessage){
+                            $('#dobErrorMessage').html(dobErrorMessage);
+                            $('#dob-datepicker').addClass('is-invalid');
+                        }else{
+                            $('#dobErrorMessage').html('');
+                            $('#dob-datepicker').removeClass('is-invalid');
+                        }
+
+                    },
+                    failure: function (response) {
+                        console.log('faliure');
+                    }
+                });
+            });
+
+
+            $('#gradeSelect').change(function() {
+                var gradeId = $(this).val();
+                $('#classSelect').empty(); // Clear previous options
+                $('#selectBoxError1').text('');
+
+                // var selectedGrade = $(this).val();
+                // if (selectedGrade !== '') {
+                //     $('#classSelect').prop('disabled', false);
+                //     $('#selectBoxError1').text('');
+                // } else {
+                //     $('#classSelect').prop('disabled', true);
+                //     $('#selectBoxError1').text('Please select a grade first');
+                //     $('#selectBoxError2').text('');
+                // }
+
+                if (gradeId === '') {
+                    // If 'Select Grade' is selected, show 'Select Class' in class select box
                     $('#classSelect').append($('<option>', {
                         value: '',
-                        text : 'No Classes in this grade'
+                        text : 'Select Class',
                     }));
-                }
-            }
-        });
+                } else {
+                    // Filter classes based on selected grade
+                    var classesFound = false;
+                    @foreach ($grades as $grade)
+                        if ('{{$grade->id}}' === gradeId) {
+                            @foreach ($grade->classes as $class)
+                                $('#classSelect').append($('<option>', {
+                                    value: '{{$class->id}}',
+                                    text : '{{$class->class_name}}'
+                                }).attr('data-description', '{{$class->description}}'));
+                                classesFound = true;
+                            @endforeach
+                        }
+                    @endforeach
 
-        $('#classSelect').click(function() {
-            var selectedGrade = $('#gradeSelect').val();
-            if (selectedGrade === '') {
-                $('#selectBoxError2').text('First select a grade to modify a class');
-                // return false; // Prevent the dropdown from opening
-            } else {
-                $('#selectBoxError2').text('');
-            }
+                    $('#selectBoxError2').text('');
+
+                    if (!classesFound) {
+                        $('#classSelect').append($('<option>', {
+                            value: '',
+                            text : 'No Classes in this grade'
+                        }));
+                    }
+                }
+            });
+
+            $('#classSelect').click(function() {
+                var selectedGrade = $('#gradeSelect').val();
+                if (selectedGrade === '') {
+                    $('#selectBoxError2').text('First select a grade to modify a class');
+                    // return false; // Prevent the dropdown from opening
+                } else {
+                    $('#selectBoxError2').text('');
+                }
+            });
+
+            $('#cancelBtn').click(function() {
+                restoreInitialForm();
+            });
+        }
+
+        $('#cancelBtn').click(function() {
+            restoreInitialForm();
         });
 
     });

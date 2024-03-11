@@ -87,10 +87,6 @@ $(document).ready(function () {
         $('#descErrorMessage').text('');
     }
 
-    // Event handler for input fields to clear error message and remove 'is-invalid' class
-
-
-
     $('#addNewGradeForm').submit(function (e) {
         e.preventDefault();
 

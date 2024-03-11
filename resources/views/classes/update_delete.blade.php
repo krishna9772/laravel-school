@@ -102,10 +102,9 @@
 
                     // $('#gradeId').val(selectedGradeId);
                     $('#gradeInputBox').val(selectedGradeName);
-                    // $('#descInputBox').val(selectedGradeDescription);
 
                     $('#grade_id option').each(function() {
-                        // If the value of the option matches the selectedGradeId, set it as selected
+
                         if ($(this).val() == selectedGradeId) {
                             $(this).prop('selected', true);
                         }

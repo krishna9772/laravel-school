@@ -147,6 +147,8 @@ class CurriculumController extends Controller
                     'user_id' => $teacherIds[$index],
                     'grade_id' => $request->grade_id,
                     'curriculum_name' => $curriculumNames[$index],
+                    'status' => '1',
+                    'deleted_at' => null
                 ]
             );
         }

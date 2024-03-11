@@ -90,134 +90,151 @@ $(document).ready(function () {
         }
     });
 
-    function clearGradeIdInputBoxError() {
-        $('#gradeSelect').removeClass('is-invalid');
-        $('#gradeIdErrorMessage').text('');
+    var initialFormHTML = $('#addCurriculumForm').html();
+
+    function restoreInitialForm() {
+        $('#addCurriculumForm').html(initialFormHTML);
+        inputFieldCount = $("input[name='curriculum_name[]']").length;
+
+        attachEventHandlers();
     }
 
-    $('#gradeSelect').change(function() {
-        clearGradeIdInputBoxError();
-    });
+    attachEventHandlers();
 
-    $('#nameInputBox').on('input', function () {
-        clearNameInputBoxError();
-    });
+    function attachEventHandlers(){
+        function clearGradeIdInputBoxError() {
+            $('#gradeSelect').removeClass('is-invalid');
+            $('#gradeIdErrorMessage').text('');
+        }
 
+        $('#gradeSelect').change(function() {
+            clearGradeIdInputBoxError();
+        });
 
-    function clearNameInputBoxError() {
-        $('#nameInputBox').removeClass('is-invalid');
-        $('#nameErrorMessage').text('');
-    }
-
-    function clearDescInputBoxError() {
-        $('#descInputBox').removeClass('is-invalid');
-        $('#gradeSelectBoxError').text('');
-    }
+        $('#nameInputBox').on('input', function () {
+            clearNameInputBoxError();
+        });
 
 
-    $('#addCurriculumForm').submit(function (e) {
-        e.preventDefault();
+        function clearNameInputBoxError() {
+            $('#nameInputBox').removeClass('is-invalid');
+            $('#nameErrorMessage').text('');
+        }
 
-        $.ajax({
-            type: 'POST',
-            url: '{{ route('curricula.store') }}',
-            data: $(this).serialize(),
-            success: function (response) {
-                if(response == 'success'){
-                    window.location.href = '{{ route('curricula.index') }}';
+        function clearDescInputBoxError() {
+            $('#descInputBox').removeClass('is-invalid');
+            $('#gradeSelectBoxError').text('');
+        }
+
+
+        $('#addCurriculumForm').submit(function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('curricula.store') }}',
+                data: $(this).serialize(),
+                success: function (response) {
+                    if(response == 'success'){
+                        window.location.href = '{{ route('curricula.index') }}';
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var response = xhr.responseJSON;
+                    console.log(response);
+
+                    let gradeSelectBoxError = response.errors.grade_id ? response.errors.grade_id[0] : '';
+
+                    if (gradeSelectBoxError) {
+                        $('#gradeSelectBoxError').html(gradeSelectBoxError);
+                        $('#gradeSelect').addClass('is-invalid');
+                    } else {
+                        $('#gradeSelectBoxError').html('');
+                        $('#gradeSelect').removeClass('is-invalid');
+                    }
+
+                    $('.curriculum-name-error').text('');
+                    $('.teacher-id-error').text('');
+                    $('.form-control').removeClass('is-invalid');
+
+                    if (response.errors) {
+                        $.each(response.errors, function(key, value) {
+                            var errorMessage = value[0];
+
+                            var [fieldName, index] = key.split('.');
+
+                            var $row = $('[name="' + fieldName + '[]"]').eq(index).closest('.row');
+
+                            if (fieldName === 'curriculum_name') {
+                                $row.find('.curriculum-name-error').text('Curriculum name is required');
+                                $row.find('[name="' + fieldName + '[]"]').addClass('is-invalid');
+                            } else if (fieldName === 'teacher_id') {
+                                $row.find('.teacher-id-error').text('Teacher field is required');
+                                $row.find('[name="' + fieldName + '[]"]').addClass('is-invalid');
+                            }
+                        });
+                    }
+                },
+                failure: function (response) {
+                    console.log('faliure');
                 }
-            },
-            error: function(xhr, status, error) {
-                var response = xhr.responseJSON;
-                console.log(response);
+            });
+        });
 
-                let gradeSelectBoxError = response.errors.grade_id ? response.errors.grade_id[0] : '';
+        var inputFieldCount = 1;
 
-                if (gradeSelectBoxError) {
-                    $('#gradeSelectBoxError').html(gradeSelectBoxError);
-                    $('#gradeSelect').addClass('is-invalid');
-                } else {
-                    $('#gradeSelectBoxError').html('');
-                    $('#gradeSelect').removeClass('is-invalid');
-                }
+        function toggleButtons() {
+            if (inputFieldCount >= 5) {
+                $("#addMoreBtn").prop("disabled", true);
+            } else {
+                $("#addMoreBtn").prop("disabled", false);
+            }
+        }
 
-                $('.curriculum-name-error').text('');
-                $('.teacher-id-error').text('');
-                $('.form-control').removeClass('is-invalid');
-
-                if (response.errors) {
-                    $.each(response.errors, function(key, value) {
-                        var errorMessage = value[0];
-
-                        var [fieldName, index] = key.split('.');
-
-                        var $row = $('[name="' + fieldName + '[]"]').eq(index).closest('.row');
-
-                        if (fieldName === 'curriculum_name') {
-                            $row.find('.curriculum-name-error').text('Curriculum name is required');
-                            $row.find('[name="' + fieldName + '[]"]').addClass('is-invalid');
-                        } else if (fieldName === 'teacher_id') {
-                            $row.find('.teacher-id-error').text('Teacher field is required');
-                            $row.find('[name="' + fieldName + '[]"]').addClass('is-invalid');
-                        }
-                    });
-                }
-            },
-            failure: function (response) {
-                console.log('faliure');
+        $("#addMoreBtn").click(function() {
+            if (inputFieldCount < 5) {
+                var newRow = `
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <input type="text" name="curriculum_name[]" class="form-control" placeholder="Enter Curriculum Name">
+                            <p class="text-danger curriculum-name-error"></p> <!-- Unique ID for error message -->
+                        </div>
+                        <div class="form-group col-6">
+                            <select name="teacher_id[]" class="form-control">
+                                <option value="">Select Teacher</option>
+                                @foreach ($teachers as $teacher)
+                                    <option value="{{$teacher->user_id}}">{{$teacher->user_name}}</option>
+                                @endforeach
+                            </select>
+                            <p class="text-danger mt-1 teacher-id-error"></p> <!-- Unique ID for error message -->
+                        </div>
+                    </div>
+                `;
+                $("#dynamicRows").append(newRow);
+                inputFieldCount++;
+                toggleButtons();
             }
         });
-    });
 
-    var inputFieldCount = 1;
 
-    function toggleButtons() {
-        if (inputFieldCount >= 5) {
-            $("#addMoreBtn").prop("disabled", true);
-        } else {
-            $("#addMoreBtn").prop("disabled", false);
-        }
+        $("#removeBtn").click(function () {
+            if (inputFieldCount > 1) {
+                $("#dynamicRows .row:last-child").remove();
+                inputFieldCount--;
+                toggleButtons();
+            }
+        });
+
+        toggleButtons();
+
+        $('#cancelBtn').click(function(){
+            restoreInitialForm();
+        });
     }
-
-    $("#addMoreBtn").click(function() {
-        if (inputFieldCount < 5) {
-            var newRow = `
-                <div class="row">
-                    <div class="form-group col-6">
-                        <input type="text" name="curriculum_name[]" class="form-control" placeholder="Enter Curriculum Name">
-                        <p class="text-danger curriculum-name-error"></p> <!-- Unique ID for error message -->
-                    </div>
-                    <div class="form-group col-6">
-                        <select name="teacher_id[]" class="form-control">
-                            <option value="">Select Teacher</option>
-                            @foreach ($teachers as $teacher)
-                                <option value="{{$teacher->user_id}}">{{$teacher->user_name}}</option>
-                            @endforeach
-                        </select>
-                        <p class="text-danger mt-1 teacher-id-error"></p> <!-- Unique ID for error message -->
-                    </div>
-                </div>
-            `;
-            $("#dynamicRows").append(newRow);
-            inputFieldCount++;
-            toggleButtons();
-        }
-    });
-
-
-    $("#removeBtn").click(function () {
-        if (inputFieldCount > 1) {
-            $("#dynamicRows .row:last-child").remove();
-            inputFieldCount--;
-            toggleButtons();
-        }
-    });
-
-    toggleButtons();
 
 
     $('#cancelBtn').click(function(){
-        window.location.href = '{{ route('curricula.index') }}';
+        restoreInitialForm();
     });
 
 

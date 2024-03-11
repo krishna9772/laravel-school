@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{{asset('plugins/fontawesome-free/css/all.min.css')}}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{asset('dist/css/adminlte.min.css')}}">
+
     {{-- date range picker --}}
     {{-- <link rel="stylesheet" href="{{asset('plugins/daterangepicker/daterangepicker.css')}}"> --}}
 
@@ -41,7 +42,7 @@
 
         </div>
 
-        @include('layouts.footer')
+        {{-- @include('layouts.footer') --}}
 
 
         <!-- jQuery -->

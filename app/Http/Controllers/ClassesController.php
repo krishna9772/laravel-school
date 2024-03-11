@@ -15,7 +15,7 @@ class ClassesController extends Controller
      */
     public function index()
     {
-        $grades = Grade::with('classes')->get();
+        $grades = Grade::with('classes')->paginate(10);
         return view('classes.all_classes',compact('grades'));
     }
 

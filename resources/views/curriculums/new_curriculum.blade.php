@@ -38,27 +38,28 @@
                     <p class="text-danger mt-1" id="gradeSelectBoxError"></p>
                 </div>
 
-
-                <div class="form-group">
-                    <label for="" class="form-label required">Curriculum Name</label>
-                    <input type="text" name="curriculum_name" id="nameInputBox" class="form-control" placeholder="Enter Curriculum Name">
-                    <p class="text-danger" id="nameErrorMessage"></p>
+                <div id="dynamicRows">
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label for="" class="form-label required">Curriculum Name</label>
+                            <input type="text" name="curriculum_name[]" class="form-control" placeholder="Enter Curriculum Name">
+                            <p class="text-danger curriculum-name-error"></p>
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="" class="form-label required">Select Teacher</label>
+                            <select name="teacher_id[]" class="form-control">
+                                <option value="">Select Teacher</option>
+                                @foreach ($teachers as $teacher)
+                                    <option value="{{$teacher->user_id}}">{{$teacher->user_name}}</option>
+                                @endforeach
+                            </select>
+                            <p class="text-danger mt-1 teacher-id-error"></p>
+                        </div>
+                    </div>
                 </div>
-
                 <div class="form-group">
-                    <label for="" class="form-label required">Select Teacher</label>
-                    <select name="teacher_id" id="teacherSelect" class="form-control">
-                        <option value="">Select Teacher</option>
-                        @foreach ($teachers as $teacher)
-                            <option value="{{$teacher->user_id}}">{{$teacher->user_name}}</option>
-                        @endforeach
-                    </select>
-                    <p class="text-danger mt-1" id="teacherSelectBoxError"></p>
-                </div>
-
-                <div class="form-group">
-                    <button class="btn btn-success"><i class="fa fa-plus"></i> Add More</button>
-                    <button class="btn btn-danger"> <i class="fa fa-minus"></i> Remove</button>
+                    <button type="button" id="addMoreBtn" class="btn btn-success"><i class="fa fa-plus"></i> Add More</button>
+                    <button type="button" id="removeBtn" class="btn btn-danger"> <i class="fa fa-minus"></i> Remove</button>
                 </div>
 
                 <div class="mt-4">
@@ -102,9 +103,6 @@ $(document).ready(function () {
         clearNameInputBoxError();
     });
 
-    $('#descInputBox').on('input', function () {
-        clearDescInputBoxError();
-    });
 
     function clearNameInputBoxError() {
         $('#nameInputBox').removeClass('is-invalid');
@@ -113,11 +111,8 @@ $(document).ready(function () {
 
     function clearDescInputBoxError() {
         $('#descInputBox').removeClass('is-invalid');
-        $('#descErrorMessage').text('');
+        $('#gradeSelectBoxError').text('');
     }
-
-    // Event handler for input fields to clear error message and remove 'is-invalid' class
-
 
 
     $('#addCurriculumForm').submit(function (e) {
@@ -133,12 +128,10 @@ $(document).ready(function () {
                 }
             },
             error: function(xhr, status, error) {
-                var err = eval("(" + xhr.responseText + ")");
-                var response = JSON.parse(xhr.responseText);
-                    // console.log(response);
+                var response = xhr.responseJSON;
+                console.log(response);
+
                 let gradeSelectBoxError = response.errors.grade_id ? response.errors.grade_id[0] : '';
-                let nameErrorMessage = response.errors.curriculum_name ? response.errors.curriculum_name[0] : '';
-                let teacherSelectBoxError = response.errors.teacher_id ? response.errors.teacher_id[0] : '';
 
                 if (gradeSelectBoxError) {
                     $('#gradeSelectBoxError').html(gradeSelectBoxError);
@@ -148,22 +141,27 @@ $(document).ready(function () {
                     $('#gradeSelect').removeClass('is-invalid');
                 }
 
-                if (nameErrorMessage) {
-                    $('#nameErrorMessage').html(nameErrorMessage);
-                    $('#nameInputBox').addClass('is-invalid');
-                } else {
-                    $('#nameErrorMessage').html('');
-                    $('#nameInputBox').removeClass('is-invalid');
-                }
+                $('.curriculum-name-error').text('');
+                $('.teacher-id-error').text('');
+                $('.form-control').removeClass('is-invalid');
 
-                if (teacherSelectBoxError) {
-                    $('#teacherSelectBoxError').html(teacherSelectBoxError);
-                    $('#teacherSelect').addClass('is-invalid');
-                } else {
-                    $('#teacherSelectBoxError').html('');
-                    $('#teacherSelect').removeClass('is-invalid');
-                }
+                if (response.errors) {
+                    $.each(response.errors, function(key, value) {
+                        var errorMessage = value[0];
 
+                        var [fieldName, index] = key.split('.');
+
+                        var $row = $('[name="' + fieldName + '[]"]').eq(index).closest('.row');
+
+                        if (fieldName === 'curriculum_name') {
+                            $row.find('.curriculum-name-error').text('Curriculum name is required');
+                            $row.find('[name="' + fieldName + '[]"]').addClass('is-invalid');
+                        } else if (fieldName === 'teacher_id') {
+                            $row.find('.teacher-id-error').text('Teacher field is required');
+                            $row.find('[name="' + fieldName + '[]"]').addClass('is-invalid');
+                        }
+                    });
+                }
             },
             failure: function (response) {
                 console.log('faliure');
@@ -171,10 +169,55 @@ $(document).ready(function () {
         });
     });
 
+    var inputFieldCount = 1;
+
+    function toggleButtons() {
+        if (inputFieldCount >= 5) {
+            $("#addMoreBtn").prop("disabled", true);
+        } else {
+            $("#addMoreBtn").prop("disabled", false);
+        }
+    }
+
+    $("#addMoreBtn").click(function() {
+        if (inputFieldCount < 5) {
+            var newRow = `
+                <div class="row">
+                    <div class="form-group col-6">
+                        <input type="text" name="curriculum_name[]" class="form-control" placeholder="Enter Curriculum Name">
+                        <p class="text-danger curriculum-name-error"></p> <!-- Unique ID for error message -->
+                    </div>
+                    <div class="form-group col-6">
+                        <select name="teacher_id[]" class="form-control">
+                            <option value="">Select Teacher</option>
+                            @foreach ($teachers as $teacher)
+                                <option value="{{$teacher->user_id}}">{{$teacher->user_name}}</option>
+                            @endforeach
+                        </select>
+                        <p class="text-danger mt-1 teacher-id-error"></p> <!-- Unique ID for error message -->
+                    </div>
+                </div>
+            `;
+            $("#dynamicRows").append(newRow);
+            inputFieldCount++;
+            toggleButtons();
+        }
+    });
+
+
+    $("#removeBtn").click(function () {
+        if (inputFieldCount > 1) {
+            $("#dynamicRows .row:last-child").remove();
+            inputFieldCount--;
+            toggleButtons();
+        }
+    });
+
+    toggleButtons();
+
+
     $('#cancelBtn').click(function(){
-        $('#gradeSelect').val('');
-        $('#nameInputBox').val('');
-        $('#descInputBox').val('');
+        window.location.href = '{{ route('curricula.index') }}';
     });
 
 

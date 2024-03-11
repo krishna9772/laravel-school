@@ -23,8 +23,8 @@ class CurriculumRequest extends FormRequest
     {
         return [
             'grade_id' => 'required',
-            'curriculum_name' => 'required|string|max:50',
-            'teacher_id' => 'required',
+            'curriculum_name.*' => 'required|string|max:50',
+            'teacher_id.*' => 'required',
         ];
     }
 }

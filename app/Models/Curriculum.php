@@ -13,6 +13,8 @@ class Curriculum extends Model
         'user_id',
         'grade_id',
         'curriculum_name',
+        'status',
+        'deleted_at',
         'created_date',
         'updated_date',
     ];

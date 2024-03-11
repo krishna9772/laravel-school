@@ -37,7 +37,11 @@ Route::middleware(['auth'])->group(function(){
     Route::resource('users',UserController::class);
 
     // curriculums
+    Route::get('curricula/filter/{filter_type}',[CurriculumController::class,'filterCurriculum'])->name('curricula.filter');
     Route::get('curricula/modify',[CurriculumController::class,'modify']);
+    Route::post('curricula/updatedata',[CurriculumController::class,'updateData'])->name('curricula.updateData');
+    Route::get('/curricula/max-id', [CurriculumController::class, 'getMaxId'])->name('curricula.getMaxId');
+    Route::get('curricula/delete/all/grade/{gradeId}',[CurriculumController::class,'curriculumDeleteWithGrade'])->name('curricula.delete.with.grade');
     Route::resource('curricula',CurriculumController::class);
 
     // class work

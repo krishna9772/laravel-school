@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Grade;
+use App\Models\Classes;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Http\Requests\UserRequest;
 use App\Models\UserGradeClass;
+use App\Http\Requests\UserRequest;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
@@ -39,11 +41,11 @@ class UserController extends Controller
     {
         Log::info($request->all());
 
-        $user_id = Str::random(8);
+        // Get the highest user ID from the database
+        $highestId = intval(User::max('user_id')) ?? 0;
 
-        if (User::where('user_id', $user_id)->exists()) {
-            $user_id = Str::random(8);
-        }
+        // Increment the highest user ID and pad it with leading zeros
+        $user_id = str_pad($highestId + 1, 5, '0', STR_PAD_LEFT);
 
         $data = $this->getUserData($request,$user_id);
 
@@ -54,6 +56,12 @@ class UserController extends Controller
             'grade_id' => $request->grade_select,
             'class_id' => $request->class_select
         ]);
+
+        // update capacity
+        if ($request->user_type == 'student') {
+            Classes::where('id', $request->class_select)->update(['capacity' => DB::raw('IFNULL(capacity, 0) + 1')]);
+        }
+
 
         return response()->json('success');
     }
@@ -132,30 +140,22 @@ class UserController extends Controller
 
     }
 
-    public function modify(){
-        return view('registrations.update_delete');
-    }
-
-    public function search(Request $request){
-        $query = $request->input('query');
-
-        $users = User::whereIn('user_type', ['teacher', 'student'])
-            ->where('user_name', 'like', '%'.$query.'%')
-            ->orWhere('user_id', 'like', '%'.$query.'%')
-            ->with(['userGradeClasses.grade', 'userGradeClasses.class'])
-            ->get();
-
-        // Log::info($users);
-
-        return response()->json($users);
-    }
-
-
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
+
+        $user = User::where('id',$id)->first();
+
+        $classId = UserGradeClass::where('user_id',$user->user_id)->value('class_id');
+        // Log::info($classId);
+
+        // decrease capcity in users table
+        if ($user->user_type == 'student') {
+            Classes::where('id', $classId)->update(['capacity' => DB::raw('IFNULL(capacity, 0) - 1')]);
+        }
+
         User::where('id',$id)->delete();
 
         return response()->json('success');

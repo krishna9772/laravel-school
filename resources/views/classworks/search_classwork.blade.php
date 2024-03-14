@@ -78,8 +78,8 @@
         $('#classworkSearchForm').submit(function (e) {
             e.preventDefault();
 
-            var classId = $('#classId').val();
-            console.log(classId);
+            // var classId = $('#classId').val();
+            // console.log(classId);
 
             $.ajax({
                 type: 'POST',
@@ -87,8 +87,10 @@
                 data: $(this).serialize(),
                 success: function (response) {
 
+                    console.log('success');
+
                     if(response == 'success'){
-                        window.location.href = '{{ route('classworks.index') }}';
+                        // window.location.href = '{{ route('classworks.index') }}';
                     }
                     },
                 error: function(xhr, status, error) {

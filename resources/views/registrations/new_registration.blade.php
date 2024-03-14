@@ -81,7 +81,7 @@
                             <div class="form-group">
                                 <label for="datepicker">Admission Date:</label>
                                 <div class="input-group">
-                                  <input type="text" class="form-control custom-placeholder changeInputStyle" name="admission_date"  id="adm-datepicker" placeholder="Enter Admission Date">
+                                  <input type="text" class="form-control custom-placeholder changeInputStyle admissionDateClass" name="admission_date"  id="adm-datepicker" placeholder="Enter Admission Date">
                                   <div class="input-group-append">
                                     <span class="input-group-text" id="adm-datepicker-icon" style="cursor: pointer"><i class="fas fa-calendar-alt"></i></span>
                                   </div>
@@ -127,7 +127,7 @@
 
                             <div class="form-group">
                                 <label for="" class="form-label">Address</label>
-                                <textarea name="address" class="form-control" id="addressInputBox" placeholder="Enter Adress"></textarea>
+                                <textarea name="address" class="form-control" id="addressInputBox" placeholder="Enter Address"></textarea>
                                 <p class="text-danger" id=""></p>
                             </div>
 
@@ -194,14 +194,20 @@
         attachEventHandlers();
 
         function attachEventHandlers(){
+
+            var maxDate = new Date();
+            maxDate.setFullYear(maxDate.getFullYear() - 5);
+
             $('#dob-datepicker').datepicker({
-              format: 'yyyy-mm-dd',
-              autoclose: true
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                endDate: maxDate // Disable selecting dates more than five years from today
             });
 
             $('#adm-datepicker').datepicker({
               format: 'yyyy-mm-dd',
-              autoclose: true
+              autoclose: true,
+              endDate: new Date()
             });
 
             // Trigger Datepicker on icon click
@@ -217,12 +223,12 @@
             $('#typeSelect').change(function() {
                 var userType = $(this).val();
                 if (userType === 'teacher') {
-
+                    $('.admissionDateClass').closest('.form-group').hide();
                     $('#fatherNameInputBox').closest('.form-group').hide();
                     $('#motherNameInputBox').closest('.form-group').hide();
                     $('#transferedSchoolInputBox').closest('.form-group').hide();
                 } else {
-
+                    $('.admissionDateClass').closest('.form-group').show();
                     $('#fatherNameInputBox').closest('.form-group').show();
                     $('#motherNameInputBox').closest('.form-group').show();
                     $('#transferedSchoolInputBox').closest('.form-group').show();

@@ -31,7 +31,7 @@
                     <p class="text-danger" id="nameErrorMessage"></p>
                 </div>
                 <div class="form-group">
-                    <label for="" class="form-label required">Description</label>
+                    <label for="" class="form-label">Description</label>
                     <textarea name="description" id="descInputBox" class="form-control" placeholder="Enter Description">{{ old('description') }}</textarea>
                     <p class="text-danger" id="descErrorMessage"></p>
               </div>

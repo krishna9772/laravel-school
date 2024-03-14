@@ -22,11 +22,16 @@ class ClassesController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function createNewClass($gradeIdParameter = null)
     {
+
+        // dd($gradeIdParameter);
+
+        $gradeName = Grade::where('id',$gradeIdParameter)->value('grade_name');
+
         $grades = Grade::get();
 
-        return view('classes.new_class',compact('grades'));
+        return view('classes.new_class',compact('grades','gradeIdParameter','gradeName'));
     }
 
     /**
@@ -34,6 +39,9 @@ class ClassesController extends Controller
      */
     public function store(ClassesRequest $request)
     {
+
+        Log::info($request->all());
+
         Classes::create([
             'grade_id' => $request->grade_id,
             'class_name' => $request->name,
@@ -74,7 +82,7 @@ class ClassesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ClassesRequest $request, string $id)
     {
 
         Classes::where('id',$id)->update([

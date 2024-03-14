@@ -23,7 +23,7 @@ class GradeRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'description' => 'required'
+            'description' => 'nullable|string'
         ];
     }
 }

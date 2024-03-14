@@ -19,22 +19,33 @@
           <!-- general form elements -->
           <div class="card card-primary">
             <div class="card-header">
-              <h3 class="card-title">Add A New Class</h3>
+                @if ($gradeIdParameter == null)
+                    <h3 class="card-title">Add A New Class</h3>
+                @else
+                    <h3 class="card-title">Add New Class In {{$gradeName}} </h3>
+                @endif
+
             </div>
             <!-- /.card-header -->
             <!-- form start -->
             <form id="addNewGradeForm">
               <div class="card-body">
-                <div class="form-group">
-                    <label for="" class="form-label required">Select Grade</label>
-                    <select name="grade_id" id="gradeSelect" class="form-control">
-                        <option value="">Select Grade</option>
-                        @foreach ($grades as $grade)
-                            <option value="{{$grade->id}}">{{$grade->grade_name}}</option>
-                        @endforeach
-                    </select>
-                    <p class="text-danger" id="gradeIdErrorMessage"></p>
-                </div>
+                @if ($gradeIdParameter == null)
+                    <div class="form-group">
+                        <label for="" class="form-label required">Select Grade</label>
+                        <select name="grade_id" id="gradeSelect" class="form-control">
+                            <option value="">Select Grade</option>
+                            @foreach ($grades as $grade)
+                                <option value="{{$grade->id}}">{{$grade->grade_name}}</option>
+                            @endforeach
+                        </select>
+                        <p class="text-danger" id="gradeIdErrorMessage"></p>
+                    </div>
+                @else
+                    <input type="hidden" name="grade_id" value="{{$gradeIdParameter}}">
+                @endif
+
+                {{-- =============== --}}
 
                 <p class="text-danger mt-1" id="selectBoxError"></p>
                 <div class="form-group">
@@ -43,7 +54,7 @@
                     <p class="text-danger" id="nameErrorMessage"></p>
                 </div>
                 <div class="form-group">
-                    <label for="" class="form-label required">Description</label>
+                    <label for="" class="form-label">Description</label>
                     <textarea name="description" id="descInputBox" class="form-control" placeholder="Enter Description">{{ old('description') }}</textarea>
                     <p class="text-danger" id="descErrorMessage"></p>
               </div>

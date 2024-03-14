@@ -19,14 +19,14 @@
         <form action="{{route('login')}}" method="post">
             @csrf
             <div class="mb-3">
-                <label for="" class="form-label">Email</label>
+                <label for="" class="form-label required">Email</label>
                 <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" placeholder="Email">
                 @error('email')
                     <p class="text-danger">{{$message}}</p>
                 @enderror
             </div>
             <div class="mb-3">
-                <label for="" class="form-label">Password</label>
+                <label for="" class="form-label required">Password</label>
                 <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password">
                 @error('password')
                     <p class="text-danger">{{$message}}</p>

@@ -28,12 +28,12 @@ Route::middleware(['auth'])->group(function(){
 
     // classes
     Route::get('classes/modify',[ClassesController::class,'modify'])->name('classes.modify');
+    Route::get('create/class/{gradeIdParameter?}',[ClassesController::class,'createNewClass'])->name('classes.createNewClass');
     Route::resource('classes',ClassesController::class);
 
     // user management
     Route::get('users/filter/{user_type}',[UserController::class,'filterUser'])->name('users.filter');
     Route::get('users/modify',[UserController::class,'modify'])->name('users.modify');
-    Route::get('search',[UserController::class,'search'])->name('users.search');
     Route::resource('users',UserController::class);
 
     // curriculums
@@ -48,7 +48,5 @@ Route::middleware(['auth'])->group(function(){
     Route::get('search',[ClassworkController::class,'search'])->name('classworks.search');
     Route::post('search-results',[ClassworkController::class,'searchResults'])->name('classworks.search_results');
     Route::resource('classworks',ClassworkController::class);
-
-
 
 });

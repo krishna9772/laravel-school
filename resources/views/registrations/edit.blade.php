@@ -95,10 +95,10 @@
                                 <p class="text-danger mt-1" id="selectBoxError2"></p>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group student-fields">
                                 <label for="datepicker">Admission Date:</label>
                                 <div class="input-group">
-                                  <input type="text" class="form-control custom-placeholder changeInputStyle" value="{{$data->admission_date}}" name="admission_date"  id="adm-datepicker" placeholder="Enter Admission Date">
+                                  <input type="text" class="form-control custom-placeholder changeInputStyle admissionDateClass" value="{{$data->admission_date}}" name="admission_date"  id="adm-datepicker" placeholder="Enter Admission Date">
                                   <div class="input-group-append">
                                     <span class="input-group-text" id="adm-datepicker-icon" style="cursor: pointer"><i class="fas fa-calendar-alt"></i></span>
                                   </div>
@@ -145,14 +145,13 @@
 
                             <div class="form-group">
                                 <label for="" class="form-label">Address</label>
-                                <textarea name="address" class="form-control" id="addressInputBox" placeholder="Enter Adress">{{$data->address}}</textarea>
+                                <textarea name="address" class="form-control" id="addressInputBox" placeholder="Enter Address">{{$data->address}}</textarea>
                                 {{-- <input type="text" name="user_name" id="nameInputBox" class="form-control" placeholder="Enter User Name"> --}}
                                 <p class="text-danger" id=""></p>
                             </div>
 
                             <div class="form-group">
                                 <label for="" class="form-label">NRC</label>
-                                {{-- <textarea name="address" id="" cols="30" rows="10" placeholder="Enter Adress"></textarea> --}}
                                 <input type="text" name="nrc" value="{{$data->nrc}}" id="nrcInputBox" class="form-control" placeholder="Enter User NRC">
                                 <p class="text-danger" id=""></p>
                             </div>
@@ -214,14 +213,19 @@ $(document).ready(function() {
     attachEventHandlers();
 
     function attachEventHandlers(){
+        var maxDate = new Date();
+        maxDate.setFullYear(maxDate.getFullYear() - 5);
+
         $('#dob-datepicker').datepicker({
-          format: 'yyyy-mm-dd',
-          autoclose: true
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            endDate: maxDate // Disable selecting dates more than five years from today
         });
 
         $('#adm-datepicker').datepicker({
           format: 'yyyy-mm-dd',
-          autoclose: true
+          autoclose: true,
+          endDate: new Date()
         });
 
         $('#adm-datepicker-icon').click(function() {
@@ -297,10 +301,12 @@ $(document).ready(function() {
         $('#typeSelect').change(function() {
             var userType = $(this).val();
             if (userType === 'teacher') {
+                $('.admissionDateClass').closest('.form-group').hide();
                 $('#fatherNameInputBox').closest('.form-group').hide();
                 $('#motherNameInputBox').closest('.form-group').hide();
                 $('#transferedSchoolInputBox').closest('.form-group').hide();
             } else {
+                $('.admissionDateClass').closest('.form-group').show();
                 $('#fatherNameInputBox').closest('.form-group').show();
                 $('#motherNameInputBox').closest('.form-group').show();
                 $('#transferedSchoolInputBox').closest('.form-group').show();

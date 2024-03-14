@@ -3,8 +3,18 @@
     @section('styles')
     <style>
         .required:after {
-        content:" *";
-        color: rgba(255, 0, 0, 0.765);
+            content:" *";
+            color: rgba(255, 0, 0, 0.765);
+        }
+
+        .deleteBtn.disabled {
+            opacity: 0.7; /* Reduce opacity to visually indicate it's disabled */
+            pointer-events: none; /* Disable pointer events to prevent clicks */
+            cursor: not-allowed; /* Change cursor to indicate it's not clickable */
+        }
+
+        .deleteBtn.disabled:hover {
+            cursor: not-allowed; /* Keep cursor style consistent on hover */
         }
     </style>
     @endsection
@@ -32,10 +42,10 @@
                     <div id="dynamicRows">
 
                         <div class="row">
-                            <div class="form-group col-6">
+                            <div class="form-group col-5">
                                 <label for="" class="form-label required">Curriculum Name</label>
                             </div>
-                            <div class="form-group col-6">
+                            <div class="form-group ml-3">
                                 <label for="" class="form-label required">Select Teacher</label>
                             </div>
                         </div>
@@ -58,7 +68,7 @@
                                     <p class="text-danger mt-1 teacher-id-error"></p>
                                 </div>
                                 <div class="col-2 mt-2 pr-2 deleteBtn" data-curriculum-id="{{$curriculum->id}}">
-                                    <button type="button" class="btn-danger" title="Delete"> <i class="fa fa-trash" aria-hidden="true"></i></button>
+                                    <button type="button" class="btn-danger deleteBtn" title="Delete"> <i class="fa fa-trash" aria-hidden="true"></i></button>
                                 </div>
                             </div>
                         @endforeach
@@ -217,15 +227,30 @@
             });
 
 
-            var inputFieldCount = $("input[name='curriculum_name[]']").length;
-            console.log('input field count' + inputFieldCount);
+            // var inputFieldCount = $("input[name='curriculum_name[]']").length;
+            // console.log('input field count ' + inputFieldCount);
 
             function toggleButtons() {
+
+                console.log('toggle button input field count ' + $("input[name='curriculum_name[]']").length);
+
+                inputFieldCount = $("input[name='curriculum_name[]']").length;
+                console.log('toggle button input field count ' + $("input[name='curriculum_name[]']").length);
+
                 if (inputFieldCount >= 5) {
                     $("#addMoreBtn").prop("disabled", true);
                 } else {
                     $("#addMoreBtn").prop("disabled", false);
                 }
+
+                if(inputFieldCount == 1){
+                    $('.deleteBtn').prop("disabled", true);
+                    $('.deleteBtn').addClass('disabled');
+                }else{
+                    $('.deleteBtn').removeClass('disabled');
+                    $('.deleteBtn').prop("disabled", false);
+                }
+
             }
 
             function checkInputFieldCount() {
@@ -240,7 +265,7 @@
 
             $("#addMoreBtn").click(function() {
 
-                console.log('input field count' + inputFieldCount);
+                // console.log('input field count ' + inputFieldCount);
 
                 if (inputFieldCount < 5) {
                     $.ajax({
@@ -281,6 +306,7 @@
                     </div>
                 `);
                 inputFieldCount++;
+                console.log(inputFieldCount);
                 toggleButtons();
                 checkInputFieldCount();
             }

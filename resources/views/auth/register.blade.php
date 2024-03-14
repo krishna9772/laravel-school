@@ -14,34 +14,34 @@
 
     <div class="card">
         <div class="card-body register-card-body">
-            <p class="login-box-msg">Register a new membership</p>
+            {{-- <p class="login-box-msg">Register a new membership</p> --}}
 
 
             <form action="{{route('register')}}" method="post">
                 @csrf
                 <div class="mb-3">
-                    <label for="" class="form-label">Name</label>
+                    <label for="" class="form-label required">Name</label>
                     <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" placeholder="Full name">
                     @error('name')
                         <p class="text-danger">{{$message}}</p>
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label for="" class="form-label">Email</label>
+                    <label for="" class="form-label required">Email</label>
                     <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" placeholder="Email">
                     @error('email')
                         <p class="text-danger">{{$message}}</p>
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label for="" class="form-label">Password</label>
+                    <label for="" class="form-label required">Password</label>
                     <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password">
                     @error('password')
                         <p class="text-danger">{{$message}}</p>
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label for="" class="form-label">Confirm Password</label>
+                    <label for="" class="form-label required">Confirm Password</label>
                     <input type="password" name="confirm_password" class="form-control @error('confirm_password') is-invalid @enderror" placeholder="Retype password">
                     @error('confirm_password')
                         <p class="text-danger">{{$message}}</p>

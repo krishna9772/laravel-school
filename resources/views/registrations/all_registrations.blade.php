@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+
 @section('content')
 
     <div class="pt-5 d-flex justify-content-between mx-5">
@@ -52,9 +53,45 @@
                             <a href="{{route('users.edit',$user->user_id)}}" title="Edit" class="mr-3 text-decoration-none">
                                 <i class="fa fa-edit"></i>
                             </a>
-                            <a onclick="deleteUser({{$user->id}})" title="Delete" class="mr-3 text-decoration-none" style="cursor: pointer">
+                            {{-- <a onclick="deleteUser({{$user->id}})" title="Delete" class="mr-3 text-decoration-none" style="cursor: pointer">
                                 <i class="fa fa-trash"></i>
-                            </a>
+                            </a> --}}
+
+                            {{-- <div class="form-group"> --}}
+                                <a type="button" class="" data-toggle="modal" data-target="#deleteStudentModal_{{$user->id}}">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+
+                                <div class="modal fade" id="deleteStudentModal_{{$user->id}}">
+                                    <div class="modal-dialog">
+                                      <div class="modal-content">
+                                        <div class='modal-header'>
+                                            <p class='col-12 modal-title text-center'>
+                                              <span class="ml-5" style="font-size: 17px">Are you sure to delete this user?</span>
+                                              <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                                                <span aria-hidden='true'>&times;</span>
+                                              </button>
+                                            </p>
+                                          </div>
+                                        <div class="modal-body py-4">
+
+                                            {{-- <input type="text" class="form-control" value="{{ $user->user_name }}" disabled> --}}
+                                            <p class="text-center" style="font-size: 19px; font-weight:bold">
+                                                {{ $user->user_name }}
+                                            </p>
+                                        </div>
+                                        <div class="modal-footer  justify-content-center ">
+                                          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                          <button type="button" onclick="deleteUser({{$user->id}})" class="btn btn-danger">Delete</button>
+                                        </div>
+                                      </div>
+                                      <!-- /.modal-content -->
+                                    </div>
+                                    <!-- /.modal-dialog -->
+                                </div>
+                                  <!-- /.modal -->
+                            {{-- </div> --}}
+
                     </td>
                     </tr>
                 </div>
@@ -121,8 +158,35 @@
                                 gradeName,
                                 className,
                                 '<a href="' + editUrl + '" title="Edit" class="mr-3 text-decoration-none"><i class="fa fa-edit"></i></a>' +
-                                '<a onclick="deleteUser(' + user.id + ')" title="Delete" class="mr-3 text-decoration-none" style="cursor: pointer"><i class="fa fa-trash"></i></a>'
-                        ]).draw();
+                                // '<a onclick="deleteUser(' + user.id + ')" title="Delete" class="mr-3 text-decoration-none" style="cursor: pointer"><i class="fa fa-trash"></i></a>'
+                                `<a type="button" class="" data-toggle="modal" data-target="#deleteStudentModal_${user.id}">
+                                    <i class="fa fa-trash"></i>
+                                 </a>
+
+                                <div class="modal fade" id="deleteStudentModal_${user.id}">
+                                    <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class='modal-header'>
+                                            <p class='col-12 modal-title text-center'>
+                                            <span class="ml-5" style="font-size: 17px">Are you sure to delete this user?</span>
+                                            <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                                                <span aria-hidden='true'>&times;</span>
+                                            </button>
+                                            </p>
+                                        </div>
+                                        <div class="modal-body py-4">
+                                            <p class="text-center" style="font-size: 19px; font-weight:bold">
+                                                ${user.user_name}
+                                            </p>
+                                        </div>
+                                        <div class="modal-footer  justify-content-center ">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                        <button type="button" onclick="deleteUser(${user.id})" class="btn btn-danger">Delete</button>
+                                        </div>
+                                    </div>
+                                    </div>
+                            </div>`
+                            ]).draw();
                     }
 
 
@@ -140,7 +204,8 @@
                 },
                 success: function(response) {
                     if (response == 'success') {
-                        $("#usersTable").load(window.location + " #usersTable");
+                        // $("#usersTable").load(window.location + " #usersTable");
+                        window.location.href = "{{route('users.index')}}";
                     }
                 },
                 error: function(xhr, status, error) {

@@ -5,12 +5,22 @@
 
     @if (count($classes) != 0)
     <div class="mx-3 p-3">
-        <h4>{{$grade->grade_name}} classes</h4>
+
+        <div class="d-flex justify-content-between mt-3">
+            <h4>{{$grade->grade_name}} classes</h4>
+
+            <div class="">
+                <a href="{{route('classes.createNewClass',['gradeIdParameter' => $grade->id]) }}">
+                    <button class="btn btn-primary"> <i class="fa fa-plus"></i> Add Class</button>
+                </a>
+            </div>
+        </div>
+
 
         <div class="row">
             @foreach ($classes as $class)
             <div class="col-12 col-sm-6 col-md-3 mt-3">
-                <a href="">
+                <a href="" class="text-decoration-none">
                     <div class="info-box">
                     <span class="info-box-icon bg-info elevation-1">
                         <i class="fa fa-university" aria-hidden="true"></i>
@@ -18,9 +28,6 @@
 
                     <div class="info-box-content text-dark">
                         <span class="info-box-text text-lg">{{$class->class_name}}</span>
-                        <span class="info-box-number">
-                        {{$class->grade->grade_name}}
-                        </span>
                     </div>
                     <!-- /.info-box-content -->
                     </div>
@@ -37,7 +44,7 @@
                 </h4>
 
                 <div class="mt-5">
-                    <a href="{{route('classes.create')}}">
+                    <a href="{{route('classes.createNewClass',['gradeIdParameter' => $grade->id]) }}">
                         <button class="btn btn-primary"> <i class="fa fa-plus"></i> Create Class</button>
                     </a>
                 </div>

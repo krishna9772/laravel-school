@@ -1,5 +1,14 @@
 @extends('layouts.app')
 
+@section('styles')
+<style>
+    .required:after {
+      content:" *";
+      color: rgba(255, 0, 0, 0.765);
+    }
+  </style>
+@endsection
+
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-4 mt-5">
@@ -16,7 +25,33 @@
 
                 <div class="mt-4">
                     <button id="updateBtn" class="btn btn-primary mr-2">Update</button>
-                    <button id="deleteBtn" class="btn btn-danger">Delete</button>
+                    <button id="deleteBtn" class="btn btn-danger" >Delete</button>
+
+                    <div class="modal fade" id="deleteGradeModal">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class='modal-header'>
+                                <p class='col-12 modal-title text-center'>
+                                    <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                                        <span aria-hidden='true'>&times;</span>
+                                      </button><br><br>
+                                  <span class=" text-dark" style="font-size: 18px">Are you sure to delete <br>
+                                    <span class=" font-weight-bold text-dark" style="font-size: 19px" id="gradeNameInsideModal">  </span>
+                                  </span>
+
+                                </p>
+                              </div>
+
+                            <div class="modal-footer  justify-content-center ">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                              <button type="button" id="deleteBtnInsideModal" class="btn btn-danger deleteBtn">Delete</button>
+                            </div>
+                          </div>
+                          <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+
                 </div>
             </div>
 
@@ -28,7 +63,7 @@
 
                 <input type="hidden" id="idInputBox" name="id" value="">
                 <div class="form-group">
-                    <label for="" class="form-label">Name</label>
+                    <label for="" class="form-label required">Name</label>
                     <input type="text" name="name" id="nameInputBox" class="form-control" placeholder="Name of Grade">
                     <p class="text-danger" id="nameErrorMessage"></p>
                 </div>
@@ -88,25 +123,34 @@
 
             $('#deleteBtn').click(function(){
                 if($('#gradeSelect').val() != ''){
+
                     var selectedGradeId = $('#gradeSelect').val();
 
-                    $.ajax({
-                        type: 'DELETE',
-                        url: '{{ route('grades.destroy', ['grade' => ':grade']) }}'.replace(':grade', selectedGradeId),
-                        data: $(this).serialize(),
-                        success: function (response) {
-                            if(response == 'success'){
-                                window.location.href = '{{ route('grades.index') }}';
+                    var selectedGradeName = $('#gradeSelect option:selected').text();
+
+                    $('#deleteGradeModal').modal('show');
+
+                    $('#gradeNameInsideModal').text(selectedGradeName + '?');
+
+                    $('#deleteBtnInsideModal').click(function(){
+                        $.ajax({
+                            type: 'DELETE',
+                            url: '{{ route('grades.destroy', ['grade' => ':grade']) }}'.replace(':grade', selectedGradeId),
+                            data: $(this).serialize(),
+                            success: function (response) {
+                                if(response == 'success'){
+                                    window.location.href = '{{ route('grades.index') }}';
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                var err = eval("(" + xhr.responseText + ")");
+                                var response = JSON.parse(xhr.responseText);
+                                console.log(response);
+                            },
+                            failure: function (response) {
+                                console.log('faliure');
                             }
-                        },
-                        error: function(xhr, status, error) {
-                            var err = eval("(" + xhr.responseText + ")");
-                            var response = JSON.parse(xhr.responseText);
-                            console.log(response);
-                        },
-                        failure: function (response) {
-                            console.log('faliure');
-                        }
+                        });
                     });
                 }else{
                     $('#gradeSelect').addClass('is-invalid');
@@ -117,6 +161,10 @@
             $('#cancelBtn').click(function() {
                 $('#selectSection').show();
                 $('#updateGradeForm').hide();
+
+                $('#nameErrorMessage').html('');
+                $('#nameInputBox').removeClass('is-invalid');
+
             });
 
             $('#updateGradeForm').submit(function (e) {

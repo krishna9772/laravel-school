@@ -24,7 +24,7 @@ class ClassesRequest extends FormRequest
         return [
             'grade_id' => 'required',
             'name' => 'required|max:50',
-            'description' => 'required'
+            'description' => 'nullable|string'
         ];
     }
 }

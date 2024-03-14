@@ -92,7 +92,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{route('classes.create')}}" class="nav-link {{ Route::is('classes.create') ? 'active'  : '' }}">
+                    <a href="{{route('classes.createNewClass')}}" class="nav-link {{ Route::is('classes.create') ? 'active'  : '' }}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>New Class</p>
                     </a>
@@ -126,12 +126,6 @@
                       <a href="{{route('users.create')}}" class="nav-link {{ Route::is('users.create') ? 'active'  : '' }}">
                           <i class="far fa-circle nav-icon"></i>
                           <p>New Registration</p>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="{{route('users.modify')}}" class="nav-link {{ Route::is('users.modify') ? 'active'  : '' }}">
-                          <i class="far fa-circle nav-icon"></i>
-                          <p>Update Or Delete</p>
                       </a>
                     </li>
                 </ul>
@@ -201,20 +195,6 @@
                     </a>
                 </li>
               </ul>
-            </li>
-        </ul>
-
-        <ul class="nav nav-pills nav-sidebar flex-column" style="position: absolute; bottom : 20px">
-            <li>
-                <form action="{{route('logout')}}" method="post">
-                    @csrf
-                    <button type="submit" class="nav-link">
-                        <i class="nav-icon fas fa-sign-out-alt "></i>
-                        <p>
-                            Logout
-                        </p>
-                    </button>
-                </form>
             </li>
         </ul>
     </nav>

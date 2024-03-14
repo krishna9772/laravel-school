@@ -122,6 +122,19 @@
           <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
         </div>
       </li> --}}
+
+
+      {{-- <ul class="nav nav-pills nav-sidebar flex-column" style="position: absolute; bottom : 20px"> --}}
+        <li class="mr-4">
+            <form action="{{route('logout')}}" method="post">
+                @csrf
+                <button type="submit" class="nav-link border-0 bg-white">
+                    <i class="nav-icon fas fa-sign-out-alt "></i> Logout
+                </button>
+            </form>
+        </li>
+    {{-- </ul> --}}
+
       <li class="nav-item">
         <a class="nav-link" data-widget="fullscreen" href="#" role="button">
           <i class="fas fa-expand-arrows-alt"></i>

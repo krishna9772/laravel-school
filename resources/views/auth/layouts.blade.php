@@ -13,6 +13,14 @@
   <link rel="stylesheet" href="{{asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{asset('dist/css/adminlte.min.css')}}">
+
+  <style>
+    .required:after {
+      content:" *";
+      color: rgba(255, 0, 0, 0.765);
+    }
+  </style>
+
 </head>
 <body class="@yield('body_class')">
 

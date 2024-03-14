@@ -79,7 +79,7 @@
         <div class="d-flex justify-content-between ">
             <h3>All Classes</h3>
             <div class="">
-                <a href="{{route('classes.create')}}">
+                <a href="{{route('classes.createNewClass')}}">
                     <button class="btn btn-primary"> <i class="fa fa-plus"></i> New Class</button>
                 </a>
             </div>

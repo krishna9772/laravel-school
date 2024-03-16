@@ -23,7 +23,7 @@
             </div>
             <!-- /.card-header -->
             <!-- form start -->
-            <form id="addCurriculumForm">
+            <form id="addClassworkForm">
 
               <div class="card-body">
 
@@ -94,13 +94,15 @@
                     </div>
                 </div> --}}
 
+                <div id="dynamicRows"></div>
+
                 <div class="form-group">
-                    <button type="button" id="addSourceBtn" class="btn btn-success" data-toggle="modal" data-target="#modal-default"><i class="fa fa-plus"></i> Add Source</button>
-                    {{-- <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">
+                    <button type="button" id="addSourceBtn" class="btn btn-success" data-toggle="modal" data-target="#newClassworkModal"><i class="fa fa-plus"></i> Add Source</button>
+                    {{-- <button type="button" class="btn btn-default" data-toggle="modal" data-target="#newClassworkModal">
                         Launch Default Modal
                     </button> --}}
 
-                    <div class="modal fade" id="modal-default">
+                    <div class="modal fade" id="newClassworkModal">
                         <div class="modal-dialog">
                           <div class="modal-content">
                             <div class="modal-header">
@@ -111,11 +113,11 @@
                             </div>
                             <div class="modal-body py-4">
                                 <div class="d-flex justify-content-center">
-                                    <button type="button" class="mx-3 border-0 bg-white ">
+                                    <button type="button" class="mx-3 border-0 bg-white" id="urlBtn">
                                         <img src="{{asset('images/menu_icons/url image.jpg')}}" width="70px">
                                         <p class="mt-2">URL</p>
                                     </button>
-                                    <button type="button" class="mx-3 border-0 bg-white ">
+                                    <button type="button" class="mx-3 border-0 bg-white" id="fileBtn">
                                         <img src="{{asset('images/menu_icons/files (1).png')}}" width="70px">
                                         <p class="mt-2">File</p>
                                     </button>
@@ -163,10 +165,10 @@ $(document).ready(function () {
         }
     });
 
-    var initialFormHTML = $('#addCurriculumForm').html();
+    var initialFormHTML = $('#addClassworkForm').html();
 
     function restoreInitialForm() {
-        $('#addCurriculumForm').html(initialFormHTML);
+        $('#addClassworkForm').html(initialFormHTML);
         inputFieldCount = $("input[name='curriculum_name[]']").length;
 
         attachEventHandlers();
@@ -194,68 +196,176 @@ $(document).ready(function () {
             $('#nameErrorMessage').text('');
         }
 
+        var labelsAdded = false;
 
-        $('#addCurriculumForm').submit(function (e) {
-            e.preventDefault();
+        $('#urlBtn').click(function(){
+            $('#newClassworkModal').modal('hide');
 
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('curricula.store') }}',
-                data: $(this).serialize(),
-                success: function (response) {
-                    if(response == 'success'){
-                        window.location.href = '{{ route('curricula.index') }}';
-                    }
-                },
-                error: function(xhr, status, error) {
-                    var response = xhr.responseJSON;
-                    console.log(response);
+            // Check if labels have been added
+            if (!labelsAdded) {
+                // Add labels for the first time
+                var newRowWithLabels = '<div class="row">' +
+                                            '<div class="form-group col-6">' +
+                                                '<label for="" class="form-label required">Source Title</label>' +
+                                                '<input type="text" name="source_title[]" class="form-control" placeholder="Enter Source Title">' +
+                                                '<p class="text-danger curriculum-name-error"></p>' +
+                                            '</div>' +
+                                            '<div class="form-group col-6">' +
+                                                '<label for="" class="form-label required">URL Link</label>' +
+                                                '<input type="text" name="url[]" class="form-control" placeholder="Enter URL">' +
+                                            '</div>' +
+                                        '</div>';
 
-                    let gradeSelectBoxError = response.errors.grade_id ? response.errors.grade_id[0] : '';
+                $('#dynamicRows').append(newRowWithLabels);
 
-                    if (gradeSelectBoxError) {
-                        $('#gradeSelectBoxError').html(gradeSelectBoxError);
-                        $('#gradeSelect').addClass('is-invalid');
-                    } else {
-                        $('#gradeSelectBoxError').html('');
-                        $('#gradeSelect').removeClass('is-invalid');
-                    }
+                // Set labelsAdded to true
+                labelsAdded = true;
+            } else {
+                // Add input fields without labels
+                var newRowWithoutLabels = '<div class="row">' +
+                        '<div class="form-group col-6">' +
+                            '<input type="text" name="source_title[]" class="form-control" placeholder="Enter Source Title">' +
+                            '<p class="text-danger curriculum-name-error"></p>' +
+                        '</div>' +
+                        '<div class="form-group col-6">' +
+                            '<input type="text" name="url[]" class="form-control" placeholder="Enter URL">' +
+                        '</div>' +
+                    '</div>';
 
-                    $('.curriculum-name-error').text('');
-                    $('.teacher-id-error').text('');
-                    $('.form-control').removeClass('is-invalid');
+                $('#dynamicRows').append(newRowWithoutLabels);
+            }
 
-                    if (response.errors) {
-                        $.each(response.errors, function(key, value) {
-                            var errorMessage = value[0];
+            inputFieldCount++;
+            toggleButtons();
 
-                            var [fieldName, index] = key.split('.');
+            // inputFieldCount = $("input[name='source_title[]']").length;
+            // console.log('input field count is ' + inputFieldCount);
 
-                            var $row = $('[name="' + fieldName + '[]"]').eq(index).closest('.row');
-
-                            if (fieldName === 'curriculum_name') {
-                                $row.find('.curriculum-name-error').text('Curriculum name is required');
-                                $row.find('[name="' + fieldName + '[]"]').addClass('is-invalid');
-                            } else if (fieldName === 'teacher_id') {
-                                $row.find('.teacher-id-error').text('Teacher field is required');
-                                $row.find('[name="' + fieldName + '[]"]').addClass('is-invalid');
-                            }
-                        });
-                    }
-                },
-                failure: function (response) {
-                    console.log('faliure');
-                }
-            });
+            // if(inputFieldCount >= 5){
+            //     $('#addSourceBtn').prop('disabled',true);
+            // }else{
+            //     $('#addSourceBtn').prop('disabled',false);
+            // }
         });
 
-        var inputFieldCount = 1;
+        $('#fileBtn').click(function(){
+            $('#newClassworkModal').modal('hide');
+
+            // Check if labels have been added
+            if (!labelsAdded) {
+                // Add labels for the first time
+                var newRowWithLabels = '<div class="row">' +
+                                            '<div class="form-group col-6">' +
+                                                '<label for="" class="form-label required">Source Title</label>' +
+                                                '<input type="text" name="source_title[]" class="form-control" placeholder="Enter Source Title">' +
+                                                '<p class="text-danger curriculum-name-error"></p>' +
+                                            '</div>' +
+                                            '<div class="form-group col-6">' +
+                                                '<label for="" class="form-label required">URL Link</label>' +
+                                                '<input type="file" name="url[]" class="form-control" placeholder="Browse File">' +
+                                            '</div>' +
+                                        '</div>';
+
+                $('#dynamicRows').append(newRowWithLabels);
+
+                // Set labelsAdded to true
+                labelsAdded = true;
+            } else {
+                // Add input fields without labels
+                var newRowWithoutLabels = '<div class="row">' +
+                        '<div class="form-group col-6">' +
+                            '<input type="text" name="source_title[]" class="form-control" placeholder="Enter Source Title">' +
+                            '<p class="text-danger curriculum-name-error"></p>' +
+                        '</div>' +
+                        '<div class="form-group col-6">' +
+                            '<input type="text" name="url_link[]" class="form-control" placeholder="Enter URL">' +
+                        '</div>' +
+                    '</div>';
+
+                $('#dynamicRows').append(newRowWithoutLabels);
+            }
+
+            inputFieldCount++;
+            toggleButtons();
+        });
+
+        $('#removeBtn').click(function(){
+            inputFieldCount = $("input[name='source_title[]']").length;
+            console.log(inputFieldCount);
+
+            if(inputFieldCount > 1){
+                $("#dynamicRows .row:last-child").remove();
+
+            }
+            inputFieldCount--;
+
+            // console.log('input field count is ' + inputFieldCount);
+            toggleButtons();
+
+        });
+
+
+        $('#addClassworkForm').submit(function (e) {
+            e.preventDefault();
+
+            // $.ajax({
+            //     type: 'POST',
+            //     url: '{{ route('curricula.store') }}',
+            //     data: $(this).serialize(),
+            //     success: function (response) {
+            //         if(response == 'success'){
+            //             window.location.href = '{{ route('curricula.index') }}';
+            //         }
+            //     },
+            //     error: function(xhr, status, error) {
+            //         var response = xhr.responseJSON;
+            //         console.log(response);
+
+            //         let gradeSelectBoxError = response.errors.grade_id ? response.errors.grade_id[0] : '';
+
+            //         if (gradeSelectBoxError) {
+            //             $('#gradeSelectBoxError').html(gradeSelectBoxError);
+            //             $('#gradeSelect').addClass('is-invalid');
+            //         } else {
+            //             $('#gradeSelectBoxError').html('');
+            //             $('#gradeSelect').removeClass('is-invalid');
+            //         }
+
+            //         $('.curriculum-name-error').text('');
+            //         $('.teacher-id-error').text('');
+            //         $('.form-control').removeClass('is-invalid');
+
+            //         if (response.errors) {
+            //             $.each(response.errors, function(key, value) {
+            //                 var errorMessage = value[0];
+
+            //                 var [fieldName, index] = key.split('.');
+
+            //                 var $row = $('[name="' + fieldName + '[]"]').eq(index).closest('.row');
+
+            //                 if (fieldName === 'curriculum_name') {
+            //                     $row.find('.curriculum-name-error').text('Curriculum name is required');
+            //                     $row.find('[name="' + fieldName + '[]"]').addClass('is-invalid');
+            //                 } else if (fieldName === 'teacher_id') {
+            //                     $row.find('.teacher-id-error').text('Teacher field is required');
+            //                     $row.find('[name="' + fieldName + '[]"]').addClass('is-invalid');
+            //                 }
+            //             });
+            //         }
+            //     },
+            //     failure: function (response) {
+            //         console.log('faliure');
+            //     }
+            // });
+        });
+
+        var inputFieldCount = 0;
 
         function toggleButtons() {
             if (inputFieldCount >= 5) {
-                $("#addMoreBtn").prop("disabled", true);
+                $("#addSourceBtn").prop("disabled", true);
             } else {
-                $("#addMoreBtn").prop("disabled", false);
+                $("#addSourceBtn").prop("disabled", false);
             }
         }
 
@@ -279,13 +389,13 @@ $(document).ready(function () {
         });
 
 
-        $("#removeBtn").click(function () {
-            if (inputFieldCount > 1) {
-                $("#dynamicRows .row:last-child").remove();
-                inputFieldCount--;
-                toggleButtons();
-            }
-        });
+        // $("#removeBtn").click(function () {
+        //     if (inputFieldCount > 1) {
+        //         $("#dynamicRows .row:last-child").remove();
+        //         inputFieldCount--;
+        //         toggleButtons();
+        //     }
+        // });
 
         toggleButtons();
 

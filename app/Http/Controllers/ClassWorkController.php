@@ -7,6 +7,7 @@ use App\Http\Requests\ClassworkSearchRequest;
 use App\Models\Classes;
 use App\Models\ClassWork;
 use App\Models\Grade;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use PhpParser\Builder\Class_;
@@ -80,8 +81,6 @@ class ClassworkController extends Controller
         return redirect()->route('classworks.search');
     }
 
-
-
     public function search() {
 
         $grades = Grade::all();
@@ -98,6 +97,7 @@ class ClassworkController extends Controller
 
         $classworks = ClassWork::where('grade_id',$request->grade_select)
                       ->where('class_id',$request->class_select)
+                      ->where('status','1')
                       ->get();
 
         $groupedClasswork = $classworks->groupBy('topic_name');
@@ -117,7 +117,9 @@ class ClassworkController extends Controller
         $gradeName = $request->grade_name;
         $className = $request->class_name;
 
-        $classworks = ClassWork::where('topic_name', $topicName)->get();
+        $classworks = ClassWork::where('topic_name', $topicName)
+                      ->where('status','1')
+                      ->get();
         // dd($classworks->toArray());
 
         // $classworks = $classworks->groupBy('topic_name');
@@ -128,17 +130,24 @@ class ClassworkController extends Controller
 
     public function edit(string $subTopicName)
     {
-
-
         $grades = Grade::with(['classes', 'curricula' => function($query) {
             $query->where('status', '1');
         }])
         ->get();
 
-        $classworks = ClassWork::where('sub_topic_name',$subTopicName)->get();
+        $classworks = ClassWork::where('sub_topic_name',$subTopicName)->where('status','1')->get();
         // dd($classworks->toArray());
 
-        return view('classworks.edit',compact('classworks','grades'));
+        $gradeId = $classworks[0]->grade_id;
+        // dd($gradeId);
+
+        $classId = $classworks[0]->class_id;
+        // dd($classId);
+
+        $curriculumId = $classworks[0]->curriculum_id;
+        // dd($curriculumId);
+
+        return view('classworks.edit',compact('classworks','grades','gradeId','classId','curriculumId'));
     }
 
 
@@ -153,7 +162,7 @@ class ClassworkController extends Controller
 
     public function updateData(Request $request){
 
-        // dd($request->all());
+        Log::info($request->all());
 
         $classworkIds = $request->classwork_id;
         $sourceTypes = $request->source_type;
@@ -173,6 +182,8 @@ class ClassworkController extends Controller
                     'topic_name' => $topic_name,
                     'sub_topic_name' => $subTopicNames[$index],
                     'source_title' => $sourceTitles[$index],
+                    'status' => '1',
+                    'deleted_at' => null
                 ]
             );
 
@@ -194,10 +205,7 @@ class ClassworkController extends Controller
             }
 
         }
-
-
         return redirect()->route('classworks.index');
-
     }
 
 
@@ -206,6 +214,16 @@ class ClassworkController extends Controller
         ClassWork::where('sub_topic_name',$subTopicName)->delete();
 
         return response()->json("success");
-
     }
+
+    public function destroy(String $classworkId){
+
+        ClassWork::where('id',$classworkId)->update([
+            'status' => '0',
+            'deleted_at' => Carbon::now(),
+        ]);
+
+        return response()->json('success');
+    }
+
 }

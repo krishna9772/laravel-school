@@ -20,7 +20,9 @@ class ClassWork extends Model
         'file',
         'created_date',
         'updated_date',
-        'sub_topic_name'
+        'sub_topic_name',
+        'status',
+        'deleted_at'
     ];
 
     public function curriculum()

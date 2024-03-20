@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\ClassworkController;
@@ -58,6 +59,9 @@ Route::middleware(['auth'])->group(function(){
 
     Route::get('classworks/delete/with/{subTopicName}',[ClassworkController::class,'deleteWithSubTopicName'])->name('classworks.delete.with.subTopicName');
     Route::resource('classworks',ClassworkController::class);
+
+    // attendances
+    Route::resource('attendances',AttendanceController::class);
 
     // promote student
     Route::get('promote/search',[PromoteController::class,'searchGradeClass'])->name('promote.search');

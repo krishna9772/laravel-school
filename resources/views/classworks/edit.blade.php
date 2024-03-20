@@ -31,6 +31,16 @@
         box-sizing: border-box;
       }
 
+       .deleteBtn.disabled {
+            opacity: 0.7;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+
+        .deleteBtn.disabled:hover {
+            cursor: not-allowed;
+        }
+
   </style>
 @endsection
 
@@ -53,48 +63,11 @@
                 {{-- <input type="hidden" name=""> --}}
                 {{-- <input type="hidden" name="grade_id" value="{{$classwork[0]}}" > --}}
 
+                <input type="hidden" name="gradeSelect" value="{{$gradeId}}">
+                <input type="hidden" name="classSelect" value="{{$classId}}">
+                <input type="hidden" name="curriculumSelect" value="{{$curriculumId}}">
+
               <div class="card-body">
-
-                <div class="form-group">
-                    <label for="" class="form-label required">Select Grade</label>
-                    <select name="gradeSelect" id="gradeSelect" class="form-control">
-                        <option value="">Select Grade</option>
-                        @foreach ($grades as $grade)
-                            <option value="{{$grade->id}}" @if($classworks[0]->grade_id == $grade->id) selected @endif >{{$grade->grade_name}}</option>
-                        @endforeach
-                    </select>
-                    <p class="text-danger mt-1" id="gradeSelectError"></p>
-                </div>
-
-                {{-- <div class="form-group">
-                    <label for="" class="form-label">Curriculu select Grade</label>
-                    <select name="" id="" class="form-control">
-                        <option value="">Select Curr</option>
-                        @foreach ($grades as $grade)
-                            @foreach ($grade->curricula as $curriculum)
-                            <option value="{{$curriculum->id}}">{{$curriculum->curriculum_name}}</option>
-                            @endforeach
-
-                        @endforeach
-                    </select>
-                    <p class="text-danger mt-1" id="selectBoxError1"></p>
-                </div> --}}
-
-                <div class="form-group">
-                    <label for="" class="form-label">Select Class</label>
-                    <select name="classSelect" id="classSelect" class="form-control">
-                        <option value="">Select Class</option>
-                    </select>
-                    <p class="text-danger mt-1" id="classSelectError"></p>
-                </div>
-
-                <div class="form-group">
-                    <label for="" class="form-label">Select Curriculum</label>
-                    <select name="curriculumSelect" id="curriculumSelect" class="form-control">
-                        <option value="">Select Curriculum</option>
-                    </select>
-                    <p class="text-danger mt-1" id="curriculumSelectError"></p>
-                </div>
 
                 <div class="form-group">
                     <label for="" class="form-label required">Main Topic Name</label>
@@ -111,35 +84,46 @@
 
                         <input type="hidden" name="classwork_id[]" value="{{$classwork->id}}">
 
-                        <div class="form-group">
-                            <label for="">Sub Topic Name</label>
-                            <input type="text" name="sub_topic_name[]" id="" value="{{$classwork->sub_topic_name}}" class="form-control">
+                        <div class="row">
+                            <div class="form-group col-11">
+                                <label for="" class="required">Sub Topic Name</label>
+                                <input type="text" name="sub_topic_name[]" id="" value="{{$classwork->sub_topic_name}}" class="form-control">
+                            </div>
+                            <div class="col-1 pl-0" style="margin-top: 30px">
+                                <div class=" mt-2 pr-2  deleteBtn" data-classwork-id="{{$classwork->id}}">
+                                    <button type="button" class="btn-danger" title="Delete"> <i class="fa fa-trash" aria-hidden="true"></i></button>
+                                </div>
+                            </div>
                         </div>
+
 
                         <div class="row">
                             <div class="form-group col-6">
-                                <label for="">Source Title</label>
+                                <label for="" class="required">Source Title</label>
                                 <input type="text" name="source_title[]" id="" value="{{$classwork->source_title}}" class="form-control">
                             </div>
                             <div class="form-group col-6">
                                 @if ($classwork->url != null)
                                     <input type="hidden" name="file[]" value="">
                                     <input type="hidden" name="source_type[]" value="url">
-                                    <label for="">URL</label>
+                                    <label for="" class="required">URL</label>
                                     <input type="text" name="url[]" id="" class="form-control" value="{{$classwork->url}}">
                                 @endif
 
                                 <div style="position: relative;">
-                                    @if($classwork->file != null)
+                                    @if($classwork->file != null || $classwork->file != '')
 
-                                    <label for="exampleInputFile">File input</label>
+                                    <input type="hidden" name="url[]" value="">
+                                    <input type="hidden" name="source_type[]" value="file">
+
+                                    <label for="exampleInputFile" class="required">File</label>
                                     <div class="input-group">
                                       <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="exampleInputFile">
+                                        <input type="file" class="custom-file-input" name="file[]" id="exampleInputFile" value="{{$classwork->file}}">
                                         <label class="custom-file-label" for="exampleInputFile">{{$classwork->file}}</label>
                                       </div>
                                     </div>
-{{--
+                                        {{--
                                         <input type="hidden" name="url[]" value="">
                                         <input type="hidden" name="source_type[]" value="file"> --}}
                                         {{-- <span>{{$classwork->file}}</span> --}}
@@ -150,8 +134,6 @@
                                     @endif
 
                                 </div>
-
-
                             </div>
 
                             {{-- input text or file  --}}
@@ -196,7 +178,7 @@
                       </div>
                       <!-- /.modal -->
 
-                    <button type="button" id="removeBtn" class="btn btn-danger"> <i class="fa fa-minus"></i> Remove</button>
+                    {{-- <button type="button" id="removeBtn" class="btn btn-danger"> <i class="fa fa-minus"></i> Remove</button> --}}
                 </div>
 
                 <div class="mt-4">
@@ -240,26 +222,6 @@
 <script>
 
 
-
-// document.addEventListener("DOMContentLoaded", function() {
-
-//   const fileInput = document.getElementById('fileInput');
-//   const fileNameInput = document.getElementById('fileName');
-//   const uploadIcon = document.getElementById('uploadIcon');
-
-
-//   uploadIcon.addEventListener('click', function() {
-
-//     fileInput.click();
-//   });
-
-
-//   fileInput.addEventListener('change', function() {
-
-//     fileNameInput.value = fileInput.files[0].name;
-//   });
-// });
-
 $(document).ready(function () {
 
     $.ajaxSetup({
@@ -274,6 +236,21 @@ $(document).ready(function () {
     function restoreInitialForm() {
         $('#updateClassworkForm').html(initialFormHTML);
         inputFieldCount = $("input[name='curriculum_name[]']").length;
+
+
+        $.ajax({
+            type: 'POST',
+            url: '{{ route('classworks.updateData')}}',
+            data: $('#updateClassworkForm').serialize(),
+            success: function(response) {
+                console.log('form restores initial state');
+            },
+            error: function(xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                var response = JSON.parse(xhr.responseText);
+                    console.log(response);
+            }
+        });
 
         attachEventHandlers();
     }
@@ -300,7 +277,41 @@ $(document).ready(function () {
             $('#nameErrorMessage').text('');
         }
 
-        var labelsAdded = false;
+
+        $('#dynamicRows').on('click', '.deleteBtn', function () {
+            var classworkId = $(this).data('classwork-id');
+            var row = $(this).closest('.newAddedRows');
+            row.remove();
+
+
+
+            // if(inputFieldCount > 1){
+                // $("#dynamicRows .newAddedRows:last-child").remove();
+            // }
+
+            --inputFieldCount;
+            toggleButtons();
+
+            console.log('input field count' + inputFieldCount);
+
+            console.log('classwork id is ' + classworkId);
+
+            $.ajax({
+                type: 'DELETE',
+                url: '{{route('classworks.destroy',['classwork' => ':classwork']) }}'.replace(':classwork', classworkId),
+                success: function (response) {
+                    if(response == 'success'){
+                        console.log('deleted successfully');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    var response = JSON.parse(xhr.responseText);
+                        console.log(response);
+                }
+            });
+        });
+
 
         $('#urlBtn').click(function(){
 
@@ -309,7 +320,7 @@ $(document).ready(function () {
                     url: "{{ route('classworks.getMaxId') }}",
                     method: 'GET',
                     success: function(response) {
-                        var maxId = parseInt(response) + 1;
+                        var maxId = parseInt(response) + 2;
                         addNewUrlRow(maxId);
                     },
                     error: function(xhr, status, error) {
@@ -321,38 +332,45 @@ $(document).ready(function () {
 
         });
 
-        $('#dynamicRows').on('click', '#uploadIcon', function() {
-            const fileInput = $(this).closest('.file-input-container').find('input[type="file"]');
-            fileInput.click(); // Trigger click on file input
-          });
-
-
-          $('#dynamicRows').on('change', 'input[type="file"]', function() {
-            console.log('hleo');
-            const fileNameInput = $(this).closest('.file-input-container').find('.file-input');
-            // Use either technique to update filename display (explained earlier)
-            fileNameInput.textContent = this.files[0].name;
-            // Or
-            const tempElement = document.createElement('span');
-            tempElement.textContent = this.files[0].name;
-            fileNameInput.textContent = tempElement.textContent;
-          });
+        $('#fileBtn').click(function(){
+            if (inputFieldCount < 5) {
+                $.ajax({
+                    url: "{{ route('classworks.getMaxId') }}",
+                    method: 'GET',
+                    success: function(response) {
+                        var maxId = parseInt(response) + 1;
+                        addNewFileRow(maxId);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Failed to fetch maximum ID:', error);
+                        // Handle error
+                    }
+                });
+            }
+        })
 
 
         function addNewUrlRow(classworkId){
             $('#newClassworkModal').modal('hide');
 
-            // Check if labels have been added
-            if (!labelsAdded) {
 
-                var newRowWithLabels = `
+
+
+                var newUrlRow = `
                                     <div class="newAddedRows">
                                         <input type="hidden" name="source_type[]" value="url">
-                                            <input type="hidden" name="classwork_id[]" value="${classworkId}"
+                                            <input type="hidden" name="classwork_id[]" value="${classworkId}">
                                             <input type="hidden" name="file[]" value="">
-                                            <div class="form-group">
-
-                                                <input type="text" name="sub_topic_name[]" id="" class="form-control" placeholder="Enter Sub Topic Name">
+                                            <div class="row">
+                                                <div class="form-group col-11">
+                                                    <label for="" class="required">Sub Topic Name</label>
+                                                    <input type="text" name="sub_topic_name[]" id="" class="form-control" placeholder="Enter Sub Topic Name">
+                                                </div>
+                                                <div class="col-1 pl-0" style="margin-top: 30px">
+                                                    <div class=" mt-2 pr-2  deleteBtn" data-classwork-id="{{$classwork->id}}">
+                                                        <button type="button" class="btn-danger" title="Delete"> <i class="fa fa-trash" aria-hidden="true"></i></button>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="row">
                                             <div class="form-group col-6">
@@ -367,92 +385,63 @@ $(document).ready(function () {
                                         </div>
                                         </div>`;
 
-                $('#dynamicRows').append(newRowWithLabels);
+                $('#dynamicRows').append(newUrlRow);
 
-                // Set labelsAdded to true
-                labelsAdded = true;
-            } else {
-                // Add input fields without labels
-                var newRowWithoutLabels = `<div class="newAddedRows">
-                <input type="hidden" name="source_type[]" value="url">
-                        <input type="hidden" name="classwork_id[]" value="${classworkId}"
-                        <input type="hidden" name="file[]" value="">
-                        <div class="form-group">
-                            <input type="text" name="sub_topic_name[]" id="" class="form-control" placeholder="Enter Sub Topic Name">
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-6">
-                                <input type="text" name="source_title[]" class="form-control" placeholder="Enter Source Title">
-                                <p class="text-danger curriculum-name-error"></p>
-                            </div>
-                            <div class="form-group col-6">
-                                <input type="text" name="url[]" class="form-control" placeholder="Enter URL">
-                            </div>
-                        </div>
-                        </div>`;
+                inputFieldCount++;
+                toggleButtons();
 
-                $('#dynamicRows').append(newRowWithoutLabels);
             }
 
-            inputFieldCount++;
-            toggleButtons();
+        function addNewFileRow(classworkId){
+                $('#newClassworkModal').modal('hide');
+
+                // Check if labels have been added
+
+                    // Add labels for the first time
 
 
+
+                    var newFileRow = `<div class="newAddedRows">
+                                            <input type="hidden" name="source_type[]" value="file">
+                                            <input type="hidden" name="classwork_id[]" value="${classworkId}">
+                                            <input type="hidden" name="url[]" value="">
+                                            <div class="row">
+                                                <div class="form-group col-11 required">
+                                                    <label for="">Sub Topic Name</label>
+                                                    <input type="text" name="sub_topic_name[]" id="" class="form-control" placeholder="Enter Sub Topic Name">
+                                                </div>
+                                                <div class="col-1 pl-0" style="margin-top: 30px">
+                                                    <div class=" mt-2 pr-2  deleteBtn" data-classwork-id="{{$classwork->id}}">
+                                                        <button type="button" class="btn-danger" title="Delete"> <i class="fa fa-trash" aria-hidden="true"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-6">
+                                                    <input type="text" name="source_title[]" class="form-control" placeholder="Enter Source Title">
+                                                    <p class="text-danger curriculum-name-error"></p>
+                                                </div>
+                                                <div class="form-group col-6">
+                                                    <div class="custom-file">
+                                                        <input type="file" name="file[]" class="custom-file-input" id="customFile">
+                                                        <label for="customFile" class="custom-file-label">No file chosen</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </div>`;
+
+
+                    $('#dynamicRows').append(newFileRow);
+
+                    $('.custom-file-input').change(function() {
+                        var filename = $(this).val().split('\\').pop(); // Get filename from path
+                        $(this).next('.custom-file-label').html(filename);
+                    });
+
+                inputFieldCount++;
+                toggleButtons();
         }
 
-
-        // var labelAdded = false;
-
-        $('#fileBtn').click(function(){
-            $('#newClassworkModal').modal('hide');
-
-            // Check if labels have been added
-            if (!labelsAdded) {
-                // Add labels for the first time
-                var newRowWithLabels = `<div class="newAddedRows">
-                                        <input type="hidden" name="source_type[]" value="file">
-                                        <input type="hidden" name="url[]" value="">
-                                        <div class="form-group">
-                                            <input type="text" name="sub_topic_name[]" id="" class="form-control" placeholder="Enter Sub Topic Name">
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-6">
-                                                <input type="text" name="source_title[]" class="form-control" placeholder="Enter Source Title">
-                                                <p class="text-danger curriculum-name-error"></p>
-                                            </div>
-                                            <div class="form-group col-6">
-                                                <input type="file" name="file[]" class="form-control">
-                                            </div>
-                                        </div>
-                                        </div>`;
-
-                labelsAdded = true;
-            }else{
-                var newRowWithoutLabels = `
-                <div class="newAddedRows">
-                    <input type="hidden" name="source_type[]" value="file">
-                    <input type="hidden" name="url[]" value="">
-                    <div class="form-group">
-                        <input type="text" name="sub_topic_name[]" id="" class="form-control" placeholder="Enter Sub Topic Name">
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-6">
-                            <input type="text" name="source_title[]" class="form-control" placeholder="Enter Source Title">
-                            <p class="text-danger curriculum-name-error"></p>
-                        </div>
-                        <div class="form-group col-6">
-                            <input type="file" name="file[]" class="form-control" placeholder="Browse File">
-                        </div>
-                    </div>
-                </div>`;
-
-                $('#dynamicRows').append(newRowWithoutLabels);
-            }
-
-
-            inputFieldCount++;
-            toggleButtons();
-        });
 
         $('#removeBtn').click(function(){
             inputFieldCount = $("input[name='source_title[]']").length;
@@ -469,17 +458,7 @@ $(document).ready(function () {
         });
 
 
-        function removeClassCurriculumErrors() {
-            $('#classSelect').removeClass('is-invalid');
-            $('#classSelectError').html('');
-            $('#curriculumSelect').removeClass('is-invalid');
-            $('#curriculumSelectError').html('');
-        }
 
-        $('#gradeSelect').change(function () {
-
-            removeClassCurriculumErrors();
-        });
 
 
 
@@ -499,17 +478,7 @@ $(document).ready(function () {
         }
 
 
-        $('#gradeSelect').change(function () {
-            validateField($('#gradeSelect'), $('#gradeSelectError'), 'Grade select field is required');
-        });
 
-        $('#classSelect').change(function () {
-            validateField($('#classSelect'), $('#classSelectError'), 'Class select field is required');
-        });
-
-        $('#curriculumSelect').change(function () {
-            validateField($('#curriculumSelect'), $('#curriculumSelectError'), 'Curriculum select field is required');
-        });
 
         $('#topicNameInputBox').on('input', function () {
             validateField($('#topicNameInputBox'), $('#topicNameError'), 'Topic Name field is required');
@@ -542,10 +511,6 @@ $(document).ready(function () {
         $('#updateClassworkForm').submit(function (e) {
             e.preventDefault();
 
-
-            validateField($('#gradeSelect'), $('#gradeSelectError'), 'Grade select field is required');
-            validateField($('#classSelect'), $('#classSelectError'), 'Class select field is required');
-            validateField($('#curriculumSelect'), $('#curriculumSelectError'), 'Curriculum select field is required');
             validateField($('#topicNameInputBox'), $('#topicNameError'), 'Topic Name field is required');
 
             var sourceTitles = $("input[name='source_title[]']");
@@ -581,121 +546,41 @@ $(document).ready(function () {
 
 
 
-            if ($('#gradeSelect').val() != '' && $('#classSelect').val() != '' && $('#curriculumSelect').val() != '' && $('#topicNameInputBox').val() != '') {
+            if ( $('#topicNameInputBox').val() != '') {
 
                 this.submit();
             }
         });
 
-        var inputFieldCount = 0;
+        // var inputFieldCount = 0;
 
         function toggleButtons() {
+
+
+
+            inputFieldCount = $("input[name='sub_topic_name[]']").length;
+            console.log('input field count is ' + inputFieldCount);
+
             if (inputFieldCount >= 5) {
                 $("#addSourceBtn").prop("disabled", true);
             } else {
                 $("#addSourceBtn").prop("disabled", false);
             }
+
+            if(inputFieldCount == 1){
+                $('.deleteBtn').prop("disabled", true);
+                $('.deleteBtn').addClass('disabled');
+            }else{
+                $('.deleteBtn').removeClass('disabled');
+                $('.deleteBtn').prop("disabled", false);
+            }
+
         }
 
         toggleButtons();
 
         $('#cancelBtn').click(function(){
             restoreInitialForm();
-        });
-
-
-        var initialGradeId = $('#gradeSelect').val();
-        var initialClassId = "{{ $classworks[0]->class_id }}";
-        var initialCurriculumId = "{{ $classworks[0]->curriculum_id }}";
-        // console.log('initial class id is ' + initialClassId);
-        updateClassOptions(initialGradeId, initialClassId,initialCurriculumId);
-
-        $('#gradeSelect').change(function() {
-            var gradeId = $(this).val();
-            updateClassOptions(gradeId, '','');
-        });
-
-        function updateClassOptions(gradeId, selectedClassId,selectedCurriculumId) {
-            $('#classSelect').empty();
-            $('#curriculumSelect').empty();
-
-            if (gradeId === '') {
-                $('#classSelect').append($('<option>', {
-                    value: '',
-                    text: 'Select Class',
-                }));
-
-                $('#curriculumSelect').append($('<option>', {
-                    value: '',
-                    text: 'Select Curriculum',
-                }));
-                return;
-            }
-
-            @foreach ($grades as $grade)
-            if ('{{$grade->id}}' === gradeId) {
-                @foreach ($grade->classes as $class)
-                    // console.log({{$class->id}});
-
-                var selected = selectedClassId == '{{$class->id}}';
-                console.log(selectedClassId);
-                $('#classSelect').append($('<option>', {
-                    value: '{{$class->id}}',
-                    text: '{{$class->class_name}}',
-                    selected: selected
-                }));
-                @endforeach
-            }
-            @endforeach
-
-            if ($('#classSelect option').length === 0) {
-                $('#classSelect').append($('<option>', {
-                    value: '',
-                    text: 'No Classes in this grade'
-                }));
-            }
-
-            @foreach ($grades as $grade)
-            if ('{{$grade->id}}' === gradeId) {
-                @foreach ($grade->curricula as $curriculum)
-                    // console.log({{$class->id}});
-
-                var selected = selectedCurriculumId == '{{$curriculum->id}}';
-                console.log(selectedCurriculumId);
-                $('#curriculumSelect').append($('<option>', {
-                    value: '{{$curriculum->id}}',
-                    text: '{{$curriculum->curriculum_name}}',
-                    selected: selected
-                }));
-                @endforeach
-            }
-            @endforeach
-
-            if ($('#curriculumSelect option').length === 0) {
-                $('#curriculumSelect').append($('<option>', {
-                    value: '',
-                    text: 'No Curricula in this grade'
-                }));
-            }
-        }
-
-
-        $('#classSelect').click(function() {
-            var selectedGrade = $('#gradeSelect').val();
-            if (selectedGrade === '') {
-                $('#selectBoxError2').text('First, select a grade');
-            } else {
-                $('#selectBoxError2').text('');
-            }
-        });
-
-        $('#curriculumSelect').click(function() {
-            var selectedGrade = $('#gradeSelect').val();
-            if (selectedGrade === '') {
-                $('#selectBoxError3').text('First, select a grade');
-            } else {
-                $('#selectBoxError3').text('');
-            }
         });
 
     }
@@ -709,7 +594,7 @@ $(document).ready(function () {
 });
 
 
-
+// admin lte form
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?module.exports=t():"function"==typeof define&&define.amd?define(t):(e=e||self).bsCustomFileInput=t()}(this,function(){"use strict";var s={CUSTOMFILE:'.custom-file input[type="file"]',CUSTOMFILELABEL:".custom-file-label",FORM:"form",INPUT:"input"},l=function(e){if(0<e.childNodes.length)for(var t=[].slice.call(e.childNodes),n=0;n<t.length;n++){var l=t[n];if(3!==l.nodeType)return l}return e},u=function(e){var t=e.bsCustomFileInput.defaultText,n=e.parentNode.querySelector(s.CUSTOMFILELABEL);n&&(l(n).textContent=t)},n=!!window.File,r=function(e){if(e.hasAttribute("multiple")&&n)return[].slice.call(e.files).map(function(e){return e.name}).join(", ");if(-1===e.value.indexOf("fakepath"))return e.value;var t=e.value.split("\\");return t[t.length-1]};function d(){var e=this.parentNode.querySelector(s.CUSTOMFILELABEL);if(e){var t=l(e),n=r(this);n.length?t.textContent=n:u(this)}}function v(){for(var e=[].slice.call(this.querySelectorAll(s.INPUT)).filter(function(e){return!!e.bsCustomFileInput}),t=0,n=e.length;t<n;t++)u(e[t])}var p="bsCustomFileInput",m="reset",h="change";return{init:function(e,t){void 0===e&&(e=s.CUSTOMFILE),void 0===t&&(t=s.FORM);for(var n,l,r=[].slice.call(document.querySelectorAll(e)),i=[].slice.call(document.querySelectorAll(t)),o=0,u=r.length;o<u;o++){var c=r[o];Object.defineProperty(c,p,{value:{defaultText:(n=void 0,n="",(l=c.parentNode.querySelector(s.CUSTOMFILELABEL))&&(n=l.textContent),n)},writable:!0}),d.call(c),c.addEventListener(h,d)}for(var f=0,a=i.length;f<a;f++)i[f].addEventListener(m,v),Object.defineProperty(i[f],p,{value:!0,writable:!0})},destroy:function(){for(var e=[].slice.call(document.querySelectorAll(s.FORM)).filter(function(e){return!!e.bsCustomFileInput}),t=[].slice.call(document.querySelectorAll(s.INPUT)).filter(function(e){return!!e.bsCustomFileInput}),n=0,l=t.length;n<l;n++){var r=t[n];u(r),r[p]=void 0,r.removeEventListener(h,d)}for(var i=0,o=e.length;i<o;i++)e[i].removeEventListener(m,v),e[i][p]=void 0}}});
 
 $(function () {

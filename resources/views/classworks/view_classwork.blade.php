@@ -70,9 +70,12 @@
                 <h2 class="mb-0">
                     <button class="btn btn-block text-left accordion-btn " type="button" data-toggle="collapse" data-target="#collapse{{$classwork[0]->id}}" aria-expanded="false" aria-controls="collapse{{$classwork[0]->id}}">
                         {{$classwork[0]->sub_topic_name}}
+
+
                         <a href="{{route('classworks.edit',$classwork[0]->sub_topic_name)}}" onclick="event.stopPropagation();">
                             <i class="fa fa-edit mr-2 ml-3" aria-hidden="true"></i>
                         </a>
+
                         {{-- <a href="">
                             <i class="fa fa-trash text-danger" aria-hidden="true"></i>
                         </a> --}}

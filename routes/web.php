@@ -6,8 +6,10 @@ use App\Http\Controllers\ClassworkController;
 use App\Http\Controllers\CurriculumController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GradeController;
+use App\Http\Controllers\PromoteController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserControlller;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 
@@ -45,8 +47,20 @@ Route::middleware(['auth'])->group(function(){
     Route::resource('curricula',CurriculumController::class);
 
     // class work
-    Route::get('search',[ClassworkController::class,'search'])->name('classworks.search');
-    Route::post('search-results',[ClassworkController::class,'searchResults'])->name('classworks.search_results');
+    Route::get('classwork/search',[ClassworkController::class,'search'])->name('classworks.search');
+    Route::post('classwork/search-results',[ClassworkController::class,'searchResults'])->name('classworks.search_results');
+    Route::get('classworks/max-id', [ClassworkController::class,'getMaxId'])->name('classworks.getMaxId');
+    Route::post('classworks/updatedata',[ClassworkController::class,'updateData'])->name('classworks.updateData');
+
+    // Route::get('classworks/delete/with/{subTopicName}',function(){
+    //     Log::info('hello world ');
+    // })->name('classworks.delete.with.subTopicName');
+
+    Route::get('classworks/delete/with/{subTopicName}',[ClassworkController::class,'deleteWithSubTopicName'])->name('classworks.delete.with.subTopicName');
     Route::resource('classworks',ClassworkController::class);
 
+    // promote student
+    Route::get('promote/search',[PromoteController::class,'searchGradeClass'])->name('promote.search');
+    Route::post('promote/search/results',[PromoteController::class,'searchResults'])->name('promote.search.results');
+    Route::post('promote/student',[PromoteController::class,'promoteStudent'])->name('promote.student');
 });

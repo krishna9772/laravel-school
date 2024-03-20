@@ -15,7 +15,8 @@
                 </div>
 
                 <div class="card-body">
-                    <form id="classworkSearchForm">
+                    <form id="classworkSearchForm" action="{{route('classworks.search_results')}}" method="POST">
+                        @csrf
                         <div class="form-group">
                             <label for="" class="form-label required">Select Grade</label>
                             <select name="grade_select" id="gradeSelect" class="form-control">
@@ -76,52 +77,52 @@
         });
 
         $('#classworkSearchForm').submit(function (e) {
-            e.preventDefault();
+            // e.preventDefault();
 
             // var classId = $('#classId').val();
             // console.log(classId);
 
-            $.ajax({
-                type: 'POST',
-                url: '{{route('classworks.search_results')}}',
-                data: $(this).serialize(),
-                success: function (response) {
+            // $.ajax({
+            //     type: 'POST',
+            //     url: '{{route('classworks.search_results')}}',
+            //     data: $(this).serialize(),
+            //     success: function (response) {
 
-                    console.log('success');
+            //         console.log('success');
 
-                    if(response == 'success'){
-                        // window.location.href = '{{ route('classworks.index') }}';
-                    }
-                    },
-                error: function(xhr, status, error) {
-                    var err = eval("(" + xhr.responseText + ")");
-                    var response = JSON.parse(xhr.responseText);
-                        console.log(response);
+            //         if(response == 'success'){
+            //             // window.location.href = '{{ route('classworks.index') }}';
+            //         }
+            //         },
+            //     error: function(xhr, status, error) {
+            //         var err = eval("(" + xhr.responseText + ")");
+            //         var response = JSON.parse(xhr.responseText);
+            //             console.log(response);
 
-                    let gradeSelectBoxError = response.errors.grade_select ? response.errors.grade_select[0] : '';
-                    let classSelectBoxError = response.errors.class_select ? response.errors.class_select[0] : '';
+            //         let gradeSelectBoxError = response.errors.grade_select ? response.errors.grade_select[0] : '';
+            //         let classSelectBoxError = response.errors.class_select ? response.errors.class_select[0] : '';
 
-                    if (gradeSelectBoxError) {
-                        $('#gradeSelectBoxError').html(gradeSelectBoxError);
-                        $('#gradeSelect').addClass('is-invalid');
-                    } else {
-                        $('#gradeSelectBoxError').html('');
-                        $('#gradeSelect').removeClass('is-invalid');
-                    }
+            //         if (gradeSelectBoxError) {
+            //             $('#gradeSelectBoxError').html(gradeSelectBoxError);
+            //             $('#gradeSelect').addClass('is-invalid');
+            //         } else {
+            //             $('#gradeSelectBoxError').html('');
+            //             $('#gradeSelect').removeClass('is-invalid');
+            //         }
 
-                    if (classSelectBoxError) {
-                        $('#classSelectBoxError').html(classSelectBoxError);
-                        $('#classSelect').addClass('is-invalid');
-                    } else {
-                        $('#classSelectBoxError').html('');
-                        $('#classSelect').removeClass('is-invalid');
-                    }
+            //         if (classSelectBoxError) {
+            //             $('#classSelectBoxError').html(classSelectBoxError);
+            //             $('#classSelect').addClass('is-invalid');
+            //         } else {
+            //             $('#classSelectBoxError').html('');
+            //             $('#classSelect').removeClass('is-invalid');
+            //         }
 
-                },
-                failure: function (response) {
-                    console.log('faliure');
-                }
-            });
+            //     },
+            //     failure: function (response) {
+            //         console.log('faliure');
+            //     }
+            // });
         });
 
 

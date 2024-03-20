@@ -6,6 +6,31 @@
       content:" *";
       color: rgba(255, 0, 0, 0.765);
     }
+
+
+    .upload-icon {
+        cursor: pointer;
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 20px;
+        height: 20px;
+        background-size: cover;
+      }
+
+
+      .file-input-container {
+        position: relative;
+        width: 200px;
+      }
+
+      .file-input {
+        width: 100%;
+        padding-right: 25px;
+        box-sizing: border-box;
+      }
+
   </style>
 @endsection
 
@@ -19,12 +44,14 @@
           <!-- general form elements -->
           <div class="card card-primary">
             <div class="card-header">
-              <h3 class="card-title">Add New Classwork</h3>
+              <h3 class="card-title">Edit Classwork</h3>
             </div>
             <!-- /.card-header -->
             <!-- form start -->
-            <form id="addClassworkForm" method="POST" action="{{route('classworks.store')}}" enctype="multipart/form-data">
+            <form id="updateClassworkForm" method="POST" action="{{route('classworks.updateData')}}" enctype="multipart/form-data">
                 @csrf
+                {{-- <input type="hidden" name=""> --}}
+                {{-- <input type="hidden" name="grade_id" value="{{$classwork[0]}}" > --}}
 
               <div class="card-body">
 
@@ -33,7 +60,7 @@
                     <select name="gradeSelect" id="gradeSelect" class="form-control">
                         <option value="">Select Grade</option>
                         @foreach ($grades as $grade)
-                            <option value="{{$grade->id}}">{{$grade->grade_name}}</option>
+                            <option value="{{$grade->id}}" @if($classworks[0]->grade_id == $grade->id) selected @endif >{{$grade->grade_name}}</option>
                         @endforeach
                     </select>
                     <p class="text-danger mt-1" id="gradeSelectError"></p>
@@ -54,7 +81,7 @@
                 </div> --}}
 
                 <div class="form-group">
-                    <label for="" class="form-label required">Select Class</label>
+                    <label for="" class="form-label">Select Class</label>
                     <select name="classSelect" id="classSelect" class="form-control">
                         <option value="">Select Class</option>
                     </select>
@@ -62,7 +89,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="" class="form-label required">Select Curriculum</label>
+                    <label for="" class="form-label">Select Curriculum</label>
                     <select name="curriculumSelect" id="curriculumSelect" class="form-control">
                         <option value="">Select Curriculum</option>
                     </select>
@@ -71,11 +98,60 @@
 
                 <div class="form-group">
                     <label for="" class="form-label required">Main Topic Name</label>
-                    <input type="text" name="topic_name" id="topicNameInputBox" class="form-control" placeholder="Enter Main Topic Name">
+                    <input type="text" name="topic_name" id="topicNameInputBox" value="{{$classworks[0]->topic_name}}" class="form-control" placeholder="Enter Main Topic Name">
                     <p class="text-danger" id="topicNameError"></p>
                 </div>
 
-                <div id="dynamicRows"></div>
+                <div id="dynamicRows">
+
+
+                    @foreach ($classworks as $classwork)
+
+                    <div class="newAddedRows">
+
+                        <input type="hidden" name="classwork_id[]" value="{{$classwork->id}}">
+
+                        <div class="form-group">
+                            <label for="">Sub Topic Name</label>
+                            <input type="text" name="sub_topic_name[]" id="" value="{{$classwork->sub_topic_name}}" class="form-control">
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-6">
+                                <label for="">Source Title</label>
+                                <input type="text" name="source_title[]" id="" value="{{$classwork->source_title}}" class="form-control">
+                            </div>
+                            <div class="form-group col-6">
+                                @if ($classwork->url != null)
+                                    <input type="hidden" name="file[]" value="">
+                                    <input type="hidden" name="source_type[]" value="url">
+                                    <label for="">URL</label>
+                                    <input type="text" name="url[]" id="" class="form-control" value="{{$classwork->url}}">
+                                @endif
+
+                                <div style="position: relative;">
+                                    @if($classwork->file != null)
+                                        <input type="hidden" name="url[]" value="">
+                                        <input type="hidden" name="source_type[]" value="file">
+                                        {{-- <span>{{$classwork->file}}</span> --}}
+                                        <label for="">File</label>
+                                        <input type="file" class="form-control" name="file[]" id="fileInput">
+                                        <p>{{$classwork->file}}</p>
+
+                                    @endif
+
+                                </div>
+
+
+                            </div>
+
+                            {{-- input text or file  --}}
+                        </div>
+
+                    </div>
+
+                    @endforeach
+                </div>
 
                 <div class="form-group">
                     <button type="button" id="addSourceBtn" class="btn btn-success" data-toggle="modal" data-target="#newClassworkModal"><i class="fa fa-plus"></i> Add Source</button>
@@ -122,6 +198,8 @@
             </form>
           </div>
 
+
+          {{-- error modal  --}}
           <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
@@ -141,7 +219,6 @@
             </div>
           </div>
 
-
         </div>
       </div>
     </div>
@@ -153,6 +230,27 @@
 
 <script>
 
+
+
+document.addEventListener("DOMContentLoaded", function() {
+
+  const fileInput = document.getElementById('fileInput');
+  const fileNameInput = document.getElementById('fileName');
+  const uploadIcon = document.getElementById('uploadIcon');
+
+
+  uploadIcon.addEventListener('click', function() {
+
+    fileInput.click();
+  });
+
+
+  fileInput.addEventListener('change', function() {
+
+    fileNameInput.value = fileInput.files[0].name;
+  });
+});
+
 $(document).ready(function () {
 
     $.ajaxSetup({
@@ -161,10 +259,11 @@ $(document).ready(function () {
         }
     });
 
-    var initialFormHTML = $('#addClassworkForm').html();
+
+    var initialFormHTML = $('#updateClassworkForm').html();
 
     function restoreInitialForm() {
-        $('#addClassworkForm').html(initialFormHTML);
+        $('#updateClassworkForm').html(initialFormHTML);
         inputFieldCount = $("input[name='curriculum_name[]']").length;
 
         attachEventHandlers();
@@ -195,25 +294,65 @@ $(document).ready(function () {
         var labelsAdded = false;
 
         $('#urlBtn').click(function(){
+
+            if (inputFieldCount < 5) {
+                $.ajax({
+                    url: "{{ route('classworks.getMaxId') }}",
+                    method: 'GET',
+                    success: function(response) {
+                        var maxId = parseInt(response) + 1;
+                        addNewUrlRow(maxId);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Failed to fetch maximum ID:', error);
+                        // Handle error
+                    }
+                });
+            }
+
+        });
+
+        $('#dynamicRows').on('click', '#uploadIcon', function() {
+            const fileInput = $(this).closest('.file-input-container').find('input[type="file"]');
+            fileInput.click(); // Trigger click on file input
+          });
+
+
+          $('#dynamicRows').on('change', 'input[type="file"]', function() {
+            console.log('hleo');
+            const fileNameInput = $(this).closest('.file-input-container').find('.file-input');
+            // Use either technique to update filename display (explained earlier)
+            fileNameInput.textContent = this.files[0].name;
+            // Or
+            const tempElement = document.createElement('span');
+            tempElement.textContent = this.files[0].name;
+            fileNameInput.textContent = tempElement.textContent;
+          });
+
+
+        function addNewUrlRow(classworkId){
             $('#newClassworkModal').modal('hide');
 
+            // Check if labels have been added
             if (!labelsAdded) {
 
-                var newRowWithLabels = `<div class='newAddedRows'>
-                <input type="hidden" name="source_type[]" value="url">
+                var newRowWithLabels = `
+                                    <div class="newAddedRows">
+                                        <input type="hidden" name="source_type[]" value="url">
+                                            <input type="hidden" name="classwork_id[]" value="${classworkId}"
                                             <input type="hidden" name="file[]" value="">
                                             <div class="form-group">
-                                                <label for="" class="form-label required">Sub Topic Name</label>
+
                                                 <input type="text" name="sub_topic_name[]" id="" class="form-control" placeholder="Enter Sub Topic Name">
                                             </div>
                                             <div class="row">
                                             <div class="form-group col-6">
-                                                <label for="" class="form-label required">Source Title</label>
+
                                                 <input type="text" name="source_title[]" class="form-control" placeholder="Enter Source Title">
                                                 <p class="text-danger curriculum-name-error"></p>
                                             </div>
                                             <div class="form-group col-6">
-                                                <label for="" class="form-label required">URL Link/Browse File</label>
+
                                                 <input type="text" name="url[]" class="form-control" placeholder="Enter URL">
                                             </div>
                                         </div>
@@ -225,8 +364,9 @@ $(document).ready(function () {
                 labelsAdded = true;
             } else {
                 // Add input fields without labels
-                var newRowWithoutLabels = `<div class='newAddedRows'>
+                var newRowWithoutLabels = `<div class="newAddedRows">
                 <input type="hidden" name="source_type[]" value="url">
+                        <input type="hidden" name="classwork_id[]" value="${classworkId}"
                         <input type="hidden" name="file[]" value="">
                         <div class="form-group">
                             <input type="text" name="sub_topic_name[]" id="" class="form-control" placeholder="Enter Sub Topic Name">
@@ -248,7 +388,9 @@ $(document).ready(function () {
             inputFieldCount++;
             toggleButtons();
 
-        });
+
+        }
+
 
         // var labelAdded = false;
 
@@ -258,45 +400,42 @@ $(document).ready(function () {
             // Check if labels have been added
             if (!labelsAdded) {
                 // Add labels for the first time
-                var newRowWithLabels = `<div class='newAddedRows'>
-                <input type="hidden" name="source_type[]" value="file">
+                var newRowWithLabels = `<div class="newAddedRows">
+                                        <input type="hidden" name="source_type[]" value="file">
                                         <input type="hidden" name="url[]" value="">
                                         <div class="form-group">
-                                            <label for="" class="form-label required">Sub Topic Name</label>
                                             <input type="text" name="sub_topic_name[]" id="" class="form-control" placeholder="Enter Sub Topic Name">
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-6">
-                                                <label for="" class="form-label required">Source Title</label>
                                                 <input type="text" name="source_title[]" class="form-control" placeholder="Enter Source Title">
                                                 <p class="text-danger curriculum-name-error"></p>
                                             </div>
                                             <div class="form-group col-6">
-                                                <label for="" class="form-label required">URL Link/Browse file</label>
-                                                <input type="file" name="file[]" class="form-control" placeholder="Browse File">
+                                                <input type="file" name="file[]" class="form-control">
                                             </div>
                                         </div>
                                         </div>`;
 
-                $('#dynamicRows').append(newRowWithLabels);
-
                 labelsAdded = true;
             }else{
-                var newRowWithoutLabels = `<div class='newAddedRows'> <input type="hidden" name="source_type[]" value="file">
-                <input type="hidden" name="url[]" value="">
-                <div class="form-group">
-                    <input type="text" name="sub_topic_name[]" id="" class="form-control" placeholder="Enter Sub Topic Name">
-                </div>
-                <div class="row">
-                    <div class="form-group col-6">
-                        <input type="text" name="source_title[]" class="form-control" placeholder="Enter Source Title">
-                        <p class="text-danger curriculum-name-error"></p>
+                var newRowWithoutLabels = `
+                <div class="newAddedRows">
+                    <input type="hidden" name="source_type[]" value="file">
+                    <input type="hidden" name="url[]" value="">
+                    <div class="form-group">
+                        <input type="text" name="sub_topic_name[]" id="" class="form-control" placeholder="Enter Sub Topic Name">
                     </div>
-                    <div class="form-group col-6">
-                        <input type="file" name="file[]" class="form-control" placeholder="Browse File">
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <input type="text" name="source_title[]" class="form-control" placeholder="Enter Source Title">
+                            <p class="text-danger curriculum-name-error"></p>
+                        </div>
+                        <div class="form-group col-6">
+                            <input type="file" name="file[]" class="form-control" placeholder="Browse File">
+                        </div>
                     </div>
-                </div>
-            </div>`;
+                </div>`;
 
                 $('#dynamicRows').append(newRowWithoutLabels);
             }
@@ -310,16 +449,16 @@ $(document).ready(function () {
             inputFieldCount = $("input[name='source_title[]']").length;
             console.log(inputFieldCount);
 
-            // if(inputFieldCount > 1){
+            if(inputFieldCount > 1){
                 $("#dynamicRows .newAddedRows:last-child").remove();
-
-            // }
+            }
             inputFieldCount--;
 
             // console.log('input field count is ' + inputFieldCount);
             toggleButtons();
 
         });
+
 
         function removeClassCurriculumErrors() {
             $('#classSelect').removeClass('is-invalid');
@@ -329,13 +468,17 @@ $(document).ready(function () {
         }
 
         $('#gradeSelect').change(function () {
+
             removeClassCurriculumErrors();
         });
+
+
 
         function removeError(field, errorElement) {
             field.removeClass('is-invalid');
             errorElement.html('');
         }
+
 
         function validateField(field, errorElement, errorMessage) {
             if (field.val() === '') {
@@ -345,6 +488,7 @@ $(document).ready(function () {
                 removeError(field, errorElement);
             }
         }
+
 
         $('#gradeSelect').change(function () {
             validateField($('#gradeSelect'), $('#gradeSelectError'), 'Grade select field is required');
@@ -364,10 +508,17 @@ $(document).ready(function () {
 
         function validateFileType(fileInput) {
             var fileName = fileInput.val();
+
+            if(fileName == ''){
+                return true;
+            }
+
             var validExtensions = ['doc', 'docx', 'pdf'];
             var fileExtension = fileName.split('.').pop().toLowerCase();
 
+            // Check if file extension is valid
             if ($.inArray(fileExtension, validExtensions) == -1) {
+                // Show error message
                 $('#errorMessage').text('Please select a valid file format (doc, docx, or pdf).');
                 $('#errorModal').modal('show');
 
@@ -379,11 +530,10 @@ $(document).ready(function () {
             return true;
         }
 
-        // Submit form handler
-        $('#addClassworkForm').submit(function (e) {
+        $('#updateClassworkForm').submit(function (e) {
             e.preventDefault();
 
-            // Validate all fields
+
             validateField($('#gradeSelect'), $('#gradeSelectError'), 'Grade select field is required');
             validateField($('#classSelect'), $('#classSelectError'), 'Class select field is required');
             validateField($('#curriculumSelect'), $('#curriculumSelectError'), 'Curriculum select field is required');
@@ -400,9 +550,10 @@ $(document).ready(function () {
             });
 
             if (!sourceTitleProvided) {
+
                 $('#errorMessage').text('Please add at least one source.');
                 $('#errorModal').modal('show');
-                return; // Prevent form submission
+                return;
             }
 
             var fileInputs = $('input[type="file"]');
@@ -411,17 +562,18 @@ $(document).ready(function () {
             fileInputs.each(function() {
                 if (!validateFileType($(this))) {
                     isValid = false;
-                    return false; // Exit the loop if an invalid file type is found
+                    return false;
                 }
             });
 
             if (!isValid) {
-
                 return;
             }
 
 
+
             if ($('#gradeSelect').val() != '' && $('#classSelect').val() != '' && $('#curriculumSelect').val() != '' && $('#topicNameInputBox').val() != '') {
+
                 this.submit();
             }
         });
@@ -443,73 +595,86 @@ $(document).ready(function () {
         });
 
 
+        var initialGradeId = $('#gradeSelect').val();
+        var initialClassId = "{{ $classworks[0]->class_id }}";
+        var initialCurriculumId = "{{ $classworks[0]->curriculum_id }}";
+        // console.log('initial class id is ' + initialClassId);
+        updateClassOptions(initialGradeId, initialClassId,initialCurriculumId);
+
         $('#gradeSelect').change(function() {
             var gradeId = $(this).val();
-            $('#classSelect').empty(); // Clear previous options
-            $('#selectBoxError1').text('');
+            updateClassOptions(gradeId, '','');
+        });
+
+        function updateClassOptions(gradeId, selectedClassId,selectedCurriculumId) {
+            $('#classSelect').empty();
             $('#curriculumSelect').empty();
 
-
             if (gradeId === '') {
-                // If 'Select Grade' is selected, show 'Select Class' in class select box
                 $('#classSelect').append($('<option>', {
                     value: '',
-                    text : 'Select Class',
+                    text: 'Select Class',
                 }));
 
                 $('#curriculumSelect').append($('<option>', {
                     value: '',
-                    text : 'Select Curriculum',
+                    text: 'Select Curriculum',
                 }));
-
-            } else {
-                // Filter classes based on selected grade
-                var classesFound = false;
-                var curriculumFound = false;
-                @foreach ($grades as $grade)
-                    if ('{{$grade->id}}' === gradeId) {
-                        @foreach ($grade->classes as $class)
-                            $('#classSelect').append($('<option>', {
-                                value: '{{$class->id}}',
-                                text : '{{$class->class_name}}'
-                            }).attr('data-description', '{{$class->description}}'));
-                            classesFound = true;
-                        @endforeach
-
-                        @foreach ($grade->curricula as $curriculum)
-                            $('#curriculumSelect').append($('<option>', {
-                                value: '{{$curriculum->id}}',
-                                text : '{{$curriculum->curriculum_name}}'
-                            }));
-                            curriculumFound = true;
-                        @endforeach
-                    }
-                @endforeach
-
-                $('#selectBoxError2').text('');
-                $('#selectBoxError3').text('');
-
-                if (!classesFound) {
-                    $('#classSelect').append($('<option>', {
-                        value: '',
-                        text : 'No Classes in this grade'
-                    }));
-                }
-
-                if (!curriculumFound) {
-                    $('#curriculumSelect').append($('<option>', {
-                        value: '',
-                        text : 'No Curricula in this grade'
-                    }));
-                }
+                return;
             }
-        });
+
+            @foreach ($grades as $grade)
+            if ('{{$grade->id}}' === gradeId) {
+                @foreach ($grade->classes as $class)
+                    // console.log({{$class->id}});
+
+                var selected = selectedClassId == '{{$class->id}}';
+                console.log(selectedClassId);
+                $('#classSelect').append($('<option>', {
+                    value: '{{$class->id}}',
+                    text: '{{$class->class_name}}',
+                    selected: selected
+                }));
+                @endforeach
+            }
+            @endforeach
+
+            if ($('#classSelect option').length === 0) {
+                $('#classSelect').append($('<option>', {
+                    value: '',
+                    text: 'No Classes in this grade'
+                }));
+            }
+
+            @foreach ($grades as $grade)
+            if ('{{$grade->id}}' === gradeId) {
+                @foreach ($grade->curricula as $curriculum)
+                    // console.log({{$class->id}});
+
+                var selected = selectedCurriculumId == '{{$curriculum->id}}';
+                console.log(selectedCurriculumId);
+                $('#curriculumSelect').append($('<option>', {
+                    value: '{{$curriculum->id}}',
+                    text: '{{$curriculum->curriculum_name}}',
+                    selected: selected
+                }));
+                @endforeach
+            }
+            @endforeach
+
+            if ($('#curriculumSelect option').length === 0) {
+                $('#curriculumSelect').append($('<option>', {
+                    value: '',
+                    text: 'No Curricula in this grade'
+                }));
+            }
+        }
+
 
         $('#classSelect').click(function() {
             var selectedGrade = $('#gradeSelect').val();
             if (selectedGrade === '') {
                 $('#selectBoxError2').text('First, select a grade');
-                // return false; // Prevent the dropdown from opening
             } else {
                 $('#selectBoxError2').text('');
             }
@@ -519,7 +684,6 @@ $(document).ready(function () {
             var selectedGrade = $('#gradeSelect').val();
             if (selectedGrade === '') {
                 $('#selectBoxError3').text('First, select a grade');
-                // return false; // Prevent the dropdown from opening
             } else {
                 $('#selectBoxError3').text('');
             }

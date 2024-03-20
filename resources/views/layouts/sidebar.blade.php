@@ -188,10 +188,31 @@
                     <p>New Classwork</p>
                     </a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a href="#" class="nav-link {{ Route::is('classworks.edit') ? 'active'  : '' }}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Update or Delete</p>
+                    </a>
+                </li> --}}
+              </ul>
+            </li>
+
+            <li class="nav-item {{ Route::is('promote.*') ? 'menu-open'  : '' }}">
+
+                <a href="#" class="nav-link {{ Route::is('promote.*') ? 'active'  : '' }}">
+                {{-- <i class="nav-icon fas fa-tachometer-alt"></i> --}}
+                <i class="fa fa-upload mr-2" aria-hidden="true"></i>
+                {{-- <img src="{{asset('images/menu_icons/homework.png')}}" alt="" width="25px"> --}}
+                <p>
+                    Promote Student
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+                </a>
+                <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="{{route('promote.search')}}" class="nav-link {{ Route::is('classworks.index') ? 'active'  : '' }}">
+                    <i class="far fa-circle nav-icon"></i>
+                     <p>Promote Student</p>
                     </a>
                 </li>
               </ul>

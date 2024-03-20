@@ -53,6 +53,7 @@
                     <p class="text-danger mt-1" id="selectBoxError1"></p>
                 </div> --}}
 
+
                 <div class="form-group">
                     <label for="" class="form-label required">Select Class</label>
                     <select name="classSelect" id="classSelect" class="form-control">
@@ -258,27 +259,42 @@ $(document).ready(function () {
             // Check if labels have been added
             if (!labelsAdded) {
                 // Add labels for the first time
-                var newRowWithLabels = `<div class='newAddedRows'>
-                <input type="hidden" name="source_type[]" value="file">
-                                        <input type="hidden" name="url[]" value="">
-                                        <div class="form-group">
-                                            <label for="" class="form-label required">Sub Topic Name</label>
-                                            <input type="text" name="sub_topic_name[]" id="" class="form-control" placeholder="Enter Sub Topic Name">
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-6">
-                                                <label for="" class="form-label required">Source Title</label>
-                                                <input type="text" name="source_title[]" class="form-control" placeholder="Enter Source Title">
-                                                <p class="text-danger curriculum-name-error"></p>
-                                            </div>
-                                            <div class="form-group col-6">
-                                                <label for="" class="form-label required">URL Link/Browse file</label>
-                                                <input type="file" name="file[]" class="form-control" placeholder="Browse File">
-                                            </div>
-                                        </div>
-                                        </div>`;
 
-                $('#dynamicRows').append(newRowWithLabels);
+                $(document).ready(function() {
+                  var newRowWithLabels = `
+                  <div class='newAddedRows'>
+                      <input type="hidden" name="source_type[]" value="file">
+                      <input type="hidden" name="url[]" value="">
+                      <div class="form-group">
+                          <label for="" class="form-label required">Sub Topic Name</label>
+                          <input type="text" name="sub_topic_name[]" id="" class="form-control" placeholder="Enter Sub Topic Name">
+                      </div>
+                      <div class="row">
+                          <div class="form-group col-6">
+                              <label for="" class="form-label required">Source Title</label>
+                              <input type="text" name="source_title[]" class="form-control" placeholder="Enter Source Title">
+                              <p class="text-danger curriculum-name-error"></p>
+                          </div>
+                          <div class="form-group col-6 file-upload-wrapper">
+                              <label for="" class="form-label required">URL Link/Browse file</label>
+                              <div class="custom-file">
+                                  <input type="file" name="file[]" class="custom-file-input" id="customFile">
+                                  <label for="customFile" class="custom-file-label">No file chosen</label>
+                              </div>
+                          </div>
+                      </div>
+                  </div>`;
+
+                  $('#dynamicRows').append(newRowWithLabels);
+
+                  // Update file name display on change
+                  $('.custom-file-input').change(function() {
+                      var filename = $(this).val().split('\\').pop(); // Get filename from path
+                      $(this).next('.custom-file-label').html(filename);
+                  });
+
+                });
+
 
                 labelsAdded = true;
             }else{

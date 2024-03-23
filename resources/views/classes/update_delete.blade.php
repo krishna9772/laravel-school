@@ -305,7 +305,6 @@
                 // }
 
                 if (gradeId === '') {
-                    // If 'Select Grade' is selected, show 'Select Class' in class select box
                     $('#classSelect').append($('<option>', {
                         value: '',
                         text : 'Select Class',
@@ -340,7 +339,7 @@
                 var selectedGrade = $('#gradeSelect').val();
                 if (selectedGrade === '') {
                     $('#selectBoxError2').text('First select a grade to modify a class');
-                    // return false; // Prevent the dropdown from opening
+                    // return false;
                 } else {
                     $('#selectBoxError2').text('');
                 }

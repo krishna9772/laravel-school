@@ -2,6 +2,9 @@
 
 @section('styles')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css" rel="stylesheet"/>
+{{-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script> --}}
+
 <style>
     .required:after {
       content:" *";
@@ -22,6 +25,11 @@
     #changeInputStyle {
         text-indent: 8px;
         font-size: 16px;
+    }
+
+    #combinedValue:focus {
+        outline: none;
+        border: none;
     }
 
 
@@ -60,6 +68,26 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="" class="required">Email</label>
+                                <input type="email" name="email" id="emailInputBox" class="form-control" placeholder="Enter User Email">
+                                <p class="text-danger" id="emailErrorMessage"></p>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col mr-1">
+                                    <label for="" class="form-label required">Password</label>
+                                    <input type="password" name="password" id="passwordInputBox" class="form-control" placeholder="Enter User Password">
+                                    <p class="text-danger" id="passwordErrorMessage"></p>
+                                </div>
+
+                                <div class="form-group col pl-0">
+                                    <label for="" class="required">Confirm Password</label>
+                                    <input type="password" name="confirm_password" id="confirmPasswordInputBox" class="form-control" placeholder="Retype Password">
+                                    <p class="text-danger" id="confirmPasswordErrorMessage"></p>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <label for="" class="form-label required">Select Grade</label>
                                 <select name="grade_select" id="gradeSelect" class="form-control">
                                     <option value="">Select Grade</option>
@@ -87,6 +115,17 @@
                                   </div>
                                 </div>
                             </div>
+
+
+                            <div class="form-group">
+                                <label for="" class="required">Select Teacher Type</label>
+                                <select name="teacher_type" id="teacherTypeSelect" class="form-control">
+                                    <option value="">Select Teacher Type</option>
+                                    <option value="subject">Subject</option>
+                                    <option value="classroom">Classroom</option>
+                                </select>
+                                <p class="text-danger" id="teacherTypeErrorMessage"></p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -111,11 +150,17 @@
 
                             <div class="form-group">
                                 <label for="">Gender</label>
-                                <select name="gender" id="genderSelect" class="form-control">
-                                    <option value="">Select User Gender</option>
-                                    <option value="male">Male</option>
-                                    <option value="femal">Female</option>
-                                </select>
+                                <div class="d-flex">
+                                    <div class=" mr-5">
+                                        <input type="radio" class="mr-1" name="gender" id="male" value="male">
+                                        <span>Male</span>
+                                    </div>
+                                    <div>
+                                        <input type="radio" class="mr-1" name="gender" id="female" value="female">
+                                        <span>Female</span>
+                                    </div>
+                                </div>
+
                                 <p class="text-danger" id="gradeIdErrorMessage"></p>
                             </div>
 
@@ -131,11 +176,59 @@
                                 <p class="text-danger" id=""></p>
                             </div>
 
-                            <div class="form-group">
-                                <label for="" class="form-label">NRC</label>
-                                <input type="text" name="nrc" id="nrcInputBox" class="form-control" placeholder="Enter User NRC">
-                                <p class="text-danger" id=""></p>
+                            <div class="form-group mb-3">
+                                <label for=""> NRC</label>
+
+                                <div class="row mt-2">
+                                    <div class="col">
+                                        <label for="">select</label>
+                                        <select id="region" class="form-control">
+                                            <option selected>ရွေးပါ</option>
+                                            <option value=1>၁</option>
+                                            <option value=2>၂</option>
+                                            <option value=3>၃</option>
+                                            <option value=4>၄</option>
+                                            <option value=5>၅</option>
+                                            <option value=6>၆</option>
+                                            <option value=7>၇</option>
+                                            <option value=8>၈</option>
+                                            <option value=9>၉</option>
+                                            <option value=10>၁၀</option>
+                                            <option value=11>၁၁</option>
+                                            <option value=12>၁၂</option>
+                                            <option value=13>၁၃</option>
+                                            <option value=14>၁၄</option>
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                            <label for="code" class="">
+                                                မြို့နယ်
+                                            </label>
+                                            <select id="code" class="form-control">
+                                            </select>
+                                    </div>
+                                    <div class="col">
+                                        <label for="number_type" class="">အမျိုးအစား</label>
+                                            <select id="number_type" class="form-control">
+                                              <option value="(နိုင်)">နိုင်</option>
+                                              <option value="(ဧည့်)">ဧည့်</option>
+                                              <option value="(ပြု)">ပြု</option>
+                                          </select>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-6">
+                                            <label for="number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">နံပါတ်</label>
+                                            <input type="text" id="number" maxlength="6" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-danger" id="nrcError"></p>
+
+                                {{-- <input type="text" name="nrc" id="" class="form-control"> --}}
                             </div>
+
+                            <input type="text" id="combinedValue" class="form-control border-0 pl-0 mb-2 bg-white" style="display: none; outline:none" readonly>
+                            <input type="hidden" name="nrc" id="nrcNumber">
 
                             <div class="form-group">
                                 <label for="" class="form-label">Father Name</label>
@@ -174,6 +267,7 @@
 
 <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
 <script>
+
     $(document).ready(function() {
 
         $.ajaxSetup({
@@ -219,6 +313,43 @@
               $('#dob-datepicker').datepicker('show');
             });
 
+            $('#region').change(fetchNrc);
+
+            $('#combinedValue').on('focus', function() {
+                $(this).css('border', 'none');
+                $(this).css('outline','none');
+            });
+
+            $('#region, #code, #number_type, #number').on('input', showNRCNumber);
+
+            //show nrc number
+            function showNRCNumber(){
+
+                var code = $('#code').val();
+                var number = $('#number').val();
+
+                const region = $('#region').val();
+                const numberType = $('#number_type').val();
+                const newMMNumber = enToMM(region);
+                const newSelectedCode = getNRC(code);
+
+                function enToMM(value) {
+                    const mmNumbers = ["၀", "၁", "၂", "၃", "၄", "၅", "၆", "၇", "၈", "၉", "၁၀", "၁၁", "၁၂", "၁၃", "၁၄"];
+                    return mmNumbers.find((mmNumber, key) => key == value);
+                }
+
+                function getNRC(value) {
+                    return value.substring(1, 4);
+                }
+
+
+
+                var combinedValue = newMMNumber + '/' + newSelectedCode + numberType + number;
+                $('#combinedValue').show();
+                $('#combinedValue').val('မှတ်ပုံတင်နံပါတ် - ' +  combinedValue);
+                $('#nrcNumber').val(combinedValue);
+            }
+
 
             $('#typeSelect').change(function() {
                 var userType = $(this).val();
@@ -227,11 +358,13 @@
                     $('#fatherNameInputBox').closest('.form-group').hide();
                     $('#motherNameInputBox').closest('.form-group').hide();
                     $('#transferedSchoolInputBox').closest('.form-group').hide();
+                    $('#teacherTypeSelect').closest('.form-group').show();
                 } else {
                     $('.admissionDateClass').closest('.form-group').show();
                     $('#fatherNameInputBox').closest('.form-group').show();
                     $('#motherNameInputBox').closest('.form-group').show();
                     $('#transferedSchoolInputBox').closest('.form-group').show();
+                    $('#teacherTypeSelect').closest('.form-group').hide();
                 }
             });
 
@@ -249,32 +382,125 @@
                 clearError();
             });
 
-            $('#newRegistrationForm').submit(function (e) {
-                // alert('hello');
-                e.preventDefault();
+            function fetchNrc() {
+                  const selectedRegion = document.getElementById('region').value;
 
-                // var classId = $('#classId').val();
-                // console.log(classId);
+                      // Fetch data based on the selected region
+                  fetch("https://raw.githubusercontent.com/htetoozin/Myanmar-NRC/master/nrc.json")
+                  .then(response => response.json())
+                  .then(({data}) => {
+                      const nrcs = data.filter(region => region.nrc_code === selectedRegion)
+                     // Update the second dropdown with fetched results
+                      const resultsDropdown = document.getElementById('code');
+                            // Clear previous options
+                            resultsDropdown.innerHTML = '';
+
+                          // Add new options based on fetched data
+                          nrcs.forEach(item => {
+                              const option = document.createElement('option');
+                              option.value = item.name_mm;
+                              option.text = item.name_mm;
+                              resultsDropdown.add(option);
+                          });
+                    })
+                  .catch(error => console.error('Error fetching data:', error));
+              }
+
+            $('#newRegistrationForm').submit(function (e) {
+
+                  e.preventDefault();
+
+                //   function submitForm(event){
+                //     event.preventDefault();
+
+
+                    // const selectedRegion = document.getElementById('region').value;
+                    // const selectedCode = document.getElementById('code').value;
+                    // const selectedNumberType = document.getElementById('number_type').value;
+                    // const number = document.getElementById('number').value;
+
+                    // if(validateAndProcessInput()) {
+                    //     // If validation succeeds, submit the form
+                    //     this.submit();
+                    // }
+
+
+
+                    validateAndProcessInput();
+
+                    function validateAndProcessInput() {
+                        var code = $('#code').val();
+                        var number = $('#number').val();
+
+                        // console.log(number.length);
+
+                        // Check if any of the required fields are filled
+                        if (!code && !number) {
+                            // None of the required fields are filled, so return without performing any validation or processing
+                            return;
+                        }
+
+                        if (!code || !number) {
+                            $('#nrcError').html('မြို့နယ်နှင့် နံပါတ်ကို ထည့်ပေးပါ');
+                            return false; // Return false to prevent form submission
+                        } else {
+                            $('#nrcError').html('');
+                        }
+
+                        if(number.length != 6){
+                            $('#nrcError').html('မှတ်ပုံတင်နံပါတ် မှားနေပါသည်။');
+                            console.log('မှတ်ပုံတင်နံပါတ် မှားနေပါသည်။');
+                            return false;
+                        } else{
+                            $('#nrcError').html('');
+                        }
+
+                        function enToMM(value) {
+                            const mmNumbers = ["၀", "၁", "၂", "၃", "၄", "၅", "၆", "၇", "၈", "၉", "၁၀", "၁၁", "၁၂", "၁၃", "၁၄"];
+                            return mmNumbers.find((mmNumber, key) => key == value);
+                        }
+
+                        function getNRC(value) {
+                            return value.substring(1, 4);
+                        }
+
+                        const region = $('#region').val();
+                        const numberType = $('#number_type').val();
+                        const newMMNumber = enToMM(region);
+                        const newSelectedCode = getNRC(code);
+
+                        var combinedValue = newMMNumber + '/' + newSelectedCode + numberType + number;
+                        $('#combinedValue').show();
+                        $('#combinedValue').val('မှတ်ပုံတင်နံပါတ် - ' +  combinedValue);
+                        $('')
+
+                        return true; // Return true to allow form submission
+                    }
+
+
 
                 $.ajax({
                     type: 'POST',
                     url: '{{ route('users.store')}}',
                     data: $(this).serialize(),
                     success: function (response) {
-                        // alert('hello');
                         if(response == 'success'){
                             window.location.href = '{{ route('users.index') }}';
                         }
-                        },
+                    },
                     error: function(xhr, status, error) {
                         var err = eval("(" + xhr.responseText + ")");
                         var response = JSON.parse(xhr.responseText);
                             console.log(response);
                         let userNameErrorMessage = response.errors.user_name ? response.errors.user_name[0] : '';
+                        let emailErrorMessage = response.errors.email ? response.errors.email[0] : '';
+                        let passwordErrorMessage = response.errors.password ? response.errors.password[0] : '';
+                        let confirmPasswordErrorMessage = response.errors.confirm_password ? response.errors.confirm_password[0] : '';
                         let userTypeErrorMessage = response.errors.user_type ? response.errors.user_type[0] : '';
                         let gradeSelectErrorMessage = response.errors.grade_select ? response.errors.grade_select[0] : '';
                         let classSelectErrorMessage = response.errors.class_select ? response.errors.class_select[0] : '';
                         let dobErrorMessage = response.errors.date_of_birth ? response.errors.date_of_birth[0] : '';
+                        let teacherTypeErrorMessage = response.errors.teacher_type ? response.errors.teacher_type[0] : '';
 
                         if (userNameErrorMessage) {
                             $('#userNameErrorMessage').html(userNameErrorMessage);
@@ -291,6 +517,30 @@
                         } else {
                             $('#userTypeErrorMessage').html('');
                             $('#typeSelect').removeClass('is-invalid');
+                        }
+
+                        if (emailErrorMessage) {
+                            $('#emailErrorMessage').html(emailErrorMessage);
+                            $('#emailInputBox').addClass('is-invalid');
+                        } else {
+                            $('#emailErrorMessage').html('');
+                            $('#emailInputBox').removeClass('is-invalid');
+                        }
+
+                        if (passwordErrorMessage) {
+                            $('#passwordErrorMessage').html(passwordErrorMessage);
+                            $('#passwordInputBox').addClass('is-invalid');
+                        } else {
+                            $('#passwordErrorMessage').html('');
+                            $('#passwordInputBox').removeClass('is-invalid');
+                        }
+
+                        if (confirmPasswordErrorMessage) {
+                            $('#confirmPasswordErrorMessage').html(confirmPasswordErrorMessage);
+                            $('#confirmPasswordInputBox').addClass('is-invalid');
+                        } else {
+                            $('#confirmPasswordErrorMessage').html('');
+                            $('#confirmPasswordInputBox').removeClass('is-invalid');
                         }
 
                         if(gradeSelectErrorMessage){
@@ -315,6 +565,14 @@
                         }else{
                             $('#dobErrorMessage').html('');
                             $('#dob-datepicker').removeClass('is-invalid');
+                        }
+
+                        if(teacherTypeErrorMessage){
+                            $('#teacherTypeErrorMessage').html(teacherTypeErrorMessage);
+                            $('#teacherTypeSelect').addClass('is-invalid');
+                        }else{
+                            $('#teacherTypeErrorMessage').html('');
+                            $('#teacherTypeSelect').removeClass('is-invalid');
                         }
 
                     },
@@ -385,6 +643,7 @@
             $('#cancelBtn').click(function() {
                 restoreInitialForm();
             });
+
         }
 
         $('#cancelBtn').click(function() {

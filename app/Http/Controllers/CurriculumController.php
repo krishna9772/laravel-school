@@ -48,7 +48,8 @@ class CurriculumController extends Controller
     {
         $grades = Grade::all();
 
-        $teachers = User::where('user_type','teacher')->get();
+        $teachers = User::with('userGradeClasses')->where('user_type','teacher')->where('teacher_type','subject')->get();
+        // dd($teachers->toArray());
 
         return view('curriculums.new_curriculum',compact('grades','teachers'));
     }

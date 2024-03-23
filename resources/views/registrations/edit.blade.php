@@ -63,6 +63,28 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="" class="form-label required">Email</label>
+                                <input type="email" name="email" id="emailInputBox" class="form-control" placeholder="Enter User Email">
+                                <p class="text-danger" id="emailErrorMessage"></p>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col mr-1">
+                                    <label for="" class="form-label required">Password</label>
+                                    <input type="password" name="password" id="passwordInputBox" class="form-control" placeholder="Enter User Password">
+                                    <p class="text-danger" id="passwordErrorMessage"></p>
+                                </div>
+
+                                <div class="form-group col pl-0">
+                                    <label for="" class="required">Confirm Password</label>
+                                    <input type="password" name="password" id="passwordInputBox" class="form-control" placeholder="Retype Password">
+                                    <p class="text-danger" id="passwordErrorMessage"></p>
+                                </div>
+                            </div>
+
+
+
+                            <div class="form-group">
                                 <label for="" class="form-label required">Select Grade</label>
                                 <select name="grade_select" id="gradeSelect" class="form-control">
                                     <option value="" >Select Grade</option>
@@ -127,13 +149,29 @@
                             </div>
 
 
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label for="">Gender</label>
                                 <select name="gender" id="genderSelect" class="form-control">
                                     <option value="">Select User Gender</option>
                                     <option value="male" @if($data->gender == 'male') selected @endif>Male</option>
                                     <option value="femal" @if($data->gender == 'female') selected @endif>Female</option>
                                 </select>
+                                <p class="text-danger" id="gradeIdErrorMessage"></p>
+                            </div> --}}
+
+                            <div class="form-group">
+                                <label for="">Gender</label>
+                                <div class="d-flex">
+                                    <div class=" mr-5">
+                                        <input type="radio" class="mr-1" name="gender" id="male" value="male"  @if($data->gender == 'male') checked @endif>
+                                        <span>Male</span>
+                                    </div>
+                                    <div>
+                                        <input type="radio" class="mr-1" name="gender" id="female" value="female"  @if($data->gender == 'female') checked @endif>
+                                        <span>Female</span>
+                                    </div>
+                                </div>
+
                                 <p class="text-danger" id="gradeIdErrorMessage"></p>
                             </div>
 

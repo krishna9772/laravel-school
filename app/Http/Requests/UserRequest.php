@@ -18,6 +18,9 @@ class UserRequest extends FormRequest
         return [
             'user_name' => 'required|string|max:50',
             'user_type' => 'required|string|max:30',
+            'email' => 'required|unique:users,email',
+            'password' => 'required|min:8',
+            'confirm_password' => 'required|same:password',
             'gender' => 'nullable|string|max:30',
             'grade_select' => 'required',
             'class_select' => 'required',
@@ -28,7 +31,8 @@ class UserRequest extends FormRequest
             'mother_name' => 'nullable|string|max:50',
             'phone_number' => 'nullable|string',
             'address' => 'nullable|string|max:100',
-            'former_school' => 'nullable|string|max:100'
+            'former_school' => 'nullable|string|max:100',
+            'teacher_type' => 'required_if:user_type,teacher',
         ];
     }
 

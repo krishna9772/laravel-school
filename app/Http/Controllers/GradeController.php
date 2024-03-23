@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\GradeRequest;
+use App\Models\Classes;
 use App\Models\Grade;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class GradeController extends Controller
@@ -38,6 +41,7 @@ class GradeController extends Controller
      */
     public function create()
     {
+
         return view('grades.new_grade');
     }
 
@@ -62,14 +66,24 @@ class GradeController extends Controller
         return view('grades.update_delete',compact('grades'));
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        // $grades = Grade::get();
 
-        // return view('grades.update_delete',compact('grades'));
+    public function showRegistrations(string $gradeId, string $classId) {
+
+
+        $users = User::whereIn('user_type', ['teacher', 'student'])
+            ->whereHas('userGradeClasses', function ($query) use ($gradeId, $classId) {
+                $query->where('grade_id', $gradeId)
+                      ->where('class_id', $classId);
+            })
+            ->with(['userGradeClasses.grade', 'userGradeClasses.class'])
+            ->get();
+
+            $gradeName = Grade::where('id',$gradeId)->value('grade_name');
+            $className = Classes::where('id',$classId)->value('class_name');
+        // dd($users->toArray());
+
+        return view('grades.show_registrations',compact('users','gradeName','className'));
+
     }
 
     /**

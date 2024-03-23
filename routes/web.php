@@ -12,7 +12,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserControlller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
-
+use Spatie\Permission\Contracts\Role;
 
 // login, register
 Route::get('login',[AuthController::class,'loginPage'])->name('loginPage');
@@ -27,6 +27,7 @@ Route::middleware(['auth'])->group(function(){
     // grades
     Route::get('grades/modify',[GradeController::class,'modify'])->name('grades.modify');
     Route::get('/grade/{grade}/classes', [GradeController::class,'showClasses'])->name('grades.classes');
+    Route::get('/grade/classes/registration/{gradeId}/{classId}',[GradeController::class,'showRegistrations'])->name('grades.classes.show.registrations');
     Route::resource('grades',GradeController::class);
 
     // classes
@@ -67,4 +68,5 @@ Route::middleware(['auth'])->group(function(){
     Route::get('promote/search',[PromoteController::class,'searchGradeClass'])->name('promote.search');
     Route::post('promote/search/results',[PromoteController::class,'searchResults'])->name('promote.search.results');
     Route::post('promote/student',[PromoteController::class,'promoteStudent'])->name('promote.student');
+
 });

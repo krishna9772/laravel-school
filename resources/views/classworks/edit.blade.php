@@ -111,7 +111,7 @@
                                 @endif
 
                                 <div style="position: relative;">
-                                    @if($classwork->file != null || $classwork->file != '')
+                                    @if($classwork->file != null )
 
                                     <input type="hidden" name="url[]" value="">
                                     <input type="hidden" name="source_type[]" value="file">
@@ -119,7 +119,10 @@
                                     <label for="exampleInputFile" class="required">File</label>
                                     <div class="input-group">
                                       <div class="custom-file">
-                                        <input type="file" class="custom-file-input" name="file[]" id="exampleInputFile" value="{{$classwork->file}}">
+
+                                        <input type="hidden" name="file[]" id="" value="{{asset('storage/classwork_files/' . $classwork->file)}}">
+
+                                        <input type="file" class="custom-file-input" name="file[]" id="exampleInputFile" value="{{asset('storage/classwork_files/' . $classwork->file)}}">
                                         <label class="custom-file-label" for="exampleInputFile">{{$classwork->file}}</label>
                                       </div>
                                     </div>
@@ -325,7 +328,6 @@ $(document).ready(function () {
                     },
                     error: function(xhr, status, error) {
                         console.error('Failed to fetch maximum ID:', error);
-                        // Handle error
                     }
                 });
             }
@@ -364,8 +366,9 @@ $(document).ready(function () {
                                             <div class="row">
                                                 <div class="form-group col-11">
                                                     <label for="" class="required">Sub Topic Name</label>
-                                                    <input type="text" name="sub_topic_name[]" id="" class="form-control" placeholder="Enter Sub Topic Name">
-                                                </div>
+                                                    <input type="text" name="sub_topic_name[]" id="" class="form-control subTopicNameInputBox" placeholder="Enter Sub Topic Name">
+                                                    <p class="text-danger subTopicNameError"></p>
+                                                    </div>
                                                 <div class="col-1 pl-0" style="margin-top: 30px">
                                                     <div class=" mt-2 pr-2  deleteBtn" data-classwork-id="{{$classwork->id}}">
                                                         <button type="button" class="btn-danger" title="Delete"> <i class="fa fa-trash" aria-hidden="true"></i></button>
@@ -375,13 +378,15 @@ $(document).ready(function () {
                                             <div class="row">
                                             <div class="form-group col-6">
 
-                                                <input type="text" name="source_title[]" class="form-control" placeholder="Enter Source Title">
-                                                <p class="text-danger curriculum-name-error"></p>
+                                                <input type="text" name="source_title[]" class="form-control sourceTitleInputBox" placeholder="Enter Source Title">
+                                                <p class="text-danger sourceTitleError"></p>
                                             </div>
                                             <div class="form-group col-6">
 
-                                                <input type="text" name="url[]" class="form-control" placeholder="Enter URL">
-                                            </div>
+                                                <input type="text" name="url[]" class="form-control urlInputBox" placeholder="Enter URL">
+
+                                                <p class="text-danger urlError"></p>
+                                                </div>
                                         </div>
                                         </div>`;
 
@@ -408,8 +413,9 @@ $(document).ready(function () {
                                             <div class="row">
                                                 <div class="form-group col-11 required">
                                                     <label for="">Sub Topic Name</label>
-                                                    <input type="text" name="sub_topic_name[]" id="" class="form-control" placeholder="Enter Sub Topic Name">
-                                                </div>
+                                                    <input type="text" name="sub_topic_name[]" id="" class="form-control subTopicNameInputBox" placeholder="Enter Sub Topic Name">
+                                                    <p class=" text-danger subTopicNameError"></p>
+                                                    </div>
                                                 <div class="col-1 pl-0" style="margin-top: 30px">
                                                     <div class=" mt-2 pr-2  deleteBtn" data-classwork-id="{{$classwork->id}}">
                                                         <button type="button" class="btn-danger" title="Delete"> <i class="fa fa-trash" aria-hidden="true"></i></button>
@@ -418,14 +424,15 @@ $(document).ready(function () {
                                             </div>
                                             <div class="row">
                                                 <div class="form-group col-6">
-                                                    <input type="text" name="source_title[]" class="form-control" placeholder="Enter Source Title">
-                                                    <p class="text-danger curriculum-name-error"></p>
+                                                    <input type="text" name="source_title[]" class="form-control sourceTitleInpuBox" placeholder="Enter Source Title">
+                                                    <p class="text-danger  sourceTitleError"></p>
                                                 </div>
                                                 <div class="form-group col-6">
                                                     <div class="custom-file">
-                                                        <input type="file" name="file[]" class="custom-file-input" id="customFile">
+                                                        <input type="file" name="file[]" class="custom-file-input fileInputBox" id="customFile">
                                                         <label for="customFile" class="custom-file-label">No file chosen</label>
                                                     </div>
+                                                    <p class="text-danger fileError"></p>
                                                 </div>
                                             </div>
                                             </div>`;
@@ -511,6 +518,9 @@ $(document).ready(function () {
         $('#updateClassworkForm').submit(function (e) {
             e.preventDefault();
 
+
+            console.log($(this).serialize());
+
             validateField($('#topicNameInputBox'), $('#topicNameError'), 'Topic Name field is required');
 
             var sourceTitles = $("input[name='source_title[]']");
@@ -530,6 +540,43 @@ $(document).ready(function () {
                 return;
             }
 
+            sourceTitles.each(function() {
+                if ($(this).val() == ''){
+                    $(this).addClass('is-invalid');
+                    $(this).next('.sourceTitleError').html('Source Title field is required');
+                }
+            })
+
+            var subTopicNames = $("input[name='sub_topic_name[]']");
+            // console.log('sub topic names are ' + subTopicNames);
+
+            subTopicNames.each(function() {
+                // console.log("Value of input:", $(this).val());
+                if ($(this).val() == '') {
+                    console.log('hello world');
+                    $(this).addClass('is-invalid');
+                    $(this).next('.subTopicNameError').html('Sub Topic Name field is required');
+                }
+            });
+
+            var urls = $("input[name='url[]']");
+            urls.each(function() {
+                // console.log("Value of input:", $(this).val());
+                if ($(this).val() == '') {
+                    $(this).addClass('is-invalid');
+                    $(this).next('.urlError').html('Url field is required');
+                }
+            });
+
+            var files = $("input[name='file[]']");
+            urls.each(function() {
+                // console.log("Value of input:", $(this).val());
+                if ($(this).val() == '') {
+                    $(this).addClass('is-invalid');
+                    $(this).next('.fileError').html('File field is required');
+                }
+            });
+
             var fileInputs = $('input[type="file"]');
             var isValid = true;
 
@@ -546,7 +593,7 @@ $(document).ready(function () {
 
 
 
-            if ( $('#topicNameInputBox').val() != '') {
+            if ( $('#topicNameInputBox').val() != '' && $('.subTopicNameInputBox').val() != '' && $('.urlInputBox').val() != '' && $('.fileInputBox').val() != '') {
 
                 this.submit();
             }

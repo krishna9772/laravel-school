@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\UserGradeClass;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
@@ -166,8 +167,11 @@ class UserController extends Controller
         return [
             'user_id' => $user_id,
             'user_name' => $request->user_name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
             'gender' => $request->gender,
             'user_type' => $request->user_type,
+            'teacher_type' => $request->teacher_type,
             'nrc' => $request->nrc,
             'admission_date' => $request->admission_date,
             'date_of_birth' => $request->date_of_birth,

@@ -33,7 +33,7 @@ class ClassworkController extends Controller
         return view('classworks.new_classwork',compact('grades'));
     }
 
-    public function store(ClassworkRequest $request)
+    public function store(Request $request)
     {
 
         // dd($request->all());
@@ -46,11 +46,11 @@ class ClassworkController extends Controller
         $urls = $request->url;
         $files = $request->file;
         $sourceTypes = $request->source_type;
-        $subTopicNames = $request->sub_topic_name ?? []; // Default to empty array if null
+        $subTopicNames = $request->sub_topic_name; // Default to empty array if null
 
         foreach ($sourceTitles as $index => $sourceTitle) {
             // Retrieve sub topic name if available
-            $subTopicName = isset($subTopicNames[$index]) ? $subTopicNames[$index] : null;
+            // $subTopicName = isset($subTopicNames[$index]) ? $subTopicNames[$index] : null;
 
             $classwork = Classwork::create([
                 'grade_id' => $gradeId,
@@ -58,7 +58,7 @@ class ClassworkController extends Controller
                 'curriculum_id' => $curriculumId,
                 'topic_name' => $topicName,
                 'source_title' => $sourceTitle,
-                'sub_topic_name' => $subTopicName
+                'sub_topic_name' => $subTopicNames[$index]
             ]);
 
             if ($sourceTypes[$index] == 'url') {
@@ -69,9 +69,9 @@ class ClassworkController extends Controller
 
                 if($file != null){
                     $fileName = uniqid() . $file->getClientOriginalName();
-                    // dd($filename);
+                    // dd($fileName);
 
-                    $file->storeAs('classwork_files',$fileName);
+                    $file->storeAs('public/classwork_files',$fileName);
 
                     $classwork->update(['file' => $fileName]);
                 }
@@ -162,6 +162,7 @@ class ClassworkController extends Controller
 
     public function updateData(Request $request){
 
+        // dd($request->all());
         Log::info($request->all());
 
         $classworkIds = $request->classwork_id;
@@ -198,7 +199,7 @@ class ClassworkController extends Controller
                     $fileName = uniqid() . $file->getClientOriginalName();
                     // dd($filename);
 
-                    $file->storeAs('classwork_files',$fileName);
+                    $file->storeAs('public/classwork_files',$fileName);
 
                     $classwork->update(['file' => $fileName]);
                 }

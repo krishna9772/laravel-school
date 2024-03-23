@@ -47,11 +47,8 @@
                         </div>
                         <div class="form-group col-6">
                             <label for="" class="form-label required">Select Teacher</label>
-                            <select name="teacher_id[]" class="form-control">
+                            <select name="teacher_id[]" class="form-control teacherSelect">
                                 <option value="">Select Teacher</option>
-                                @foreach ($teachers as $teacher)
-                                    <option value="{{$teacher->user_id}}">{{$teacher->user_name}}</option>
-                                @endforeach
                             </select>
                             <p class="text-danger mt-1 teacher-id-error"></p>
                         </div>
@@ -200,11 +197,8 @@ $(document).ready(function () {
                             <p class="text-danger curriculum-name-error"></p> <!-- Unique ID for error message -->
                         </div>
                         <div class="form-group col-6">
-                            <select name="teacher_id[]" class="form-control">
+                            <select name="teacher_id[]" class="form-control teacherSelect">
                                 <option value="">Select Teacher</option>
-                                @foreach ($teachers as $teacher)
-                                    <option value="{{$teacher->user_id}}">{{$teacher->user_name}}</option>
-                                @endforeach
                             </select>
                             <p class="text-danger mt-1 teacher-id-error"></p> <!-- Unique ID for error message -->
                         </div>
@@ -213,6 +207,56 @@ $(document).ready(function () {
                 $("#dynamicRows").append(newRow);
                 inputFieldCount++;
                 toggleButtons();
+            }
+        });
+
+
+        $('#gradeSelect').change(function() {
+            var gradeId = $(this).val();
+            $('.teacherSelect').empty(); // Clear previous options
+            $('#selectBoxError1').text('');
+
+
+            if (gradeId === '') {
+                // If 'Select Grade' is selected, show 'Select Class' in class select box
+                $('.teacherSelect').append($('<option>', {
+                    value: '',
+                    text : 'Select Teacher',
+                }));
+            } else {
+                // Filter classes based on selected grade
+                var teachersFound = false;
+                @foreach ($teachers as $teacher)
+                    @foreach ($teacher->userGradeClasses as $gradeClass)
+                        if ('{{ $gradeClass->grade_id }}' === gradeId) {
+                            $('.teacherSelect').append($('<option>', {
+                                value: '{{ $teacher->id }}',
+                                text : '{{ $teacher->user_name }}'
+                            }));
+                            teachersFound = true;
+                        }
+                    @endforeach
+                @endforeach
+
+                $('#selectBoxError2').text('');
+                $('#selectBoxError3').text('');
+
+                if (!teachersFound) {
+                    $('.teacherSelect').append($('<option>', {
+                        value: '',
+                        text : 'No Teachers in this grade'
+                    }));
+                }
+            }
+        });
+
+        $('.teacherSelect').click(function() {
+            var selectedGrade = $('#gradeSelect').val();
+            if (selectedGrade === '') {
+                $('#selectBoxError2').text('First, select a grade');
+                // return false; // Prevent the dropdown from opening
+            } else {
+                $('#selectBoxError2').text('');
             }
         });
 

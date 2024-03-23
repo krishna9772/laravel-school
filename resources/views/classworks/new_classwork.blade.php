@@ -154,6 +154,7 @@
 
 <script>
 
+
 $(document).ready(function () {
 
     $.ajaxSetup({
@@ -196,28 +197,31 @@ $(document).ready(function () {
         var labelsAdded = false;
 
         $('#urlBtn').click(function(){
+            console.log('hello wro dl');
             $('#newClassworkModal').modal('hide');
 
             if (!labelsAdded) {
 
                 var newRowWithLabels = `<div class='newAddedRows'>
-                <input type="hidden" name="source_type[]" value="url">
-                                            <input type="hidden" name="file[]" value="">
-                                            <div class="form-group">
-                                                <label for="" class="form-label required">Sub Topic Name</label>
-                                                <input type="text" name="sub_topic_name[]" id="" class="form-control" placeholder="Enter Sub Topic Name">
+                                            <input type="hidden" name="source_type[]" value="url">
+                                                <input type="hidden" name="file[]" value="">
+                                                <div class="form-group">
+                                                    <label for="" class="form-label required">Sub Topic Name</label>
+                                                    <input type="text" name="sub_topic_name[]" class="form-control subTopicNameInputBox" placeholder="Enter Sub Topic Name">
+                                                    <p class="text-danger subTopicNameError"></p>
+                                                </div>
+                                                <div class="row">
+                                                <div class="form-group col-6">
+                                                    <label for="" class="form-label required">Source Title</label>
+                                                    <input type="text" name="source_title[]" class="form-control sourceTitleInputBox" placeholder="Enter Source Title">
+                                                    <p class="text-danger sourceTitleError"></p>
+                                                </div>
+                                                <div class="form-group col-6">
+                                                    <label for="" class="form-label required">URL Link/Browse File</label>
+                                                    <input type="text" name="url[]" class="form-control urlInputBox" placeholder="Enter URL">
+                                                    <p class="text-danger urlError"></p>
+                                                </div>
                                             </div>
-                                            <div class="row">
-                                            <div class="form-group col-6">
-                                                <label for="" class="form-label required">Source Title</label>
-                                                <input type="text" name="source_title[]" class="form-control" placeholder="Enter Source Title">
-                                                <p class="text-danger curriculum-name-error"></p>
-                                            </div>
-                                            <div class="form-group col-6">
-                                                <label for="" class="form-label required">URL Link/Browse File</label>
-                                                <input type="text" name="url[]" class="form-control" placeholder="Enter URL">
-                                            </div>
-                                        </div>
                                         </div>`;
 
                 $('#dynamicRows').append(newRowWithLabels);
@@ -230,15 +234,17 @@ $(document).ready(function () {
                 <input type="hidden" name="source_type[]" value="url">
                         <input type="hidden" name="file[]" value="">
                         <div class="form-group">
-                            <input type="text" name="sub_topic_name[]" id="" class="form-control" placeholder="Enter Sub Topic Name">
-                        </div>
+                            <input type="text" name="sub_topic_name[]" class="form-control subTopicNameInputBox" placeholder="Enter Sub Topic Name">
+                            <p class="text-danger subTopicNameError"></p>
+                            </div>
                         <div class="row">
                             <div class="form-group col-6">
-                                <input type="text" name="source_title[]" class="form-control" placeholder="Enter Source Title">
-                                <p class="text-danger curriculum-name-error"></p>
+                                <input type="text" name="source_title[]" class="form-control sourceTitleInputBox" placeholder="Enter Source Title">
+                                <p class="text-danger sourceTitleError"></p>
                             </div>
                             <div class="form-group col-6">
-                                <input type="text" name="url[]" class="form-control" placeholder="Enter URL">
+                                <input type="text" name="url[]" class="form-control urlInputBox" placeholder="Enter URL">
+                                <p class="text-danger urlError"></p>
                             </div>
                         </div>
                         </div>`;
@@ -267,20 +273,22 @@ $(document).ready(function () {
                       <input type="hidden" name="url[]" value="">
                       <div class="form-group">
                           <label for="" class="form-label required">Sub Topic Name</label>
-                          <input type="text" name="sub_topic_name[]" id="" class="form-control" placeholder="Enter Sub Topic Name">
+                          <input type="text" name="sub_topic_name[]" class="form-control subTopicNameInputBox" placeholder="Enter Sub Topic Name">
+                          <p class="text-danger subTopicNameError"></p>
                       </div>
                       <div class="row">
                           <div class="form-group col-6">
                               <label for="" class="form-label required">Source Title</label>
-                              <input type="text" name="source_title[]" class="form-control" placeholder="Enter Source Title">
-                              <p class="text-danger curriculum-name-error"></p>
+                              <input type="text" name="source_title[]" class="form-control sourceTitleInputBox" placeholder="Enter Source Title">
+                              <p class="text-danger sourceTitleError"></p>
                           </div>
                           <div class="form-group col-6 file-upload-wrapper">
                               <label for="" class="form-label required">URL Link/Browse file</label>
                               <div class="custom-file">
-                                  <input type="file" name="file[]" class="custom-file-input" id="customFile">
+                                  <input type="file" name="file[]" class="custom-file-input fileInputBox" id="customFile">
                                   <label for="customFile" class="custom-file-label">No file chosen</label>
                               </div>
+                              <p class="text-danger fileError"></p>
                           </div>
                       </div>
                   </div>`;
@@ -301,20 +309,31 @@ $(document).ready(function () {
                 var newRowWithoutLabels = `<div class='newAddedRows'> <input type="hidden" name="source_type[]" value="file">
                 <input type="hidden" name="url[]" value="">
                 <div class="form-group">
-                    <input type="text" name="sub_topic_name[]" id="" class="form-control" placeholder="Enter Sub Topic Name">
+                    <input type="text" name="sub_topic_name[]" class="form-control subTopicNameInputBox" placeholder="Enter Sub Topic Name">
+                    <p class="text-danger subTopicNameError"></p>
                 </div>
                 <div class="row">
                     <div class="form-group col-6">
-                        <input type="text" name="source_title[]" class="form-control" placeholder="Enter Source Title">
-                        <p class="text-danger curriculum-name-error"></p>
+                        <input type="text" name="source_title[]" class="form-control sourceTitleInputBox" placeholder="Enter Source Title">
+                        <p class="text-danger sourceTitleError"></p>
                     </div>
-                    <div class="form-group col-6">
-                        <input type="file" name="file[]" class="form-control" placeholder="Browse File">
-                    </div>
+                    <div class="form-group col-6 file-upload-wrapper">
+                          <div class="custom-file">
+                              <input type="file" name="file[]" class="custom-file-input fileInputBox" id="customFile">
+                              <label for="customFile" class="custom-file-label">No file chosen</label>
+                          </div>
+                        <p class="text-danger fileError"></p>
+                      </div>
                 </div>
             </div>`;
 
                 $('#dynamicRows').append(newRowWithoutLabels);
+
+
+                $('.custom-file-input').change(function() {
+                      var filename = $(this).val().split('\\').pop(); // Get filename from path
+                      $(this).next('.custom-file-label').html(filename);
+                  });
             }
 
 
@@ -362,22 +381,6 @@ $(document).ready(function () {
             }
         }
 
-        $('#gradeSelect').change(function () {
-            validateField($('#gradeSelect'), $('#gradeSelectError'), 'Grade select field is required');
-        });
-
-        $('#classSelect').change(function () {
-            validateField($('#classSelect'), $('#classSelectError'), 'Class select field is required');
-        });
-
-        $('#curriculumSelect').change(function () {
-            validateField($('#curriculumSelect'), $('#curriculumSelectError'), 'Curriculum select field is required');
-        });
-
-        $('#topicNameInputBox').on('input', function () {
-            validateField($('#topicNameInputBox'), $('#topicNameError'), 'Topic Name field is required');
-        });
-
         function validateFileType(fileInput) {
             var fileName = fileInput.val();
             var validExtensions = ['doc', 'docx', 'pdf'];
@@ -398,18 +401,39 @@ $(document).ready(function () {
         // Submit form handler
         $('#addClassworkForm').submit(function (e) {
             e.preventDefault();
+            // console.log('hello worl d');
 
             // Validate all fields
             validateField($('#gradeSelect'), $('#gradeSelectError'), 'Grade select field is required');
             validateField($('#classSelect'), $('#classSelectError'), 'Class select field is required');
             validateField($('#curriculumSelect'), $('#curriculumSelectError'), 'Curriculum select field is required');
             validateField($('#topicNameInputBox'), $('#topicNameError'), 'Topic Name field is required');
+            // validateField($('.subTopicNameInputBox'),$('.subTopicNameError'), 'Sub Topic Name field is required');
+            // validateField($('.sourceTitleInputBox'),$('.sourceTitleError'), 'Source Title field is required');
+            // validateField($('.fileInputBox'),$('.fileError'), 'File field is required');
+            // validateField($('.urlInputBox'),$('.urlError'), 'Url field is required');
+
+            // function validateNewField(field, errorElement, errorMessage) {
+            //     if (field.val() === '') { // Check if field is empty after trimming whitespace
+            //         if (!field.hasClass('is-invalid')) { // Check if error is not already shown
+            //             field.addClass('is-invalid');
+            //             errorElement.html(errorMessage);
+            //         }
+            //     } else {
+            //         removeError(field, errorElement);
+            //     }
+            // }
+
 
             var sourceTitles = $("input[name='source_title[]']");
+            // console.log('source titles are ' + sourceTitles);
             var sourceTitleProvided = false;
 
             sourceTitles.each(function() {
                 if ($(this).val() !== '') {
+
+                    // $(this).addClass('is-invalid');
+                    // $(this).next('.sourceTitleError').html('Source Title field is required');
                     sourceTitleProvided = true;
                     return false;
                 }
@@ -420,6 +444,42 @@ $(document).ready(function () {
                 $('#errorModal').modal('show');
                 return; // Prevent form submission
             }
+
+            var subTopicNames = $("input[name='sub_topic_name[]']");
+            // console.log('sub topic names are ' + subTopicNames);
+
+            subTopicNames.each(function() {
+                // console.log("Value of input:", $(this).val());
+                if ($(this).val() == '') {
+                    console.log('hello world');
+                    $(this).addClass('is-invalid');
+                    $(this).next('.subTopicNameError').html('Sub Topic Name field is required');
+                }
+            });
+
+            var urls = $("input[name='url[]']");
+            urls.each(function() {
+                // console.log("Value of input:", $(this).val());
+                if ($(this).val() == '') {
+                    $(this).addClass('is-invalid');
+                    $(this).next('.urlError').html('Url field is required');
+                }
+            });
+
+            var files = $("input[name='file[]']");
+            urls.each(function() {
+                // console.log("Value of input:", $(this).val());
+                if ($(this).val() == '') {
+                    $(this).addClass('is-invalid');
+                    $(this).next('.fileError').html('File field is required');
+                }
+            });
+
+            // if(!subTopicNameProvided){
+            //     $('.subTopicNameInputBox').addClass('is-invalid');
+            //     $('.sub')
+            // }
+
 
             var fileInputs = $('input[type="file"]');
             var isValid = true;
@@ -437,7 +497,7 @@ $(document).ready(function () {
             }
 
 
-            if ($('#gradeSelect').val() != '' && $('#classSelect').val() != '' && $('#curriculumSelect').val() != '' && $('#topicNameInputBox').val() != '') {
+            if ($('#gradeSelect').val() != '' && $('#classSelect').val() != '' && $('#curriculumSelect').val() != '' && $('#topicNameInputBox').val() != '' && $('.subTopicNameInputBox').val() != '' && $('.urlInputBox').val() != '' && $('.fileInputBox').val() != '') {
                 this.submit();
             }
         });

@@ -179,13 +179,13 @@
                 <li class="nav-item">
                     <a href="{{route('classworks.index')}}" class="nav-link {{ Route::is('classworks.index') ? 'active'  : '' }}">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>All Classworks</p>
+                    <p>List</p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{route('classworks.create')}}" class="nav-link {{ Route::is('classworks.create') ? 'active'  : '' }}">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>New Classwork</p>
+                    <p>New</p>
                     </a>
                 </li>
                 {{-- <li class="nav-item">

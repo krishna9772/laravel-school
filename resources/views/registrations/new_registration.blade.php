@@ -181,10 +181,10 @@
 
                                 <div class="row mt-2">
                                     <div class="col">
-                                        <label for="">select</label>
+                                        <label for="">Number</label>
                                         <select id="region" class="form-control">
-                                            <option selected>ရွေးပါ</option>
-                                            <option value=1>၁</option>
+                                            <option selected disabled>Options</option>
+                                            {{-- <option value=1>၁</option>
                                             <option value=2>၂</option>
                                             <option value=3>၃</option>
                                             <option value=4>၄</option>
@@ -197,27 +197,50 @@
                                             <option value=11>၁၁</option>
                                             <option value=12>၁၂</option>
                                             <option value=13>၁၃</option>
-                                            <option value=14>၁၄</option>
+                                            <option value=14>၁၄</option> --}}
+                                            <option value=1>1</option>
+                                            <option value=2>2</option>
+                                            <option value=3>3</option>
+                                            <option value=4>4</option>
+                                            <option value=5>5</option>
+                                            <option value=6>6</option>
+                                            <option value=7>7</option>
+                                            <option value=8>8</option>
+                                            <option value=9>9</option>
+                                            <option value=10>10</option>
+                                            <option value=11>11</option>
+                                            <option value=12>12</option>
+                                            <option value=13>13</option>
+                                            <option value=14>14</option>
+
+
                                         </select>
                                     </div>
                                     <div class="col">
                                             <label for="code" class="">
-                                                မြို့နယ်
+                                                {{-- မြို့နယ် --}}
+                                                Township
                                             </label>
                                             <select id="code" class="form-control">
                                             </select>
                                     </div>
                                     <div class="col">
-                                        <label for="number_type" class="">အမျိုးအစား</label>
+                                        <label for="number_type" class="">
+                                            {{-- အမျိုးအစား --}} Type
+                                        </label>
                                             <select id="number_type" class="form-control">
-                                              <option value="(နိုင်)">နိုင်</option>
+                                              {{-- <option value="(နိုင်)">နိုင်</option>
                                               <option value="(ဧည့်)">ဧည့်</option>
-                                              <option value="(ပြု)">ပြု</option>
+                                              <option value="(ပြု)">ပြု</option> --}}
+                                              <option value="N">N</option>
+                                              <option value="E">E</option>
+                                              <option value="P">P</option>
+
                                           </select>
                                     </div>
                                     <div class="col">
                                         <div class="mb-6">
-                                            <label for="number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">နံပါတ်</label>
+                                            <label for="number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Number</label>
                                             <input type="text" id="number" maxlength="6" class="form-control">
                                         </div>
                                     </div>
@@ -331,22 +354,23 @@
                 const region = $('#region').val();
                 const numberType = $('#number_type').val();
                 const newMMNumber = enToMM(region);
-                const newSelectedCode = getNRC(code);
+                const newSelectedCode = code;
 
                 function enToMM(value) {
-                    const mmNumbers = ["၀", "၁", "၂", "၃", "၄", "၅", "၆", "၇", "၈", "၉", "၁၀", "၁၁", "၁၂", "၁၃", "၁၄"];
+                    // const mmNumbers = ["၀", "၁", "၂", "၃", "၄", "၅", "၆", "၇", "၈", "၉", "၁၀", "၁၁", "၁၂", "၁၃", "၁၄"];
+                    const mmNumbers = ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14'];
                     return mmNumbers.find((mmNumber, key) => key == value);
                 }
 
-                function getNRC(value) {
-                    return value.substring(1, 4);
-                }
+                // function getNRC(value) {
+                //     return value.substring(1, 4);
+                // }
 
 
 
-                var combinedValue = newMMNumber + '/' + newSelectedCode + numberType + number;
+                var combinedValue = newMMNumber + '/' + newSelectedCode + '( '+numberType+' )' + number;
                 $('#combinedValue').show();
-                $('#combinedValue').val('မှတ်ပုံတင်နံပါတ် - ' +  combinedValue);
+                $('#combinedValue').val('NRC - ' +  combinedValue);
                 $('#nrcNumber').val(combinedValue);
             }
 
@@ -398,8 +422,8 @@
                           // Add new options based on fetched data
                           nrcs.forEach(item => {
                               const option = document.createElement('option');
-                              option.value = item.name_mm;
-                              option.text = item.name_mm;
+                              option.value = item.name_en;
+                              option.text = item.name_en;
                               resultsDropdown.add(option);
                           });
                     })
@@ -409,21 +433,6 @@
             $('#newRegistrationForm').submit(function (e) {
 
                   e.preventDefault();
-
-                //   function submitForm(event){
-                //     event.preventDefault();
-
-
-                    // const selectedRegion = document.getElementById('region').value;
-                    // const selectedCode = document.getElementById('code').value;
-                    // const selectedNumberType = document.getElementById('number_type').value;
-                    // const number = document.getElementById('number').value;
-
-                    // if(validateAndProcessInput()) {
-                    //     // If validation succeeds, submit the form
-                    //     this.submit();
-                    // }
-
 
 
                     validateAndProcessInput();
@@ -441,14 +450,16 @@
                         }
 
                         if (!code || !number) {
-                            $('#nrcError').html('မြို့နယ်နှင့် နံပါတ်ကို ထည့်ပေးပါ');
+                            // $('#nrcError').html('မြို့နယ်နှင့် နံပါတ်ကို ထည့်ပေးပါ');
+                            $('#nrcError').html('Pleaes Select Township Code');
                             return false; // Return false to prevent form submission
                         } else {
                             $('#nrcError').html('');
                         }
 
                         if(number.length != 6){
-                            $('#nrcError').html('မှတ်ပုံတင်နံပါတ် မှားနေပါသည်။');
+                            // $('#nrcError').html('မှတ်ပုံတင်နံပါတ် မှားနေပါသည်။');
+                            $('#nrcError').html('Wrong Nrc number');
                             console.log('မှတ်ပုံတင်နံပါတ် မှားနေပါသည်။');
                             return false;
                         } else{
@@ -456,25 +467,29 @@
                         }
 
                         function enToMM(value) {
-                            const mmNumbers = ["၀", "၁", "၂", "၃", "၄", "၅", "၆", "၇", "၈", "၉", "၁၀", "၁၁", "၁၂", "၁၃", "၁၄"];
+                            // const mmNumbers = ["၀", "၁", "၂", "၃", "၄", "၅", "၆", "၇", "၈", "၉", "၁၀", "၁၁", "၁၂", "၁၃", "၁၄"];
+                            const mmNumbers = ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14'];
+
                             return mmNumbers.find((mmNumber, key) => key == value);
                         }
 
-                        function getNRC(value) {
-                            return value.substring(1, 4);
-                        }
+                        // function getNRC(value) {
+                        //     return value.substring(1, 7);
+                        // }
 
                         const region = $('#region').val();
                         const numberType = $('#number_type').val();
                         const newMMNumber = enToMM(region);
-                        const newSelectedCode = getNRC(code);
+                        const newSelectedCode = code;
 
-                        var combinedValue = newMMNumber + '/' + newSelectedCode + numberType + number;
+                        var combinedValue = newMMNumber + '/' + newSelectedCode + '( '+numberType+' )' + number;
                         $('#combinedValue').show();
-                        $('#combinedValue').val('မှတ်ပုံတင်နံပါတ် - ' +  combinedValue);
-                        $('')
+                        $('#combinedValue').val('NRC - ' +  combinedValue);
 
                         return true; // Return true to allow form submission
+
+                       
+
                     }
 
 

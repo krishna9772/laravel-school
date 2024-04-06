@@ -29,7 +29,7 @@
               <div class="card-body">
 
                 <div class="form-group">
-                    <label for="" class="form-label required">Select Grade</label>
+                    <label for="" class="form-label required">Grade</label>
                     <select name="gradeSelect" id="gradeSelect" class="form-control">
                         <option value="">Select Grade</option>
                         @foreach ($grades as $grade)
@@ -55,7 +55,7 @@
 
 
                 <div class="form-group">
-                    <label for="" class="form-label required">Select Class</label>
+                    <label for="" class="form-label required">Class</label>
                     <select name="classSelect" id="classSelect" class="form-control">
                         <option value="">Select Class</option>
                     </select>
@@ -63,9 +63,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="" class="form-label required">Select Curriculum</label>
+                    <label for="" class="form-label required">Subjects</label>
                     <select name="curriculumSelect" id="curriculumSelect" class="form-control">
-                        <option value="">Select Curriculum</option>
+                        <option value="">Select Subject</option>
                     </select>
                     <p class="text-danger mt-1" id="curriculumSelectError"></p>
                 </div>
@@ -575,7 +575,7 @@ $(document).ready(function () {
                 if (!curriculumFound) {
                     $('#curriculumSelect').append($('<option>', {
                         value: '',
-                        text : 'No Curricula in this grade'
+                        text : 'No Subject in this grade'
                     }));
                 }
             }

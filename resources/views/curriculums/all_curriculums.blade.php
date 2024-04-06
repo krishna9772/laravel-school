@@ -136,12 +136,12 @@
         @else
         <div class="text-center pt-5" >
             <h4>
-                No Curricula Created Yet
+                No Subjects Created Yet
             </h4>
 
             <div class="mt-5">
                 <a href="{{route('curricula.create') }}">
-                    <button class="btn btn-primary"> <i class="fa fa-plus"></i> Create Curriculum</button>
+                    <button class="btn btn-primary"> <i class="fa fa-plus"></i> New </button>
                 </a>
             </div>
 

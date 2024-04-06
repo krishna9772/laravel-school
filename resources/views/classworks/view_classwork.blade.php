@@ -129,7 +129,7 @@
                                                 <a href={{$data->url}} target="_blank">{{$data->url}}</a>
                                             @endif
                                             @if ($data->file != null)
-                                                <a href="{{asset('classwork_files/'.$data->file)}}" download>
+                                                <a href="{{asset('storage/classwork_files/'.$data->file)}}" download>
                                                     {{ $data->file}}
                                                 </a>
                                             @endif

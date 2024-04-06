@@ -48,7 +48,7 @@
 
                             <div class="form-group">
                                 <label for="" class="form-label required">Name</label>
-                                <input type="text" name="user_name" id="userNameInputBox" class="form-control" placeholder="Enter User Name" value="{{$data->user_name}}">
+                                <input type="text" name="user_name" id="userNameInputBox" class="form-control" placeholder="Enter User Name" value="{{$data->user_name}}" autocomplete="false">
                                 <p class="text-danger" id="userNameErrorMessage"></p>
                             </div>
 
@@ -64,7 +64,7 @@
 
                             <div class="form-group">
                                 <label for="" class="form-label required">Email</label>
-                                <input type="email" name="email" id="emailInputBox" class="form-control" placeholder="Enter User Email">
+                                <input type="email" name="email" id="emailInputBox" class="form-control" placeholder="Enter User Email" autocomplete="false">
                                 <p class="text-danger" id="emailErrorMessage"></p>
                             </div>
 

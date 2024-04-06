@@ -61,6 +61,7 @@ class ClassworkController extends Controller
                 'sub_topic_name' => $subTopicNames[$index]
             ]);
 
+
             if ($sourceTypes[$index] == 'url') {
                 $url = $urls[$index] ?? null;
                 $classwork->update(['url' => $url]);

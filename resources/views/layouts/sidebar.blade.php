@@ -1,5 +1,5 @@
 <!-- Main Sidebar Container -->
-<aside class="main-sidebar sidebar-dark-primary elevation-4 position-fixed h-100">
+<aside class="main-sidebar sidebar-dark-blue elevation-4 position-fixed h-100">
     <!-- Brand Logo -->
     {{-- <div class="" style="margin-right: 30px !important"> --}}
         <a href="index3.html" class="nav-link" style="margin-left: 8px; margin-top: 10px">

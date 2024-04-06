@@ -40,8 +40,6 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
-        Log::info($request->all());
-
         // Get the highest user ID from the database
         $highestId = intval(User::max('user_id')) ?? 0;
 

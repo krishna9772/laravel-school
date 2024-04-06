@@ -62,7 +62,7 @@
                                     <select name="teacher_id[]" class="form-control">
                                         <option value="">Select Teacher</option>
                                         @foreach ($teachers as $teacher)
-                                            <option value="{{$teacher->user_id}}" @if($teacher->user_id == $curriculum->user_id) selected @endif>{{$teacher->user_name}}</option>
+                                            <option value="{{$teacher->id}}" @if($teacher->user_id == $curriculum->user_id) selected @endif>{{$teacher->user_name}}</option>
                                         @endforeach
                                     </select>
                                     <p class="text-danger mt-1 teacher-id-error"></p>
@@ -295,7 +295,7 @@
                             <select name="teacher_id[]" class="form-control">
                                 <option value="">Select Teacher</option>
                                 @foreach ($teachers as $teacher)
-                                    <option value="{{$teacher->user_id}}">{{$teacher->user_name}}</option>
+                                    <option value="{{$teacher->id}}">{{$teacher->user_name}}</option>
                                 @endforeach
                             </select>
                             <p class="text-danger mt-1 teacher-id-error"></p>

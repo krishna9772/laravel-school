@@ -53,7 +53,7 @@
 
                             <div class="form-group">
                                 <label for="" class="form-label required">Name</label>
-                                <input type="text" name="user_name" id="userNameInputBox" class="form-control" placeholder="Enter User Name">
+                                <input type="text" name="user_name" id="userNameInputBox" class="form-control" placeholder="Enter User Name" autocomplete="false">
                                 <p class="text-danger" id="userNameErrorMessage"></p>
                             </div>
 
@@ -76,7 +76,7 @@
                             <div class="row">
                                 <div class="form-group col mr-1">
                                     <label for="" class="form-label required">Password</label>
-                                    <input type="password" name="password" id="passwordInputBox" class="form-control" placeholder="Enter User Password">
+                                    <input type="password" name="password" id="passwordInputBox" class="form-control" placeholder="Enter User Password" autocomplete="false">
                                     <p class="text-danger" id="passwordErrorMessage"></p>
                                 </div>
 

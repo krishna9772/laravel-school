@@ -21,7 +21,7 @@ class CurriculumController extends Controller
      */
 
     public function index(){
-        $curriculums = Curriculum::with('grade')->with('user')->get();
+        $curriculums = Curriculum::where('status','1')->with('grade')->with('user')->get();
 
         // Group the data by 'grade_id'
         $groupedCurriculums = $curriculums->groupBy('grade_id');
@@ -67,7 +67,6 @@ class CurriculumController extends Controller
 
 
         foreach ($curriculumNames as $index => $curriculumName) {
-            print_r($curriculumName);   
             Curriculum::create([
                 'user_id' => $teacherIds[$index],
                 'grade_id' => $request->grade_id,

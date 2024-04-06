@@ -603,8 +603,6 @@ $(document).ready(function () {
 
         function toggleButtons() {
 
-
-
             inputFieldCount = $("input[name='sub_topic_name[]']").length;
             console.log('input field count is ' + inputFieldCount);
 

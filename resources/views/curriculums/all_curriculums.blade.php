@@ -38,7 +38,7 @@
         @if (count($paginatedData) != 0)
             <div class="">
                 <div class="d-flex justify-content-between py-4">
-                    <h3 class="">Grades With Curricula</h3>
+                    <h3 class="">Subjects</h3>
                     <div>
                         <div class="d-flex mr-5">
                             <label for="" class="  form-label mt-2 mr-1">Filter:</label>
@@ -111,10 +111,10 @@
 
                                 <ul class="list-group">
                                     @foreach ($data as $curriculum)
-                                            <li class="list-group-item">
-                                                <span class="float-left">{{$curriculum->curriculum_name }}</span>
-                                                <span class="float-right">{{$curriculum->user->user_name }}</span>
-                                            </li>
+                                        <li class="list-group-item">
+                                            <span class="float-left">{{$curriculum->curriculum_name }}</span>
+                                            <span class="float-right">{{$curriculum->user->user_name }}</span>
+                                        </li>
                                     @endforeach
                                     {{-- @foreach ($data as $user)
                                             <li class="list-group-item">

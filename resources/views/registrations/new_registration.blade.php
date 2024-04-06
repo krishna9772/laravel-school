@@ -354,7 +354,7 @@
                 const region = $('#region').val();
                 const numberType = $('#number_type').val();
                 const newMMNumber = enToMM(region);
-                const newSelectedCode = code;
+                const newSelectedCode = code ? code : '----';
 
                 function enToMM(value) {
                     // const mmNumbers = ["၀", "၁", "၂", "၃", "၄", "၅", "၆", "၇", "၈", "၉", "၁၀", "၁၁", "၁၂", "၁၃", "၁၄"];

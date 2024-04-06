@@ -127,7 +127,7 @@
                                         <span class="text-dark">{{$data->source_title}}</span> -
                                         <span>
                                             @if ($data->url != null)
-                                                {{$data->url}}
+                                                <a href={{$data->url}} target="_blank">{{$data->url}}</a>
                                             @endif
                                             @if ($data->file != null)
                                                 {{ $data->file}}

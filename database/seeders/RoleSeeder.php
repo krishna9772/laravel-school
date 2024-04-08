@@ -15,7 +15,8 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         Role::create(['name' => 'admin']);
-        Role::create(['name' => 'teacher']);
+        Role::create(['name' => 'subject teacher']);
+        Role::create(['name' => 'class teacher']);
         Role::create(['name' => 'student']);
 
 
@@ -37,10 +38,15 @@ class RoleSeeder extends Seeder
             'manage exams'
         ]);
 
-        $teacher = Role::findByName('teacher');
-        $teacher->givePermissionTo([
+        $subjectTeacher = Role::findByName('subject teacher');
+        $subjectTeacher->givePermissionTo([
             'manage classworks',
             'manage exams'
+        ]);
+
+        $classTeacher = Role::findByName('class teacher');
+        $classTeacher->givePermissionTo([
+            'manage classworks',
         ]);
 
     }

@@ -64,7 +64,7 @@
 
                             <div class="form-group">
                                 <label for="" class="form-label required">Email</label>
-                                <input type="email" name="email" id="emailInputBox" class="form-control" placeholder="Enter User Email">
+                                <input type="email" name="email" id="emailInputBox" class="form-control" placeholder="Enter User Email" value="{{$data->email}}">
                                 <p class="text-danger" id="emailErrorMessage"></p>
                             </div>
 

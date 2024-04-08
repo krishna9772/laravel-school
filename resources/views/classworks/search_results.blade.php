@@ -6,7 +6,7 @@
 
     {{-- <form action="" method="get"> --}}
 
-        <h3>{{$gradeName}} - {{$className}} Classwork</h3>
+        <h3>{{$gradeName}} / {{$className}} / Classwork</h3>
 
         <div class="row">
             @foreach ($groupedClasswork as $index => $classwork)

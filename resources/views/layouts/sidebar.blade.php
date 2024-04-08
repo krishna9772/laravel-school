@@ -1,5 +1,5 @@
 <!-- Main Sidebar Container -->
-<aside class="main-sidebar sidebar-dark-primary elevation-4 position-fixed h-100">
+<aside class="main-sidebar sidebar-dark-blue elevation-4 position-fixed h-100">
     <!-- Brand Logo -->
     {{-- <div class="" style="margin-right: 30px !important"> --}}
         <a href="index3.html" class="nav-link" style="margin-left: 8px; margin-top: 10px">
@@ -34,10 +34,7 @@
 
             <li class="nav-item">
                 <a href="{{route('dashboard')}}" class="nav-link {{ Route::is('dashboard') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-th"></i>
-                <p>
-                    Dashboard
-                </p>
+                    <i class="nav-icon fas fa-th"></i><p>Dashboard</p>
                 </a>
             </li>
 
@@ -47,28 +44,35 @@
                 <a href="#" class="nav-link {{ Route::is('grades.*') ? 'active'  : '' }}">
                 {{-- <i class="nav-icon fas fa-tachometer-alt"></i> --}}
                 <img src="{{asset('images/menu_icons/result.png')}}" alt="" width="25px">
-                <p>
-                    Grades
-                    <i class="right fas fa-angle-left"></i>
-                </p>
+                <p>Grades <i class="right fas fa-angle-left"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
                 <li class="nav-item">
                     <a href="{{route('grades.index')}}" class="nav-link {{ Route::is('grades.index') ? 'active'  : '' }}">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>All Grades</p>
+                    <p>List</p>
                     </a>
                 </li>
                 <li class="nav-item">
+
                     <a href="{{route('grades.create')}}" class="nav-link {{ Route::is('grades.create') ? 'active'  : '' }}">
+                    {{-- @if(Route::is('grades.index'))
+                    <span class="far fa-circle" style="position: relative;">
+                        <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 5px; height: 5px; background-color: black; border-radius: 50%;"></span>
+                    </span>
+                    @else
+                        <i class='far fa-circle nav-icon'></i>
+                    @endif --}}
+
                     <i class="far fa-circle nav-icon"></i>
-                    <p>New Grade</p>
+
+                    <p>New</p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{route('grades.modify')}}" class="nav-link {{ Route::is('grades.modify') ? 'active'  : '' }}">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Update or Delete</p>
+                    <p>Edit</p>
                     </a>
                 </li>
                 </ul>
@@ -88,19 +92,19 @@
                 <li class="nav-item">
                     <a href="{{route('classes.index')}}" class="nav-link {{ Route::is('classes.index') ? 'active'  : '' }}">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>All Classes</p>
+                    <p>List</p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{route('classes.createNewClass')}}" class="nav-link {{ Route::is('classes.create') ? 'active'  : '' }}">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>New Class</p>
+                    <p>New</p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{route('classes.modify')}}" class="nav-link {{ Route::is('classes.modify') ? 'active'  : '' }}">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Update or Delete</p>
+                    <p>Edit</p>
                     </a>
                 </li>
                 </ul>
@@ -109,23 +113,19 @@
             {{-- registration section --}}
             <li class="nav-item {{ Route::is('users.*') ? 'menu-open'  : '' }}">
                 <a href="#" class="nav-link {{ Route::is('users.*') ? 'active'  : '' }}">
-                    <i class="nav-icon fa fa-address-card"></i>
-                    <p>
-                    Registrations
-                    <i class="right fas fa-angle-left"></i>
-                    </p>
+                    <i class="nav-icon fa fa-address-card"></i><p>Registrations<i class="right fas fa-angle-left"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item activ">
                       <a href="{{route('users.index')}}" class="nav-link {{ Route::is('users.index') ? 'active'  : '' }}">
                           <i class="far fa-circle nav-icon"></i>
-                          <p>All Registrations</p>
+                          <p>List</p>
                       </a>
                     </li>
                     <li class="nav-item">
                       <a href="{{route('users.create')}}" class="nav-link {{ Route::is('users.create') ? 'active'  : '' }}">
                           <i class="far fa-circle nav-icon"></i>
-                          <p>New Registration</p>
+                          <p>New</p>
                       </a>
                     </li>
                 </ul>
@@ -137,7 +137,7 @@
                   {{-- <i class="nav-icon fa fa-address-card"></i> --}}
                   <img src="{{asset('images/menu_icons/curriculum.png')}}" alt="" width="25px">
                   <p>
-                  Curricula
+                  Subjects
                   <i class="right fas fa-angle-left"></i>
                   </p>
               </a>
@@ -146,13 +146,13 @@
                   <li class="nav-item activ">
                     <a href="{{route('curricula.index')}}" class="nav-link {{ Route::is('curricula.index') ? 'active'  : '' }}">
                         <i class="far fa-circle nav-icon"></i>
-                        <p>All Curricula</p>
+                        <p>List</p>
                     </a>
                   </li>
                   <li class="nav-item">
                     <a href="{{route('curricula.create')}}" class="nav-link {{ Route::is('curricula.create') ? 'active'  : '' }}">
                         <i class="far fa-circle nav-icon"></i>
-                        <p>Add Curriculum</p>
+                        <p>New</p>
                     </a>
                   </li>
                   {{-- <li class="nav-item">
@@ -179,13 +179,13 @@
                 <li class="nav-item">
                     <a href="{{route('classworks.index')}}" class="nav-link {{ Route::is('classworks.index') ? 'active'  : '' }}">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>All Classworks</p>
+                    <p>List</p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{route('classworks.create')}}" class="nav-link {{ Route::is('classworks.create') ? 'active'  : '' }}">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>New Classwork</p>
+                    <p>New</p>
                     </a>
                 </li>
                 {{-- <li class="nav-item">
@@ -203,9 +203,7 @@
                 {{-- <i class="nav-icon fas fa-tachometer-alt"></i> --}}
                 <i class="fa fa-upload mr-2" aria-hidden="true"></i>
                 {{-- <img src="{{asset('images/menu_icons/homework.png')}}" alt="" width="25px"> --}}
-                <p>
-                    Promote Student
-                    <i class="right fas fa-angle-left"></i>
+                <p>Promotions<i class="right fas fa-angle-left"></i>
                 </p>
                 </a>
                 <ul class="nav nav-treeview">
@@ -218,10 +216,10 @@
               </ul>
             </li>
 
-            <li class="nav-item {{ Route::is('attendances.*') ? 'menu-open'  : '' }}">
+            {{-- <li class="nav-item {{ Route::is('attendances.*') ? 'menu-open'  : '' }}">
 
                 <a href="#" class="nav-link {{ Route::is('attendances.*') ? 'active'  : '' }}">
-                {{-- <i class="fa fa-wordpress" aria-hidden="true"></i> --}}
+                <i class="fa fa-wordpress" aria-hidden="true"></i>
                 <img src="{{asset('images/menu_icons/homework.png')}}" alt="" width="25px">
                 <p>
                     Attendance
@@ -243,7 +241,7 @@
                 </li>
 
               </ul>
-            </li>
+            </li> --}}
         </ul>
     </nav>
 

@@ -48,7 +48,7 @@
 
                             <div class="form-group">
                                 <label for="" class="form-label required">Name</label>
-                                <input type="text" name="user_name" id="userNameInputBox" class="form-control" placeholder="Enter User Name" value="{{$data->user_name}}">
+                                <input type="text" name="user_name" id="userNameInputBox" class="form-control" placeholder="Enter User Name" value="{{$data->user_name}}" autocomplete="false">
                                 <p class="text-danger" id="userNameErrorMessage"></p>
                             </div>
 
@@ -64,7 +64,11 @@
 
                             <div class="form-group">
                                 <label for="" class="form-label required">Email</label>
+<<<<<<< HEAD
                                 <input type="email" name="email" id="emailInputBox" class="form-control" placeholder="Enter User Email" value="{{$data->email}}">
+=======
+                                <input type="email" name="email" id="emailInputBox" class="form-control" placeholder="Enter User Email" autocomplete="false">
+>>>>>>> ed26d7f4591d505d8cdb6275dce2cabb3f5d9a51
                                 <p class="text-danger" id="emailErrorMessage"></p>
                             </div>
 
@@ -77,7 +81,7 @@
 
                                 <div class="form-group col pl-0">
                                     <label for="" class="required">Confirm Password</label>
-                                    <input type="password" name="password" id="passwordInputBox" class="form-control" placeholder="Retype Password">
+                                    <input type="password" name="confirm_password" id="passwordInputBox" class="form-control" placeholder="Retype Password">
                                     <p class="text-danger" id="passwordErrorMessage"></p>
                                 </div>
                             </div>
@@ -126,6 +130,16 @@
                                   </div>
                                 </div>
                             </div>
+
+                            <div class="form-group">
+                                <label for="" class="required">Select Teacher Type</label>
+                                <select name="teacher_type" id="teacherTypeSelect" class="form-control">
+                                    <option value="">Select Teacher Type</option>
+                                    <option value="subject" @if($data->teacher_type == 'subject') selected @endif>Subject</option>
+                                    <option value="classroom" @if($data->teacher_type == 'classroom') selected @endif>Classroom</option>
+                                </select>
+                                <p class="text-danger" id="teacherTypeErrorMessage"></p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -142,6 +156,8 @@
                                 <label for="">Date Of Birth</label>
                                 <div class="input-group">
                                   <input type="text" class="form-control custom-placeholder changeInputStyle" value="{{$data->date_of_birth}}" name="date_of_birth" id="dob-datepicker" placeholder="Enter Date Of Birth">
+                                  <p class="text-danger" id="dobErrorMessage"></p>
+
                                   <div class="input-group-append">
                                     <span class="input-group-text" id="dob-datepicker-icon" style="cursor: pointer"><i class="fas fa-calendar-alt"></i></span>
                                   </div>
@@ -238,6 +254,24 @@ $(document).ready(function() {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+
+    var user_type = '{{$data->user_type}}';
+
+    if (user_type == 'teacher') {
+        $('.admissionDateClass').closest('.form-group').hide();
+        $('#fatherNameInputBox').closest('.form-group').hide();
+        $('#motherNameInputBox').closest('.form-group').hide();
+        $('#transferedSchoolInputBox').closest('.form-group').hide();
+        $('#teacherTypeSelect').closest('.form-group').show();
+
+    } else {
+        $('.admissionDateClass').closest('.form-group').show();
+        $('#fatherNameInputBox').closest('.form-group').show();
+        $('#motherNameInputBox').closest('.form-group').show();
+        $('#transferedSchoolInputBox').closest('.form-group').show();
+        $('#teacherTypeSelect').closest('.form-group').hide();
+
+    }
 
     var initialFormHTML = $('#updateRegistrationForm').html();
 
@@ -343,11 +377,15 @@ $(document).ready(function() {
                 $('#fatherNameInputBox').closest('.form-group').hide();
                 $('#motherNameInputBox').closest('.form-group').hide();
                 $('#transferedSchoolInputBox').closest('.form-group').hide();
+                $('#teacherTypeSelect').closest('.form-group').show();
+
             } else {
                 $('.admissionDateClass').closest('.form-group').show();
                 $('#fatherNameInputBox').closest('.form-group').show();
                 $('#motherNameInputBox').closest('.form-group').show();
                 $('#transferedSchoolInputBox').closest('.form-group').show();
+                $('#teacherTypeSelect').closest('.form-group').hide();
+
             }
         });
 
@@ -378,7 +416,7 @@ $(document).ready(function() {
                 url: '{{ route('users.update', ['user' => ':user']) }}'.replace(':user', userId),
                 data: $(this).serialize(),
                 success: function (response) {
-                    if(response == 'success'){
+                    if(response == 'success'){  
                         window.location.href = '{{ route('users.index') }}';
                     }
                     },
@@ -386,10 +424,15 @@ $(document).ready(function() {
                     var err = eval("(" + xhr.responseText + ")");
                     var response = JSON.parse(xhr.responseText);
                         console.log(response);
-                    let userNameErrorMessage = response.errors.user_name ? response.errors.user_name[0] : '';
-                    let userTypeErrorMessage = response.errors.user_type ? response.errors.user_type[0] : '';
-                    let gradeSelectErrorMessage = response.errors.grade_select ? response.errors.grade_select[0] : '';
-                    let classSelectErrorMessage = response.errors.class_select ? response.errors.class_select[0] : '';
+                        let userNameErrorMessage = response.errors.user_name ? response.errors.user_name[0] : '';
+                        let emailErrorMessage = response.errors.email ? response.errors.email[0] : '';
+                        let passwordErrorMessage = response.errors.password ? response.errors.password[0] : '';
+                        let confirmPasswordErrorMessage = response.errors.confirm_password ? response.errors.confirm_password[0] : '';
+                        let userTypeErrorMessage = response.errors.user_type ? response.errors.user_type[0] : '';
+                        let gradeSelectErrorMessage = response.errors.grade_select ? response.errors.grade_select[0] : '';
+                        let classSelectErrorMessage = response.errors.class_select ? response.errors.class_select[0] : '';
+                        let dobErrorMessage = response.errors.date_of_birth ? response.errors.date_of_birth[0] : '';
+                        let teacherTypeErrorMessage = response.errors.teacher_type ? response.errors.teacher_type[0] : '';
 
                     if (userNameErrorMessage) {
                         $('#userNameErrorMessage').html(userNameErrorMessage);
@@ -408,6 +451,30 @@ $(document).ready(function() {
                         $('#typeSelect').removeClass('is-invalid');
                     }
 
+                    if (emailErrorMessage) {
+                        $('#emailErrorMessage').html(emailErrorMessage);
+                        $('#emailInputBox').addClass('is-invalid');
+                    } else {
+                        $('#emailErrorMessage').html('');
+                        $('#emailInputBox').removeClass('is-invalid');
+                    }
+
+                    if (passwordErrorMessage) {
+                        $('#passwordErrorMessage').html(passwordErrorMessage);
+                        $('#passwordInputBox').addClass('is-invalid');
+                    } else {
+                        $('#passwordErrorMessage').html('');
+                        $('#passwordInputBox').removeClass('is-invalid');
+                    }
+
+                    if (confirmPasswordErrorMessage) {
+                        $('#confirmPasswordErrorMessage').html(confirmPasswordErrorMessage);
+                        $('#confirmPasswordInputBox').addClass('is-invalid');
+                    } else {
+                        $('#confirmPasswordErrorMessage').html('');
+                        $('#confirmPasswordInputBox').removeClass('is-invalid');
+                    }
+
                     if(gradeSelectErrorMessage){
                         $('#selectBoxError1').html(gradeSelectErrorMessage);
                         $('#gradeSelect').addClass('is-invalid');
@@ -422,6 +489,14 @@ $(document).ready(function() {
                     }else{
                         $('#selectBoxError2').html('');
                         $('#classSelect').removeClass('is-invalid');
+                    }
+
+                    if(teacherTypeErrorMessage){
+                        $('#teacherTypeErrorMessage').html(teacherTypeErrorMessage);
+                        $('#teacherTypeSelect').addClass('is-invalid');
+                    }else{
+                        $('#teacherTypeErrorMessage').html('');
+                        $('#teacherTypeSelect').removeClass('is-invalid');
                     }
 
                 },

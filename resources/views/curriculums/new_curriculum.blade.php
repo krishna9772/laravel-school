@@ -19,7 +19,7 @@
           <!-- general form elements -->
           <div class="card card-primary">
             <div class="card-header">
-              <h3 class="card-title">Add New Curriculum</h3>
+              <h3 class="card-title">Add New Subject</h3>
             </div>
             <!-- /.card-header -->
             <!-- form start -->
@@ -41,8 +41,8 @@
                 <div id="dynamicRows">
                     <div class="row">
                         <div class="form-group col-6">
-                            <label for="" class="form-label required">Curriculum Name</label>
-                            <input type="text" name="curriculum_name[]" class="form-control" placeholder="Enter Curriculum Name">
+                            <label for="" class="form-label required">Subject</label>
+                            <input type="text" name="curriculum_name[]" class="form-control" placeholder="Enter Subject Name">
                             <p class="text-danger curriculum-name-error"></p>
                         </div>
                         <div class="form-group col-6">

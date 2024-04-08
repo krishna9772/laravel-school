@@ -65,6 +65,7 @@ class CurriculumController extends Controller
             return response()->json(['error' => 'Number of curriculum names does not match number of teacher IDs'], 400);
         }
 
+
         foreach ($curriculumNames as $index => $curriculumName) {
             Curriculum::create([
                 'user_id' => $teacherIds[$index],

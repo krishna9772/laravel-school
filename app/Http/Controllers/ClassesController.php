@@ -25,8 +25,6 @@ class ClassesController extends Controller
     public function createNewClass($gradeIdParameter = null)
     {
 
-        // dd($gradeIdParameter);
-
         $gradeName = Grade::where('id',$gradeIdParameter)->value('grade_name');
 
         $grades = Grade::get();
@@ -54,11 +52,6 @@ class ClassesController extends Controller
     public function modify(){
 
         $grades = Grade::with('classes')->get();
-
-        // foreach($grades as $grade){
-        //     echo $grade->classes . '<br>';
-        // }
-        // dd($grades->classes);
 
         return view('classes.update_delete',compact('grades'));
     }

@@ -53,8 +53,7 @@
 
     <div class="d-flex justify-content-between mb-5">
         <div class="">
-            <h3>{{$gradeName}} - {{$className}}</h3>
-            <h4 class="">{{$topicName}} Classwork</h4>
+            <h3>{{$gradeName}} / {{$className}} / {{$topicName}}</h3>
         </div>
         <div class="mt-3">
             <a href="{{route('classworks.create') }}">
@@ -127,10 +126,12 @@
                                         <span class="text-dark">{{$data->source_title}}</span> -
                                         <span>
                                             @if ($data->url != null)
-                                                {{$data->url}}
+                                                <a href={{$data->url}} target="_blank">{{$data->url}}</a>
                                             @endif
                                             @if ($data->file != null)
-                                                {{ $data->file}}
+                                                <a href="{{asset('storage/classwork_files/'.$data->file)}}" download>
+                                                    {{ $data->file}}
+                                                </a>
                                             @endif
                                         </span>
                                     {{-- </div> --}}

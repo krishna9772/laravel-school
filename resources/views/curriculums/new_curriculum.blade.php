@@ -163,7 +163,7 @@ $(document).ready(function () {
                             var $row = $('[name="' + fieldName + '[]"]').eq(index).closest('.row');
 
                             if (fieldName === 'curriculum_name') {
-                                $row.find('.curriculum-name-error').text('Curriculum name is required');
+                                $row.find('.curriculum-name-error').text('Subject name is required');
                                 $row.find('[name="' + fieldName + '[]"]').addClass('is-invalid');
                             } else if (fieldName === 'teacher_id') {
                                 $row.find('.teacher-id-error').text('Teacher field is required');

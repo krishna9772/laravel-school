@@ -24,49 +24,64 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/',[DashboardController::class,'index'])->name('dashboard');
     Route::post('logout',[AuthController::class,'logout'])->name('logout');
 
-    // grades
-    Route::get('grades/modify',[GradeController::class,'modify'])->name('grades.modify');
-    Route::get('/grade/{grade}/classes', [GradeController::class,'showClasses'])->name('grades.classes');
-    Route::get('/grade/classes/registration/{gradeId}/{classId}',[GradeController::class,'showRegistrations'])->name('grades.classes.show.registrations');
-    Route::resource('grades',GradeController::class);
 
-    // classes
-    Route::get('classes/modify',[ClassesController::class,'modify'])->name('classes.modify');
-    Route::get('create/class/{gradeIdParameter?}',[ClassesController::class,'createNewClass'])->name('classes.createNewClass');
-    Route::resource('classes',ClassesController::class);
+    Route::middleware(['role:admin'])->group(function () {
+        // grades
+        Route::get('grades/modify',[GradeController::class,'modify'])->name('grades.modify');
+        Route::get('/grade/{grade}/classes', [GradeController::class,'showClasses'])->name('grades.classes');
+        Route::get('/grade/classes/registration/{gradeId}/{classId}',[GradeController::class,'showRegistrations'])->name('grades.classes.show.registrations');
+        Route::resource('grades',GradeController::class);
 
-    // user management
-    Route::get('users/filter/{user_type}',[UserController::class,'filterUser'])->name('users.filter');
-    Route::get('users/modify',[UserController::class,'modify'])->name('users.modify');
-    Route::resource('users',UserController::class);
+        // classes
+        Route::get('classes/modify',[ClassesController::class,'modify'])->name('classes.modify');
+        Route::get('create/class/{gradeIdParameter?}',[ClassesController::class,'createNewClass'])->name('classes.createNewClass');
+        Route::resource('classes',ClassesController::class);
 
-    // curriculums
-    Route::get('curricula/filter/{filter_type}',[CurriculumController::class,'filterCurriculum'])->name('curricula.filter');
-    Route::get('curricula/modify',[CurriculumController::class,'modify']);
-    Route::post('curricula/updatedata',[CurriculumController::class,'updateData'])->name('curricula.updateData');
-    Route::get('/curricula/max-id', [CurriculumController::class, 'getMaxId'])->name('curricula.getMaxId');
-    Route::get('curricula/delete/all/grade/{gradeId}',[CurriculumController::class,'curriculumDeleteWithGrade'])->name('curricula.delete.with.grade');
-    Route::resource('curricula',CurriculumController::class);
+        // user management
+        Route::get('users/filter/{user_type}',[UserController::class,'filterUser'])->name('users.filter');
+        Route::get('users/modify',[UserController::class,'modify'])->name('users.modify');
+        Route::resource('users',UserController::class);
 
-    // class work
-    Route::get('classwork/search',[ClassworkController::class,'search'])->name('classworks.search');
-    Route::post('classwork/search-results',[ClassworkController::class,'searchResults'])->name('classworks.search_results');
-    Route::get('classworks/max-id', [ClassworkController::class,'getMaxId'])->name('classworks.getMaxId');
-    Route::post('classworks/updatedata',[ClassworkController::class,'updateData'])->name('classworks.updateData');
+        // curriculums
+        Route::get('curricula/filter/{filter_type}',[CurriculumController::class,'filterCurriculum'])->name('curricula.filter');
+        Route::get('curricula/modify',[CurriculumController::class,'modify']);
+        Route::post('curricula/updatedata',[CurriculumController::class,'updateData'])->name('curricula.updateData');
+        Route::get('/curricula/max-id', [CurriculumController::class, 'getMaxId'])->name('curricula.getMaxId');
+        Route::get('curricula/delete/all/grade/{gradeId}',[CurriculumController::class,'curriculumDeleteWithGrade'])->name('curricula.delete.with.grade');
+        Route::resource('curricula',CurriculumController::class);
+
+    });
+
+    Route::middleware(['role:admin|subject teacher'])->group(function () {
+        // class work
+        Route::get('classwork/search',[ClassworkController::class,'search'])->name('classworks.search');
+        Route::post('classwork/list',[ClassworkController::class,'searchResults'])->name('classworks.search_results');
+        Route::get('classworks/max-id', [ClassworkController::class,'getMaxId'])->name('classworks.getMaxId');
+        Route::post('classworks/updatedata',[ClassworkController::class,'updateData'])->name('classworks.updateData');
+
+        Route::get('classworks/delete/with/{subTopicName}',[ClassworkController::class,'deleteWithSubTopicName'])->name('classworks.delete.with.subTopicName');
+        Route::resource('classworks',ClassworkController::class);
+    });
+
+
+
+
 
     // Route::get('classworks/delete/with/{subTopicName}',function(){
     //     Log::info('hello world ');
     // })->name('classworks.delete.with.subTopicName');
 
-    Route::get('classworks/delete/with/{subTopicName}',[ClassworkController::class,'deleteWithSubTopicName'])->name('classworks.delete.with.subTopicName');
-    Route::resource('classworks',ClassworkController::class);
 
-    // attendances
-    Route::resource('attendances',AttendanceController::class);
 
-    // promote student
-    Route::get('promote/search',[PromoteController::class,'searchGradeClass'])->name('promote.search');
-    Route::post('promote/search/results',[PromoteController::class,'searchResults'])->name('promote.search.results');
-    Route::post('promote/student',[PromoteController::class,'promoteStudent'])->name('promote.student');
+    Route::middleware(['role:admin|class teacher'])->group(function () {
+        // attendances
+        Route::resource('attendances',AttendanceController::class);
+
+        // promote student
+        Route::get('promote/search',[PromoteController::class,'searchGradeClass'])->name('promote.search');
+        Route::post('promote/search/results',[PromoteController::class,'searchResults'])->name('promote.search.results');
+        Route::post('promote/student',[PromoteController::class,'promoteStudent'])->name('promote.student');
+    });
+
 
 });

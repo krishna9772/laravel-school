@@ -6,9 +6,12 @@ use App\Http\Requests\ClassworkRequest;
 use App\Http\Requests\ClassworkSearchRequest;
 use App\Models\Classes;
 use App\Models\ClassWork;
+use App\Models\Curriculum;
 use App\Models\Grade;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use PhpParser\Builder\Class_;
 
@@ -18,9 +21,37 @@ class ClassworkController extends Controller
     public function index()
     {
 
-        $grades = Grade::with('classes')->get();
+        if(Auth::user()->user_type != 'teacher' && Auth::user()->user_type != 'student'){
+            $grades = Grade::with('classes')->get();
 
-        return view('classworks.search_classwork',compact('grades'));
+            return view('classworks.search_classwork',compact('grades'));
+        }
+        elseif(Auth::user()->user_type == 'teacher' && Auth::user()->teacher_type == 'subject'){
+
+            $teacherGradeClass = User::where('user_id',Auth::user()->user_id)->with('userGradeClasses')->first();
+            // dd($teacherGradeClass->toArray());
+            $gradeId = $teacherGradeClass->userGradeClasses[0]->grade_id;
+            $classId = $teacherGradeClass->userGradeClasses[0]->class_id;
+            // dd($gradeId);
+            // $gradeName = Grade::where('id',)
+
+            $gradeName = Grade::where('id',$gradeId)->value('grade_name');
+            $className = Classes::where('id',$classId)->value('class_name');
+
+            $classworks = ClassWork::where('grade_id',$gradeId)
+                          ->where('class_id',$classId)
+                          ->where('status','1')
+                          ->get();
+
+            $groupedClasswork = $classworks->groupBy('topic_name');
+
+            // dd($groupedClasswork);
+            // Log::info($groupedClasswork);
+
+            return view('classworks.search_results',compact('groupedClasswork','gradeName','className'));
+
+        }
+
     }
 
     public function create()
@@ -30,7 +61,17 @@ class ClassworkController extends Controller
         }])
         ->get();
 
-        return view('classworks.new_classwork',compact('grades'));
+        $teacherGradeClass = User::where('user_id',Auth::user()->user_id)->with('userGradeClasses')->first();
+        // dd($teacherGradeClass->toArray());
+        // $curriculumId = Curriculum::where('user_id',Auth::user()->user_id)->pluck('id');
+        // dd($teacherGradeClass->userGradeClasses[0]->grade_id);
+
+        $curriculums  = Curriculum::where('user_id',Auth::user()->id)->get();
+        // dd($curriculumIds);
+
+
+
+        return view('classworks.new_classwork',compact('grades','teacherGradeClass','curriculums'));
     }
 
     public function store(Request $request)

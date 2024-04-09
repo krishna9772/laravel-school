@@ -64,11 +64,7 @@
 
                             <div class="form-group">
                                 <label for="" class="form-label required">Email</label>
-<<<<<<< HEAD
-                                <input type="email" name="email" id="emailInputBox" class="form-control" placeholder="Enter User Email" value="{{$data->email}}">
-=======
                                 <input type="email" name="email" id="emailInputBox" class="form-control" placeholder="Enter User Email" autocomplete="false">
->>>>>>> ed26d7f4591d505d8cdb6275dce2cabb3f5d9a51
                                 <p class="text-danger" id="emailErrorMessage"></p>
                             </div>
 
@@ -416,7 +412,7 @@ $(document).ready(function() {
                 url: '{{ route('users.update', ['user' => ':user']) }}'.replace(':user', userId),
                 data: $(this).serialize(),
                 success: function (response) {
-                    if(response == 'success'){  
+                    if(response == 'success'){
                         window.location.href = '{{ route('users.index') }}';
                     }
                     },

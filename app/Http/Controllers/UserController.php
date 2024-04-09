@@ -48,7 +48,7 @@ class UserController extends Controller
 
         $data = $this->getUserData($request,$user_id);
 
-        User::create($data);
+        $user = User::create($data);
 
         UserGradeClass::create([
             'user_id' => $user_id,
@@ -61,6 +61,14 @@ class UserController extends Controller
             Classes::where('id', $request->class_select)->update(['capacity' => DB::raw('IFNULL(capacity, 0) + 1')]);
         }
 
+
+        if ($request->user_type == 'teacher') {
+            if ($request->teacher_type == 'classroom') {
+                $user->assignRole('class teacher');
+            } elseif ($request->teacher_type == 'subject') {
+                $user->assignRole('subject teacher');
+            }
+        }
 
         return response()->json('success');
     }

@@ -28,47 +28,69 @@
 
               <div class="card-body">
 
-                <div class="form-group">
-                    <label for="" class="form-label required">Grade</label>
-                    <select name="gradeSelect" id="gradeSelect" class="form-control">
-                        <option value="">Select Grade</option>
-                        @foreach ($grades as $grade)
-                            <option value="{{$grade->id}}">{{$grade->grade_name}}</option>
-                        @endforeach
-                    </select>
-                    <p class="text-danger mt-1" id="gradeSelectError"></p>
-                </div>
-
-                {{-- <div class="form-group">
-                    <label for="" class="form-label">Curriculu select Grade</label>
-                    <select name="" id="" class="form-control">
-                        <option value="">Select Curr</option>
-                        @foreach ($grades as $grade)
-                            @foreach ($grade->curricula as $curriculum)
-                            <option value="{{$curriculum->id}}">{{$curriculum->curriculum_name}}</option>
+                @if (Auth::user()->user_type != 'teacher' && Auth::user()->user_type != 'student')
+                    <div class="form-group">
+                        <label for="" class="form-label required">Grade</label>
+                        <select name="gradeSelect" id="gradeSelect" class="form-control">
+                            <option value="">Select Grade</option>
+                            @foreach ($grades as $grade)
+                                <option value="{{$grade->id}}">{{$grade->grade_name}}</option>
                             @endforeach
+                        </select>
+                        <p class="text-danger mt-1" id="gradeSelectError"></p>
+                    </div>
 
-                        @endforeach
-                    </select>
-                    <p class="text-danger mt-1" id="selectBoxError1"></p>
-                </div> --}}
+                    {{-- <div class="form-group">
+                        <label for="" class="form-label">Curriculu select Grade</label>
+                        <select name="" id="" class="form-control">
+                            <option value="">Select Curr</option>
+                            @foreach ($grades as $grade)
+                                @foreach ($grade->curricula as $curriculum)
+                                <option value="{{$curriculum->id}}">{{$curriculum->curriculum_name}}</option>
+                                @endforeach
+
+                            @endforeach
+                        </select>
+                        <p class="text-danger mt-1" id="selectBoxError1"></p>
+                    </div> --}}
 
 
-                <div class="form-group">
-                    <label for="" class="form-label required">Class</label>
-                    <select name="classSelect" id="classSelect" class="form-control">
-                        <option value="">Select Class</option>
-                    </select>
-                    <p class="text-danger mt-1" id="classSelectError"></p>
-                </div>
+                    <div class="form-group">
+                        <label for="" class="form-label required">Class</label>
+                        <select name="classSelect" id="classSelect" class="form-control">
+                            <option value="">Select Class</option>
+                        </select>
+                        <p class="text-danger mt-1" id="classSelectError"></p>
+                    </div>
 
-                <div class="form-group">
-                    <label for="" class="form-label required">Subjects</label>
-                    <select name="curriculumSelect" id="curriculumSelect" class="form-control">
-                        <option value="">Select Subject</option>
-                    </select>
-                    <p class="text-danger mt-1" id="curriculumSelectError"></p>
-                </div>
+                    <div class="form-group">
+                        <label for="" class="form-label required">Subjects</label>
+                        <select name="curriculumSelect" id="curriculumSelect" class="form-control">
+                            <option value="">Select Subject</option>
+                        </select>
+                        <p class="text-danger mt-1" id="curriculumSelectError"></p>
+                    </div>
+
+                @elseif (Auth::user()->user_type == 'teacher')
+
+                    <input type="hidden" name="gradeSelect" value="{{$teacherGradeClass->userGradeClasses[0]->grade_id}}">
+                    <input type="hidden" name="classSelect" value="{{$teacherGradeClass->userGradeClasses[0]->class_id}}">
+
+                    <div class="form-group">
+                        <label for="" class="form-label required">Subjects</label>
+                        <select name="curriculumSelect" id="curriculumSelect" class="form-control">
+                            <option value="">Select Subject</option>
+                            @foreach ($curriculums as $curriculum)
+                                <option value="{{$curriculum->id}}">{{$curriculum->curriculum_name}}</option>
+                            @endforeach
+                        </select>
+                        <p class="text-danger mt-1" id="curriculumSelectError"></p>
+                    </div>
+
+                @endif
+
+
+
 
                 <div class="form-group">
                     <label for="" class="form-label required">Main Topic Name</label>

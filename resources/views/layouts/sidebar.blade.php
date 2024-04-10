@@ -251,13 +251,13 @@
                 </a>
                 <ul class="nav nav-treeview">
                 <li class="nav-item">
-                    <a href="{{route('classworks.index')}}" class="nav-link {{ Route::is('classworks.index') ? 'active'  : '' }}">
+                    <a href="{{route('mark.attendance')}}" class="nav-link {{ Route::is('classworks.index') ? 'active'  : '' }}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Mark Attendance</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{route('classworks.create')}}" class="nav-link {{ Route::is('classworks.create') ? 'active'  : '' }}">
+                    <a href="{{route('attendances.index')}}" class="nav-link {{ Route::is('classworks.create') ? 'active'  : '' }}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Attendance Report</p>
                     </a>

@@ -76,6 +76,9 @@ Route::middleware(['auth'])->group(function(){
     Route::middleware(['role:admin|class teacher'])->group(function () {
         // attendances
         Route::resource('attendances',AttendanceController::class);
+        Route::get('mark-attendance',[AttendanceController::class,'markAttendance'])->name('mark.attendance');
+        Route::get('attendance/search',[AttendanceController::class,'search'])->name('attendance.search');
+        Route::post('attendance/search-results',[AttendanceController::class,'searchResults'])->name('attendance.search_results');
 
         // promote student
         Route::get('promote/search',[PromoteController::class,'searchGradeClass'])->name('promote.search');

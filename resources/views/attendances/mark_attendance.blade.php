@@ -23,11 +23,18 @@
 
     {{-- <form action="" method="get"> --}}
 
-         <h3>{{$gradeName}} / {{$className}} - Mark Attendance</h3>
+         <div class="d-flex justify-content-between mb-4">
+             <h3>{{$gradeName}} / {{$className}} - Mark Attendance</h3>
+
+             <input type="date" class=" form-control-sm" id="" value="{{$todayDate}}">
+
+         </div>
+
 
          <div class="">
 
-            <form action="" id="markAttendance Form">
+            <form action="{{route('attendances.store')}}" id="markAttendanceForm" method="post">
+                @csrf
                 <table id="studentsTable" class="w-100 my-3 table table-striped" >
                     <thead>
                         <tr>
@@ -49,20 +56,23 @@
                                 <td>{{ $student->user_name }}</td>
                                 <td>{{$student->father_name}}</td>
                                 <td>
+                                    <input type="hidden" name="student_id[]" value="{{$student->user_id}}">
+                                    <input type="hidden" name="user_grade_class_id[]" value="{{$student->userGradeClasses[0]->id}}">
+
                                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                         <label class="btn btn-white mr-1 border border-secondary">
-                                          <input type="radio" name="status" value="P" autocomplete="off"> P
+                                          <input type="radio" name="status[{{ $student->user_id }}]" value="present" autocomplete="off"> P
                                         </label>
                                         <label class="btn btn-white mr-1 border border-secondary">
-                                          <input type="radio" name="status" value="A" autocomplete="off"> A
+                                          <input type="radio" name="status[{{ $student->user_id }}]" value="absent" autocomplete="off"> A
                                         </label>
                                         <label class="btn btn-white border border-secondary">
-                                          <input type="radio" name="status" value="L" autocomplete="off"> L
+                                          <input type="radio" name="status[{{ $student->user_id }}]" value="L" autocomplete="off"> L
                                         </label>
                                       </div>
                                 </td>
                                 <td>
-                                    <input type="text" name="reason" class="form-control" id="">
+                                    <input type="text" name="reason[]" class="form-control" id="">
                                 </td>
                             </tr>
                         </div>
@@ -98,8 +108,8 @@
         $('.btn-group-toggle label').click(function() {
           $(this).parent().find('.btn').removeClass('badge-green badge-red badge-yellow border-1');
           $(this).addClass(function() {
-            return $(this).find('input').val() === 'P' ? 'badge-green' :
-                   $(this).find('input').val() === 'A' ? 'badge-red' : 'badge-yellow';
+            return $(this).find('input').val() === 'present' ? 'badge-green' :
+                   $(this).find('input').val() === 'absent' ? 'badge-red' : 'badge-yellow';
           });
         });
       });

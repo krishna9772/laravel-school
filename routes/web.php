@@ -78,12 +78,12 @@ Route::middleware(['auth'])->group(function(){
         // Route::get('mark-attendance',[AttendanceController::class,'markAttendance'])->name('mark.attendance');
 
         // mark attendance
-        Route::get('attendances-search',[AttendanceController::class,'search'])->name('mark.attendances.search');
+        Route::get('mark-attendances-search',[AttendanceController::class,'search'])->name('mark.attendances.search');
 
         Route::post('attendances/search-results',[AttendanceController::class,'searchResults'])->name('attendances.search_results');
 
         // view attendance report
-        Route::get('attendances-search',[AttendanceController::class,'search'])->name('report.attendances.search');
+        Route::get('report-attendances-search',[AttendanceController::class,'search'])->name('report.attendances.search');
         Route::post('attendances/view-report',[AttendanceController::class,'viewReport'])->name('attendances.view_report');
 
         Route::resource('attendances',AttendanceController::class);

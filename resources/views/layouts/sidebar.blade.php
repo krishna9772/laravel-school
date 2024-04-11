@@ -250,12 +250,12 @@
                 </p>
                 </a>
                 <ul class="nav nav-treeview">
-                {{-- <li class="nav-item">
+                <li class="nav-item">
                     <a href="{{route('mark.attendances.search')}}" class="nav-link {{ Route::is('mark.attendances.search') ? 'active'  : '' }}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Mark Attendance</p>
                     </a>
-                </li> --}}
+                </li>
                 <li class="nav-item">
                     <a href="{{route('report.attendances.search')}}" class="nav-link {{ Route::is('report.attendances.search') ? 'active'  : '' }}">
                     <i class="far fa-circle nav-icon"></i>

@@ -64,7 +64,7 @@
 
                             <div class="form-group">
                                 <label for="" class="form-label required">Email</label>
-                                <input type="email" name="email" id="emailInputBox" class="form-control" placeholder="Enter User Email" autocomplete="false">
+                                <input type="email" name="email" id="emailInputBox" class="form-control" placeholder="Enter User Email" autocomplete="false" value="{{$data->email}}">
                                 <p class="text-danger" id="emailErrorMessage"></p>
                             </div>
 
@@ -78,7 +78,7 @@
                                 <div class="form-group col pl-0">
                                     <label for="" class="required">Confirm Password</label>
                                     <input type="password" name="confirm_password" id="passwordInputBox" class="form-control" placeholder="Retype Password">
-                                    <p class="text-danger" id="passwordErrorMessage"></p>
+                                    <p class="text-danger" id="confirmPasswordErrorMessage"></p>
                                 </div>
                             </div>
 

@@ -15,7 +15,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form id="attendanceSearchForm" action="{{ Route::is('mark.attendances.search') ? route('attendances.search_results') : route('attendances.view_report')}}" method="POST">
+                    <form id="attendanceSearchForm" action="{{ Route::is('attendances.mark.search') ? route('attendances.search_results') : route('attendances.view_report')}}" method="POST">
                         @csrf
                         <div class="form-group">
                             <label for="" class="form-label required">Select Grade</label>

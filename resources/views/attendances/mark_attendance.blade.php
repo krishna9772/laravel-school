@@ -67,7 +67,7 @@
                                           <input type="radio" name="status[{{ $student->user_id }}]" value="absent" autocomplete="off"> A
                                         </label>
                                         <label class="btn btn-white border border-secondary">
-                                          <input type="radio" name="status[{{ $student->user_id }}]" value="L" autocomplete="off"> L
+                                          <input type="radio" name="status[{{ $student->user_id }}]" value="leave" autocomplete="off"> L
                                         </label>
                                       </div>
                                 </td>
@@ -109,7 +109,7 @@
           $(this).parent().find('.btn').removeClass('badge-green badge-red badge-yellow border-1');
           $(this).addClass(function() {
             return $(this).find('input').val() === 'present' ? 'badge-green' :
-                   $(this).find('input').val() === 'absent' ? 'badge-red' : 'badge-yellow';
+                   $(this).find('input').val() === 'absent' ? 'badge-yellow' : 'badge-red';
           });
         });
       });

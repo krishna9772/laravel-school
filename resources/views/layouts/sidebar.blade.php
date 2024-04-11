@@ -228,7 +228,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{route('promote.search')}}" class="nav-link {{ Route::is('classworks.index') ? 'active'  : '' }}">
+                            <a href="{{route('promote.search')}}" class="nav-link {{ Route::is('promote.search') ? 'active'  : '' }}">
                             <i class="far fa-circle nav-icon"></i>
                             <p>Promote Student</p>
                             </a>
@@ -251,13 +251,13 @@
                 </a>
                 <ul class="nav nav-treeview">
                 <li class="nav-item">
-                    <a href="{{route('mark.attendances.search')}}" class="nav-link {{ Route::is('mark.attendances.search') ? 'active'  : '' }}">
+                    <a href="{{route('attendances.mark.search')}}" class="nav-link {{ Route::is('attendances.mark.search') ? 'active'  : '' }}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Mark Attendance</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{route('report.attendances.search')}}" class="nav-link {{ Route::is('report.attendances.search') ? 'active'  : '' }}">
+                    <a href="{{route('attendances.report.search')}}" class="nav-link {{ Route::is('attendances.report.search') ? 'active'  : '' }}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Attendance Report</p>
                     </a>
@@ -275,9 +275,9 @@
 
             @can('manage exam marks')
 
-            <li class="nav-item {{ Route::is('attendances.*') ? 'menu-open'  : '' }}">
+            <li class="nav-item {{ Route::is('exam_marks.*') ? 'menu-open'  : '' }}">
 
-                <a href="#" class="nav-link {{ Route::is('attendances.*') ? 'active'  : '' }}">
+                <a href="#" class="nav-link {{ Route::is('exam_marks.*') ? 'active'  : '' }}">
                 {{-- <i class="nav-icon fas fa-tachometer-alt"></i> --}}
                 <img src="{{asset('images/menu_icons/test-results (1).png')}}" alt="" width="23px">
                 <p>

@@ -51,7 +51,9 @@ class RoleSeeder extends Seeder
         $subjectTeacher = Role::findByName('subject teacher');
         $subjectTeacher->givePermissionTo([
             'manage classworks',
-            'manage promotions'
+            'manage promotions',
+            'manage timetables'
+
         ]);
 
         $classTeacher = Role::findByName('class teacher');
@@ -59,7 +61,6 @@ class RoleSeeder extends Seeder
             'manage promotions',
             'manage attendances',
             'manage exam marks',
-            'manage timetables'
         ]);
 
         $student = Role::findByName('student');

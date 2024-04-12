@@ -41,7 +41,7 @@
                 <div class="col-md-5 mt-5">
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">School Information</h3>
+                            <h3 class="card-title">Personal Information</h3>
                         </div>
 
                         <div class="card-body">
@@ -144,7 +144,7 @@
 
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Other Informations</h3>
+                            <h3 class="card-title">Other Information</h3>
                         </div>
                         <div class="card-body">
 
@@ -189,7 +189,7 @@
 
                             <div class="form-group">
                                 <label for="" class="form-label">Phone Number</label>
-                                <input type="text" name="phone_number" value="{{$data->phone_number}}" id="phoneNumberInpuBox" class="form-control" placeholder="Enter Phone Number">
+                                <input type="text" name="phone_number" value="{{$data->phone_number}}" id="phoneNumberInpuBox" class="form-control" placeholder="Enter Phone Number" onkeypress='validate(event)'>
                                 <p class="text-danger" id=""></p>
                             </div>
 
@@ -521,6 +521,27 @@ $(document).ready(function() {
     });
 
 });
+
+function validate(evt) {
+
+    var theEvent = evt || window.event;
+
+    // Handle paste
+    if (theEvent.type === 'paste') {
+        key = event.clipboardData.getData('text/plain');
+    } else {
+    // Handle key press
+        var key = theEvent.keyCode || theEvent.which;
+        key = String.fromCharCode(key);
+    }
+    var regex = /[0-9]|\./;
+    if( !regex.test(key) ) {
+        theEvent.returnValue = false;
+        if(theEvent.preventDefault) theEvent.preventDefault();
+    }
+
+}
+
 </script>
 
 @endsection

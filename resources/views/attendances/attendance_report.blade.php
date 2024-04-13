@@ -143,6 +143,7 @@
                     </thead>
                     <tbody>
                         @php $count = 1 @endphp
+
                         @foreach ($students as $student)
                             <div class="userList">
                             <tr>
@@ -254,7 +255,7 @@
                                 '<div class="w-100 text-center">' + student.user_name + '</div>' ,
                                 '<div class="w-100 text-center">' + (student.father_name ? student.father_name : '') + '</div>' ,
                                 '<div class="progress w-100 text-center"><div class="progress-bar progress-bar-striped active bg-success" role="progressbar" aria-valuenow="' + student.percentage + '" aria-valuemin="0" aria-valuemax="100" style="width:' + student.percentage + '%">' + student.percentage + '%</div></div>',
-                                '<div class="w-100 text-center"><a href="#" class="view-details-link" data-user-id="{{ $student->user_id }}" data-percentage="{{ $student->percentage }}">View Details</a></div>'
+                                '<div class="w-100 text-center"><a href="#" class="view-details-link" data-user-id="{{ $student->user_id ?? '' }}" data-percentage="{{ $student->percentage ?? '' }}">View Details</a></div>'
                             ];
 
                             dataTable.row.add(rowData).draw();

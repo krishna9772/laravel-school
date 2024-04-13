@@ -53,7 +53,11 @@
                     <ul class="nav nav-treeview">
                     <li class="nav-item">
                         <a href="{{route('grades.index')}}" class="nav-link {{ Route::is('grades.index') ? 'active'  : '' }}">
-                        <i class="far fa-circle nav-icon"></i>
+                            @if(Route::is('grades.index'))
+                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                            @else
+                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                            @endif
                         <p>List</p>
                         </a>
                     </li>
@@ -68,14 +72,22 @@
                             <i class='far fa-circle nav-icon'></i>
                         @endif --}}
 
-                        <i class="far fa-circle nav-icon"></i>
+                        @if(Route::is('grades.create'))
+                           <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                        @else
+                           <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                        @endif
 
                         <p>New</p>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{route('grades.modify')}}" class="nav-link {{ Route::is('grades.modify') ? 'active'  : '' }}">
-                        <i class="far fa-circle nav-icon"></i>
+                            @if(Route::is('grades.modify'))
+                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                            @else
+                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                            @endif
                         <p>Edit</p>
                         </a>
                     </li>
@@ -96,19 +108,31 @@
                     <ul class="nav nav-treeview">
                     <li class="nav-item">
                         <a href="{{route('classes.index')}}" class="nav-link {{ Route::is('classes.index') ? 'active'  : '' }}">
-                        <i class="far fa-circle nav-icon"></i>
+                            @if(Route::is('classes.index'))
+                            <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                         @else
+                            <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                         @endif
                         <p>List</p>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{route('classes.createNewClass')}}" class="nav-link {{ Route::is('classes.create') ? 'active'  : '' }}">
-                        <i class="far fa-circle nav-icon"></i>
+                            @if(Route::is('classes.createNewClass'))
+                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                            @else
+                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                            @endif
                         <p>New</p>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{route('classes.modify')}}" class="nav-link {{ Route::is('classes.modify') ? 'active'  : '' }}">
-                        <i class="far fa-circle nav-icon"></i>
+                            @if(Route::is('classes.modify'))
+                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                            @else
+                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                            @endif
                         <p>Edit</p>
                         </a>
                     </li>
@@ -129,13 +153,21 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item activ">
                         <a href="{{route('users.index')}}" class="nav-link {{ Route::is('users.index') ? 'active'  : '' }}">
-                            <i class="far fa-circle nav-icon"></i>
+                            @if(Route::is('users.index'))
+                               <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                            @else
+                               <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                            @endif
                             <p>List</p>
                         </a>
                         </li>
                         <li class="nav-item">
                         <a href="{{route('users.create')}}" class="nav-link {{ Route::is('users.create') ? 'active'  : '' }}">
-                            <i class="far fa-circle nav-icon"></i>
+                            @if(Route::is('users.create'))
+                               <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                            @else
+                               <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                            @endif
                             <p>New</p>
                         </a>
                         </li>
@@ -159,13 +191,21 @@
                 <ul class="nav nav-treeview">
                     <li class="nav-item activ">
                       <a href="{{route('curricula.index')}}" class="nav-link {{ Route::is('curricula.index') ? 'active'  : '' }}">
-                          <i class="far fa-circle nav-icon"></i>
+                            @if(Route::is('curricula.index'))
+                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                            @else
+                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                            @endif
                           <p>List</p>
                       </a>
                     </li>
                     <li class="nav-item">
                       <a href="{{route('curricula.create')}}" class="nav-link {{ Route::is('curricula.create') ? 'active'  : '' }}">
-                          <i class="far fa-circle nav-icon"></i>
+                            @if(Route::is('curricula.create'))
+                            <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                            @else
+                            <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                            @endif
                           <p>New</p>
                       </a>
                     </li>
@@ -195,13 +235,21 @@
                     <ul class="nav nav-treeview">
                     <li class="nav-item">
                         <a href="{{route('classworks.index')}}" class="nav-link {{ Route::is('classworks.index') ? 'active'  : '' }}">
-                        <i class="far fa-circle nav-icon"></i>
+                            @if(Route::is('classworks.index'))
+                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                            @else
+                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                            @endif
                         <p>List</p>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{route('classworks.create')}}" class="nav-link {{ Route::is('classworks.create') ? 'active'  : '' }}">
-                        <i class="far fa-circle nav-icon"></i>
+                            @if(Route::is('classworks.create'))
+                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                            @else
+                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                            @endif
                         <p>New</p>
                         </a>
                     </li>
@@ -229,7 +277,11 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{route('promote.search')}}" class="nav-link {{ Route::is('promote.search') ? 'active'  : '' }}">
-                            <i class="far fa-circle nav-icon"></i>
+                                @if(Route::is('promote.search'))
+                                    <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                                @else
+                                    <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                                @endif
                             <p>Promote Student</p>
                             </a>
                         </li>
@@ -253,10 +305,10 @@
 
                     <li class="nav-item">
                         <a href="{{ route('attendances.mark.search') }}" class="nav-link {{ Route::is('attendances.mark.search') ? 'active'  : '' }}">
-                            @if(!Route::is('attendances.mark.search'))
-                            <i class="fas fa-dot-circle"></i> <!-- First icon when active -->
+                            @if(Route::is('attendances.mark.search'))
+                               <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
                             @else
-                                <i class="fa fa-solid fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                               <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
                             @endif
                             <p>Mark Attendance</p>
                         </a>
@@ -265,7 +317,11 @@
 
                     <li class="nav-item">
                         <a href="{{route('attendances.report.search')}}" class="nav-link {{ Route::is('attendances.report.search') ? 'active'  : '' }}">
-                        <i class="far fa-circle nav-icon"></i>
+                            @if(Route::is('attendances.report.search'))
+                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                            @else
+                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                            @endif
                         <p>Attendance Report</p>
                         </a>
                     </li>

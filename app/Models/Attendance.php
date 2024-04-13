@@ -13,6 +13,7 @@ class Attendance extends Model
         'user_grade_class_id',
         'status',
         'reason',
+        'attendance_date'
     ];
 
     public function userGradeClass()

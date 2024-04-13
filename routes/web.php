@@ -86,6 +86,10 @@ Route::middleware(['auth'])->group(function(){
         Route::get('report-attendances-search',[AttendanceController::class,'search'])->name('attendances.report.search');
         Route::post('attendances/view-report',[AttendanceController::class,'viewReport'])->name('attendances.view_report');
 
+        Route::get('attendances/view-report/{month}',[AttendanceController::class,'percentagePerMonth'])->name('attendances.view-report.per.month');
+        Route::get('attendances/details',[AttendanceController::class,'attendanceDetails'])->name('attendances.details');
+        Route::get('attendances/get-by-date',[AttendanceController::class,'attendanceByDate'])->name('attendances.get-by-date');
+
         Route::resource('attendances',AttendanceController::class);
 
         // promote student

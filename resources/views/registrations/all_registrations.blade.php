@@ -34,8 +34,6 @@
                     @php $count = 1 @endphp
                     @foreach ($users as $user)
                         <div class="userList">
-
-
                         <tr>
                             <td class="col-1">{{ $count++ }}</td>
                             <td>{{$user->user_id}}</td>

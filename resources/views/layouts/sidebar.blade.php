@@ -250,25 +250,32 @@
                 </p>
                 </a>
                 <ul class="nav nav-treeview">
-                <li class="nav-item">
-                    <a href="{{route('attendances.mark.search')}}" class="nav-link {{ Route::is('attendances.mark.search') ? 'active'  : '' }}">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Mark Attendance</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{route('attendances.report.search')}}" class="nav-link {{ Route::is('attendances.report.search') ? 'active'  : '' }}">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Attendance Report</p>
-                    </a>
-                </li>
-                {{-- <li class="nav-item">
-                    <a href="#" class="nav-link {{ Route::is('classworks.edit') ? 'active'  : '' }}">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Update or Delete</p>
-                    </a>
-                </li> --}}
-            </ul>
+
+                    <li class="nav-item">
+                        <a href="{{ route('attendances.mark.search') }}" class="nav-link {{ Route::is('attendances.mark.search') ? 'active'  : '' }}">
+                            @if(!Route::is('attendances.mark.search'))
+                            <i class="fas fa-dot-circle"></i> <!-- First icon when active -->
+                            @else
+                                <i class="fa fa-solid fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                            @endif
+                            <p>Mark Attendance</p>
+                        </a>
+                    </li>
+
+
+                    <li class="nav-item">
+                        <a href="{{route('attendances.report.search')}}" class="nav-link {{ Route::is('attendances.report.search') ? 'active'  : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Attendance Report</p>
+                        </a>
+                    </li>
+                    {{-- <li class="nav-item">
+                        <a href="#" class="nav-link {{ Route::is('classworks.edit') ? 'active'  : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Update or Delete</p>
+                        </a>
+                    </li> --}}
+                </ul>
             </li>
 
             @endcan

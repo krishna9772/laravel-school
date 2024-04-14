@@ -79,7 +79,7 @@
                                 <div class="row">
                                     @foreach ($grade->classes as $class)
                                         <div class="col-12 col-sm-6 col-md-3">
-                                            <a href="" class="text-decoration-none">
+                                            <a href="{{route('grades.classes.show.registrations',['gradeId' => $grade->id, 'classId' => $class->id])}}" class="text-decoration-none">
                                                 <div class="info-box">
                                                 <span class="info-box-icon bg-info elevation-1">
                                                     <i class="fa fa-university" aria-hidden="true"></i>

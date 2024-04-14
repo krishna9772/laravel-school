@@ -7,7 +7,7 @@
         @if (count($grades) != 0)
 
             <div class="d-flex justify-content-between pt-4 mx-5">
-                <h3>All Grades</h3>
+                <h3>Grades</h3>
                 <div>
                     <a href="{{route('grades.create')}}" class="text-decoration-none">
                         <button class="btn btn-primary"> <i class="fa fa-plus"></i> Add New Grade </button>

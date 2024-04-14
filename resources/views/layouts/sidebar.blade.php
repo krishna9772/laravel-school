@@ -2,10 +2,10 @@
 <aside class="main-sidebar sidebar-light-blue elevation-4 position-fixed h-100">
     <!-- Brand Logo -->
     {{-- <div class="" style="margin-right: 30px !important"> --}}
-        <a href="index3.html" class="nav-link" style="margin-left: 8px; margin-top: 10px">
+        <a href="{{route('dashboard')}}" class="nav-link" style="margin-left: 8px; margin-top: 10px">
             <i class="fa fa-university nav-icon" style="color: #000; font-size: 30px;"></i>
             {{-- <img src="{{asset('dist/img/AdminLTELogo.png')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8"> --}}
-            <span class="brand-text font-weight-light text-white" style="font-size: 18px">School Management</span>
+            <span class="brand-text font-weight-bold text-secondary" style="font-size: 18px">La Yaung LMS</span>
         </a>
 
     {{-- </div> --}}

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('styles')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css" rel="stylesheet"/>
 <style>
     .badge {
         cursor: pointer;
@@ -30,10 +31,23 @@
         <input type="hidden" name="grade_select" id="gradeIdInputBox" value="{{$gradeId}}">
         <input type="hidden" name="class_select" id="classIdInputBox" value="{{$classId}}">
 
+        <input type="hidden" id="startDate" value="{{$startDate}}">
+        <input type="hidden" id="endDate" value="{{$endDate}}">
+
          <div class="d-flex justify-content-between mb-4">
              <h3>{{$gradeName}} / {{$className}} - Mark Attendance</h3>
 
-             <input type="date" class=" form-control" style="width: 12%" id="dateInput" value="{{$todayDate}}">
+             {{-- <input type="date" class=" form-control" style="width: 12%" id="dateInput" value="{{$todayDate}}"> --}}
+
+             <div class="form-group">
+                {{-- <label for="datepicker" class="required">Start Date:</label> --}}
+                <div class="input-group">
+                  <input type="text" class="form-control custom-placeholder changeInputStyle admissionDateClass" name="date" style="width: 12%" id="dateInput" value="{{$todayDate}}">
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="datepicker-icon" style="cursor: pointer"><i class="fas fa-calendar-alt"></i></span>
+                  </div>
+                </div>
+            </div>
 
          </div>
 
@@ -125,6 +139,8 @@
                                             </button>
                                         </div>
                                         @endif
+                                    @else
+                                        <button type="button" class="btn btn-primary" id="reasonButton"><i class="fa fa-edit mr-2" aria-hidden="true"></i>Reason </button>
                                     @endif
                                 </td>
                             </tr>
@@ -142,6 +158,7 @@
 @endsection
 
 @section('scripts')
+<script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
 <script>
 
       $(document).ready(function() {
@@ -273,9 +290,47 @@
             });
         }
 
-        $('#dateInput').change(function() {
+        var startDate = $('#startDate').val();
+        var endDate = $('#endDate').val();
 
-            console.log('hello world');
+        var holidays = {!! $holidays->pluck('date') !!};
+
+        console.log(holidays);
+
+        var disabledDates = holidays.map(function(date) {
+            return new Date(date);
+        });
+
+        console.log('disabled  dates are ' + disabledDates);
+
+        $('#dateInput').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            startDate: startDate,
+            endDate: endDate,
+            beforeShowDay: function(date) {
+                // Convert date to string in yyyy-mm-dd format
+                var dateString = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+
+                // Check if the date is a holiday
+                var isHoliday = disabledDates.find(function(holidayDate) {
+                    return holidayDate.toISOString().split('T')[0] === dateString;
+                });
+
+                var isWeekend = date.getDay() === 0 || date.getDay() === 6;
+
+                // Disable holiday dates
+                return {
+                    enabled: !isHoliday && !isWeekend
+                };
+            }
+        });
+
+        $('#datepicker-icon').click(function() {
+          $('#dateInput').datepicker('show');
+        });
+
+        $('#dateInput').change(function() {
 
             var selectedDate = $(this).val();
 

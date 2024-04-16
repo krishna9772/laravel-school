@@ -1,9 +1,9 @@
 <!-- Main Sidebar Container -->
-<aside class="main-sidebar sidebar-dark-blue elevation-4 position-fixed h-100">
+<aside class="main-sidebar sidebar-light-blue elevation-4 position-fixed h-100">
     <!-- Brand Logo -->
     {{-- <div class="" style="margin-right: 30px !important"> --}}
         <a href="index3.html" class="nav-link" style="margin-left: 8px; margin-top: 10px">
-            <i class="fa fa-university nav-icon" style="color: #d6d6d6; font-size: 30px;"></i>
+            <i class="fa fa-university nav-icon" style="color: #000; font-size: 30px;"></i>
             {{-- <img src="{{asset('dist/img/AdminLTELogo.png')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8"> --}}
             <span class="brand-text font-weight-light text-white" style="font-size: 18px">School Management</span>
         </a>
@@ -16,10 +16,11 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="{{asset('dist/img/user2-160x160.jpg')}}" class="img-circle elevation-2" alt="User Image">
+          {{-- <img src="{{asset('dist/img/user2-160x160.jpg')}}" class="img-circle elevation-2" alt="User Image"> --}}
+          <i class="fas fa-user m-2"></i>
         </div>
         <div class="info">
-          <a href="#" class="d-block">
+          <a href="#" class="d-block text-capitalize">
                 <?php
                     echo Auth::user()->user_name;
                 ?>
@@ -41,14 +42,55 @@
                 </li>
             @endcan
 
+            {{-- acadamic year section --}}
+            @can('manage academic year')
+                <li class="nav-item {{ Route::is('academic-years.*') ? 'menu-open'  : '' }}">
+
+                    <a href="#" class="nav-link {{ Route::is('academic-years.*') ? 'active'  : '' }}">
+                        <i class="nav-icon fas fa-graduation-cap"></i><p>Acadamic Year<i class="right fas fa-angle-left"></i></p>
+                        {{-- <img src="{{asset('images/menu_icons/result.png')}}" alt="" width="25px"> --}}
+
+                    </a>
+                    <ul class="nav nav-treeview">
+
+                    <li class="nav-item">
+
+                        <a href="{{route('academic-years.index')}}" class="nav-link {{ Route::is('academic-years.index') ? 'active'  : '' }}">
+
+                        @if(Route::is('academic-years.index'))
+                           <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                        @else
+                           <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                        @endif
+
+                        <p>Academic Year</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+
+                        <a href="{{route('holidays.index')}}" class="nav-link {{ Route::is('holidays.index') ? 'active'  : '' }}">
+
+                        @if(Route::is('holidays.index'))
+                           <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                        @else
+                           <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                        @endif
+
+                        <p>Holidays</p>
+                        </a>
+                    </li>
+                    </ul>
+                </li>
+            @endcan
+
             {{-- grades section --}}
             @can('manage grades')
                 <li class="nav-item {{ Route::is('grades.*') ? 'menu-open'  : '' }}">
 
                     <a href="#" class="nav-link {{ Route::is('grades.*') ? 'active'  : '' }}">
-                    {{-- <i class="nav-icon fas fa-tachometer-alt"></i> --}}
-                    <img src="{{asset('images/menu_icons/result.png')}}" alt="" width="25px">
-                    <p>Grades <i class="right fas fa-angle-left"></i></p>
+                        <i class="nav-icon fas fa-graduation-cap"></i><p>Grade<i class="right fas fa-angle-left"></i></p>
+                        {{-- <img src="{{asset('images/menu_icons/result.png')}}" alt="" width="25px"> --}}
+
                     </a>
                     <ul class="nav nav-treeview">
                     <li class="nav-item">
@@ -98,12 +140,10 @@
             @can('manage classes')
                 <li class="nav-item {{ Route::is('classes.*') ? 'menu-open'  : '' }}">
                     <a href="#" class="nav-link {{ Route::is('classes.*') ? 'active'  : '' }}">
-                    {{-- <i class="nav-icon fas fa-tachometer-alt"></i> --}}
-                    <img src="{{asset('images/menu_icons/training (8).png')}}" alt="" width="25px">
-                    <p>
-                        Classes
-                        <i class="right fas fa-angle-left"></i>
+                    <i class="nav-icon fas fa-chalkboard-teacher"></i><p>Class<i class="right fas fa-angle-left"></i>
                     </p>
+                    {{-- <img src="{{asset('images/menu_icons/training (8).png')}}" alt="" width="25px"> --}}
+
                     </a>
                     <ul class="nav nav-treeview">
                     <li class="nav-item">
@@ -148,7 +188,7 @@
             @can('manage registrations')
                 <li class="nav-item {{ Route::is('users.*') ? 'menu-open'  : '' }}">
                     <a href="#" class="nav-link {{ Route::is('users.*') ? 'active'  : '' }}">
-                        <i class="nav-icon fa fa-address-card"></i><p>Registrations<i class="right fas fa-angle-left"></i></p>
+                        <i class="nav-icon fa fa-address-card"></i><p>Registration<i class="right fas fa-angle-left"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item activ">
@@ -180,12 +220,9 @@
             @can('manage subjects')
             <li class="nav-item {{ Route::is('curricula.*') ? 'menu-open'  : '' }}">
                 <a href="#" class="nav-link {{ Route::is('curricula.*') ? 'active'  : '' }}">
-                    {{-- <i class="nav-icon fa fa-address-card"></i> --}}
-                    <img src="{{asset('images/menu_icons/curriculum.png')}}" alt="" width="25px">
-                    <p>
-                    Subjects
-                    <i class="right fas fa-angle-left"></i>
-                    </p>
+                    <i class="nav-icon fas fa-book"></i><p>Subject<i class="right fas fa-angle-left"></i></p>
+                    {{-- <img src="{{asset('images/menu_icons/curriculum.png')}}" alt="" width="25px"> --}}
+
                 </a>
 
                 <ul class="nav nav-treeview">
@@ -225,12 +262,9 @@
                 <li class="nav-item {{ Route::is('classworks.*') ? 'menu-open'  : '' }}">
 
                     <a href="#" class="nav-link {{ Route::is('classworks.*') ? 'active'  : '' }}">
-                    {{-- <i class="nav-icon fas fa-tachometer-alt"></i> --}}
-                    <img src="{{asset('images/menu_icons/homework.png')}}" alt="" width="25px">
-                    <p>
-                        Classwork
-                        <i class="right fas fa-angle-left"></i>
-                    </p>
+                    <i class="nav-icon fas fa-pencil-alt"></i><p>Classwork<i class="right fas fa-angle-left"></i></p>
+                    {{-- <img src="{{asset('images/menu_icons/homework.png')}}" alt="" width="25px"> --}}
+
                     </a>
                     <ul class="nav nav-treeview">
                     <li class="nav-item">
@@ -269,19 +303,19 @@
 
                     <a href="#" class="nav-link {{ Route::is('promote.*') ? 'active'  : '' }}">
                     {{-- <i class="nav-icon fas fa-tachometer-alt"></i> --}}
-                    <i class="fa fa-upload mr-2" aria-hidden="true"></i>
-                    {{-- <img src="{{asset('images/menu_icons/homework.png')}}" alt="" width="25px"> --}}
-                    <p>Promotions<i class="right fas fa-angle-left"></i>
+                    <i class="nav-icon fa fa-upload" aria-hidden="true"></i><p>Promotion<i class="right fas fa-angle-left"></i>
                     </p>
+                    {{-- <img src="{{asset('images/menu_icons/homework.png')}}" alt="" width="25px"> --}}
+
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{route('promote.search')}}" class="nav-link {{ Route::is('promote.search') ? 'active'  : '' }}">
-                                @if(Route::is('promote.search'))
-                                    <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
-                                @else
-                                    <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
-                                @endif
+                            @if(Route::is('promote.search'))
+                                <i class="fas fa-dot-circle nav-icon"></i>
+                            @else
+                                <i class="far fa-circle nav-icon"></i>
+                            @endif
                             <p>Promote Student</p>
                             </a>
                         </li>
@@ -294,13 +328,11 @@
             <li class="nav-item {{ Route::is('attendances.*') ? 'menu-open'  : '' }}">
 
                 <a href="#" class="nav-link {{ Route::is('attendances.*') ? 'active'  : '' }}">
-                {{-- <i class="nav-icon fas fa-tachometer-alt"></i> --}}
-                <img src="{{asset('images/menu_icons/check.png')}}" alt="" width="23px">
-                <p>
-                    Attendances
-                    <i class="right fas fa-angle-left"></i>
-                </p>
+                    <i class="nav-icon fas fa-check-circle"></i><p>Attendance<i class="right fas fa-angle-left"></i></p>
                 </a>
+
+                {{-- <img src="{{asset('images/menu_icons/check.png')}}" alt="" width="23px"> --}}
+
                 <ul class="nav nav-treeview">
 
                     <li class="nav-item">
@@ -342,9 +374,9 @@
 
                 <a href="#" class="nav-link {{ Route::is('timetables.*') ? 'active'  : '' }}">
                 {{-- <i class="nav-icon fas fa-tachometer-alt"></i> --}}
-                <img src="{{asset('images/menu_icons/timetable.png')}}" alt="" width="23px">
+                <img src="{{asset('images/menu_icons/timetable (3).png')}}" alt="" width="23px">
                 <p>
-                    Time Tables
+                    Time Table
                     <i class="right fas fa-angle-left"></i>
                 </p>
                 </a>
@@ -391,7 +423,7 @@
                 {{-- <i class="nav-icon fas fa-tachometer-alt"></i> --}}
                 <img src="{{asset('images/menu_icons/test-results (1).png')}}" alt="" width="23px">
                 <p>
-                    Exam Marks
+                    Exam Mark
                     <i class="right fas fa-angle-left"></i>
                 </p>
                 </a>

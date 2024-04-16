@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AttendanceSearchRequest;
+use App\Models\AcademicYear;
 use App\Models\Attendance;
 use App\Models\Classes;
 use App\Models\Grade;
+use App\Models\Holiday;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -59,7 +61,8 @@ class AttendanceController extends Controller
         ->with('userGradeClasses.attendances')
         ->get();
 
-
+        $startDate = AcademicYear::first()->start_date;
+        $endDate = AcademicYear::first()->end_date;
 
         // foreach($students as $student){
         //     $status = $student->userGradeClasses[0]->attendances[0]->status;
@@ -69,6 +72,8 @@ class AttendanceController extends Controller
 
         // dd($students->toArray());
 
+        $holidays = Holiday::select('date')->get();
+        // dd($holidays->toArray());
 
         $todayDate = Carbon::now()->toDateString();
         // dd($todayDate);
@@ -79,7 +84,7 @@ class AttendanceController extends Controller
         // dd($students[1]->userGradeClasses);
         // dd($students[0]->userGradeClasses[0]->grade_id);
 
-        return view('attendances.mark_attendance',compact('gradeName','className','students','todayDate','attendances','gradeId','classId'));
+        return view('attendances.mark_attendance',compact('gradeName','className','students','todayDate','attendances','gradeId','classId','startDate','endDate','holidays'));
     }
 
     public function viewReport(AttendanceSearchRequest $request){

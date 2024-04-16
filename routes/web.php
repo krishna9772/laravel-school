@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AcadamicYearController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClassesController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\CurriculumController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExamMarkController;
 use App\Http\Controllers\GradeController;
+use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\PromoteController;
 use App\Http\Controllers\TimetableController;
 use App\Http\Controllers\UserController;
@@ -28,6 +30,15 @@ Route::middleware(['auth'])->group(function(){
 
 
     Route::middleware(['role:admin'])->group(function () {
+
+        // acadamic year
+        Route::get('academic-year/index',[AcadamicYearController::class,'index'])->name('academic-years.index');
+        Route::post('academic-year/store',[AcadamicYearController::class,'store'])->name('academic-years.store');
+
+        // holidays
+        Route::get('holidays/index',[HolidayController::class,'index'])->name('holidays.index');
+        Route::post('holidays/store',[HolidayController::class,'store'])->name('holidays.store');
+
         // grades
         Route::get('grades/modify',[GradeController::class,'modify'])->name('grades.modify');
         Route::get('/grade/{grade}/classes', [GradeController::class,'showClasses'])->name('grades.classes');

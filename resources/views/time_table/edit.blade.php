@@ -92,11 +92,23 @@
 
                     <div class="card-body">
 
-                      <div class="form-group">
+                        <div class="form-group">
+                            <label for="exampleInputFile" class="mt-2">File</label>
+                            <div class="input-group">
+                                <div class="custom-file">
+                                <input type="file" name="file" class="custom-file-input" id="exampleInputFile">
+                                <label class="custom-file-label" id="inputFileLabel"  for="exampleInputFile"> Choose File
+                                    {{-- {{ $student->userGradeClasses[0]->examMarks[0]->file ?? 'Choose File' }} --}}
+                                </label>
+                                </div>
+                            </div>
+                        </div>
+
+                      {{-- <div class="form-group">
                           <label for="" class="form-label required">File </label>
                           <input type="file" name="file" id="fileInputBox" class="form-control">
                           <p class="text-danger" id="fileErrorMessage"></p>
-                      </div>
+                      </div> --}}
 
                     <!-- /.card-body -->
                     <div class="">
@@ -122,6 +134,11 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
+        $('.custom-file-input').change(function() {
+              var filename = $(this).val().split('\\').pop();
+              $(this).next('.custom-file-label').html(filename);
+          });
 
         $('#updateBtn').click(function() {
 

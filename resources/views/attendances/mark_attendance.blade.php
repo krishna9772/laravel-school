@@ -208,6 +208,11 @@
 
             var reason = $(this).closest('tr').find('.reasonInput').val();
 
+            if(reason == ''){
+                $(this).closest('tr').find('.reasonInput').addClass('is-invalid');
+                return;
+            }
+
             console.log('reason is ' + reason);
             console.log('Reason is ' + reason);
             var studentId = $(this).closest('tr').find('[name^="student_id"]').val();
@@ -245,6 +250,7 @@
         function saveReason(studentId, user_grade_class_id, reason) {
 
             var selectedDate = $('#dateInput').val();
+
 
             $.ajax({
                 headers: {
@@ -362,7 +368,8 @@
                                 <button type="button" class="btn btn-sm btn-danger" id="cancelBtn">
                                     <i class="fa fa-times" aria-hidden="true"></i>
                                 </button>
-                            </div>`;
+                            </div>
+                            `;
                         }
 
                         newTableHtml += `</td></tr>`;

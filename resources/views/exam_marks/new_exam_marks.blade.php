@@ -138,7 +138,7 @@
         );
 
         $('.custom-file-input').change(function() {
-              var filename = $(this).val().split('\\').pop(); // Get filename from path
+              var filename = $(this).val().split('\\').pop();
               $(this).next('.custom-file-label').html(filename);
           });
 
@@ -154,7 +154,6 @@
             formData.append('student_id', studentId);
             formData.append('user_grade_class_id', user_grade_class_id);
 
-            // Send AJAX request to the server
             $.ajax({
                 url: '{{route('exam-marks.store')}}',
                 type: 'POST',
@@ -162,11 +161,11 @@
                 processData: false,
                 contentType: false,
                 success: function(response) {
-                    // Handle success response from the server
+
                     console.log('File uploaded successfully');
                 },
                 error: function(xhr, status, error) {
-                    // Handle error response from the server
+
                     console.error('Error uploading file:', error);
                 }
             });

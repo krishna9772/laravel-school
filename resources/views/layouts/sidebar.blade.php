@@ -304,8 +304,8 @@
                 <ul class="nav nav-treeview">
 
                     <li class="nav-item">
-                        <a href="{{ route('attendances.mark.search') }}" class="nav-link {{ Route::is('attendances.mark.search') ? 'active'  : '' }}">
-                            @if(Route::is('attendances.mark.search'))
+                        <a href="{{ route('attendances.mark.search') }}" class="nav-link {{ Route::is('attendances.mark.search') || Route::is('attendances.search_results') ? 'active' : '' }}">
+                            @if(Route::is('attendances.mark.search') || Route::is('attendances.search_results') )
                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
                             @else
                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
@@ -342,7 +342,7 @@
 
                 <a href="#" class="nav-link {{ Route::is('timetables.*') ? 'active'  : '' }}">
                 {{-- <i class="nav-icon fas fa-tachometer-alt"></i> --}}
-                <img src="{{asset('images/menu_icons/check.png')}}" alt="" width="23px">
+                <img src="{{asset('images/menu_icons/timetable.png')}}" alt="" width="23px">
                 <p>
                     Time Tables
                     <i class="right fas fa-angle-left"></i>

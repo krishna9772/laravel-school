@@ -79,7 +79,7 @@
         });
 
         $('.custom-file-input').change(function() {
-              var filename = $(this).val().split('\\').pop(); // Get filename from path
+              var filename = $(this).val().split('\\').pop();
               $(this).next('.custom-file-label').html(filename);
           });
 
@@ -110,7 +110,7 @@
 
         $('#gradeSelect').change(function() {
             var gradeId = $(this).val();
-            $('#classSelect').empty(); // Clear previous options
+            $('#classSelect').empty();
             $('#selectBoxError1').text('');
 
             if (gradeId === '') {

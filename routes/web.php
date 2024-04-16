@@ -6,8 +6,10 @@ use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\ClassworkController;
 use App\Http\Controllers\CurriculumController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExamMarkController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\PromoteController;
+use App\Http\Controllers\TimetableController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserControlller;
 use Illuminate\Support\Facades\Log;
@@ -89,6 +91,7 @@ Route::middleware(['auth'])->group(function(){
         Route::get('attendances/view-report/{month}',[AttendanceController::class,'percentagePerMonth'])->name('attendances.view-report.per.month');
         Route::get('attendances/details',[AttendanceController::class,'attendanceDetails'])->name('attendances.details');
         Route::get('attendances/get-by-date',[AttendanceController::class,'attendanceByDate'])->name('attendances.get-by-date');
+        Route::get('attendances/get-by-date',[AttendanceController::class,'attendanceByDateInMarkAttendance'])->name('attendances.getByDate.in.mark.attendance');
 
         Route::resource('attendances',AttendanceController::class);
 
@@ -96,7 +99,26 @@ Route::middleware(['auth'])->group(function(){
         Route::get('promote/search',[PromoteController::class,'searchGradeClass'])->name('promote.search');
         Route::post('promote/search/results',[PromoteController::class,'searchResults'])->name('promote.search.results');
         Route::post('promote/student',[PromoteController::class,'promoteStudent'])->name('promote.student');
+
+        // time table
+        Route::get('timetable/list',[TimetableController::class,'list'])->name('timetables.list');
+        Route::get('timetable/new',[TimetableController::class,'addNewTimeTable'])->name('timetables.new');
+        Route::post('timetable/store',[TimetableController::class,'store'])->name('timetable.store');
+        Route::get('timetable/edit',[TimetableController::class,'edit'])->name('timetables.edit');
+        Route::post('timetable/update',[TimetableController::class,'update'])->name('timetables.update');
+        Route::get('timetable/destroy/{gradeId}/{classId}',[TimetableController::class,'destroy'])->name('timetables.destroy');
+
+        // Route::get('exam-marks/search',[ExamMarkController::class,''])
+        Route::get('exam-marks/search',[ExamMarkController::class,'addNewExamMark'])->name('exam-marks.search');
+        Route::post('exam-marks/search/results',[ExamMarkController::class,'searchResults'])->name('exam-marks.search.results');
+        Route::post('exam-marks/store',[ExamMarkController::class,'store'])->name('exam-marks.store');
+        Route::get('exam-marks/edit',[ExamMarkController::class,'edit'])->name('exam-marks.edit');
+        Route::post('exam-marks/update',[ExamMarkController::class,'update'])->name('exam-marks.update');
+        Route::get('exam-marks/destroy/{gradeId}/{classId}',[ExamMarkController::class,'destroy'])->name('exam-marks.destroy');
+
     });
+
+
 
 
 });

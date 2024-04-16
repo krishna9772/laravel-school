@@ -14,6 +14,10 @@
       .badge-yellow {
         background-color: yellow !important;
       }
+
+      input[type="radio"] {
+        display: none;
+    }
   </style>
 @endsection
 
@@ -22,6 +26,9 @@
 <div class="mx-5 py-5">
 
     {{-- <form action="" method="get"> --}}
+
+        <input type="hidden" name="grade_select" id="gradeIdInputBox" value="{{$gradeId}}">
+        <input type="hidden" name="class_select" id="classIdInputBox" value="{{$classId}}">
 
          <div class="d-flex justify-content-between mb-4">
              <h3>{{$gradeName}} / {{$className}} - Mark Attendance</h3>
@@ -43,7 +50,7 @@
                             <th class="text-center">Student Name</th>
                             <th class="text-center">Father Name</th>
                             <th class="text-center">Status</th>
-                            <th class="text-center"></th>
+                            <th class="text-center">Reason</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -62,38 +69,69 @@
                                     <input type="hidden" name="student_id" value="{{$student->user_id}}">
                                     <input type="hidden" name="user_grade_class_id" value="{{$student->userGradeClasses[0]->id}}">
 
-
-
                                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                        <label class="btn btn-white mr-1 border border-secondary active ">
+                                        <label class="btn
+
+                                        @if (isset($student->userGradeClasses[0]) && isset($student->userGradeClasses[0]->attendances[0]))
+                                        @if($student->userGradeClasses[0]->attendances[0]->status == 'present')
+                                            btn-success
+                                        @else
+                                            btn-white
+                                        @endif
+                                    @endif
+                                            mr-1 border border-secondary active ">
                                           <input type="radio" name="status[{{ $student->user_id }}]" value="present" autocomplete="off" checked> P
                                         </label>
 
-
-                                        <label class="btn btn-white mr-1 border border-secondary">
-                                          <input type="radio" name="status[{{ $student->user_id }}]" value="absent" autocomplete="off"> A
+                                        <label class="btn
+                                            @if (isset($student->userGradeClasses[0]) && isset($student->userGradeClasses[0]->attendances[0]))
+                                                @if ($student->userGradeClasses[0]->attendances[0]->status == 'absent' )
+                                                    btn-warning
+                                                @else ($student->userGradeClasses[0]->attendances[0]->status == 'leave')
+                                                    btn-white
+                                                @endif
+                                            @endif
+                                            mr-1 border border-secondary">
+                                            <input type="radio" name="status[{{ $student->user_id }}]" value="absent" autocomplete="off"> A
                                         </label>
 
-                                        <label class="btn btn-white border border-secondary">
+                                        <label class="btn
+
+                                        @if (isset($student->userGradeClasses[0]) && isset($student->userGradeClasses[0]->attendances[0]))
+                                            @if ($student->userGradeClasses[0]->attendances[0]->status == 'leave')
+                                                btn-danger
+                                            @else ($student->userGradeClasses[0]->attendances[0]->status == 'leave')
+                                                btn-white
+                                            @endif
+                                        @endif
+
+                                        border border-secondary">
                                           <input type="radio" name="status[{{ $student->user_id }}]" value="leave" autocomplete="off"> L
                                         </label>
                                       </div>
+
                                 </td>
-                                <td class="text-center">
-                                    <button type="button" class="btn btn-primary" id="reasonButton"><i class="fa fa-edit mr-2" aria-hidden="true"></i>Reason </button>
-                                    {{-- <input type="text" name="reason[]" class="form-control" id=""> --}}
+                                <td class="text-center col-3">
+
+                                    @if (isset($student->userGradeClasses[0]) && isset($student->userGradeClasses[0]->attendances[0]))
+                                        @if ($student->userGradeClasses[0]->attendances[0]->reason == null || $student->userGradeClasses[0]->attendances[0]->reason == '' )
+                                            <button type="button" class="btn btn-primary" id="reasonButton"><i class="fa fa-edit mr-2" aria-hidden="true"></i>Reason </button>
+                                        @else
+                                        <div class="d-flex">
+                                            <input type="text" class="reasonInput form-control mr-2" placeholder="Enter Reason" value="{{$student->userGradeClasses[0]->attendances[0]->reason}}">
+                                            <button type="button" id="" class="saveButton btn btn-success mr-1">Save</button>
+                                            <button type="button" class="btn btn-sm btn-danger" id="cancelBtn">
+                                                <i class="fa fa-times" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
+                                        @endif
+                                    @endif
                                 </td>
                             </tr>
                         </div>
                         @endforeach
                     </tbody>
                 </table>
-
-                {{-- <div class="text-center">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div> --}}
-
-
             </form>
 
 
@@ -108,24 +146,17 @@
 
       $(document).ready(function() {
 
-
-
-
-        $('#studentsTable').dataTable(
-
-        );
+        $('#studentsTable').dataTable();
 
         $(document).on("click", "#reasonButton", function() {
 
             var buttonContainer = $(this).parent();
 
-
             $(this).hide();
 
-
             var reasonInput = $(`<div class="d-flex">
-                <input type="text" id="reasonInput" class="form-control mr-2" placeholder="Enter Reason">
-                <button type="button" id="saveButton" class="btn btn-success mr-1">Save</button>
+                <input type="text" id="" class="reasonInput form-control mr-2" placeholder="Enter Reason">
+                <button type="button" id="" class="saveButton btn btn-success mr-1">Save</button>
                 <button type="button" class="btn btn-sm btn-danger" id="cancelBtn">
                     <i class="fa fa-times" aria-hidden="true"></i>
                 </button>
@@ -139,7 +170,7 @@
         });
 
 
-        $('.btn-group-toggle label').click(function() {
+        $(document).on("click", ".btn-group-toggle label", function() {
 
             $(this).closest('td').find('div label').removeClass('btn-danger btn-success btn-warning');
 
@@ -160,7 +191,7 @@
 
         $(document).on("click", "#cancelBtn", function() {
 
-            $("#reasonInput").val("");
+            $(".reasonInput").val("");
             $(this).closest('.d-flex').replaceWith(`
                 <button type="button" class="btn btn-primary" id="reasonButton">
                     <i class="fa fa-edit mr-2" aria-hidden="true"></i>Reason
@@ -169,11 +200,15 @@
 
         });
 
-        $(document).on("click", "#saveButton", function() {
+        $(document).on("click", ".saveButton", function() {
 
             // console.log();
 
-            var reason = $("#reasonInput").val();
+            // var reason = $(".reasonInput").val();
+
+            var reason = $(this).closest('tr').find('.reasonInput').val();
+
+            console.log('reason is ' + reason);
             console.log('Reason is ' + reason);
             var studentId = $(this).closest('tr').find('[name^="student_id"]').val();
             var status = $(this).closest('tr').find('[name^="status"]').val();
@@ -202,7 +237,7 @@
                    console.log(response);
                 },
                 error: function(xhr, status, error) {
-                    // Handle error response if needed
+
                 }
             });
         }
@@ -230,7 +265,122 @@
 
                 }
             });
-            }
+        }
+
+        $('#dateInput').change(function() {
+
+            console.log('hello world');
+
+            var selectedDate = $(this).val();
+
+            var grade_select = $('#gradeIdInputBox').val();
+            var class_select = $('#classIdInputBox').val();
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: '{{ route('attendances.getByDate.in.mark.attendance') }}',
+                method: "GET",
+                data: {
+                    'grade_select' : grade_select,
+                    'class_select' :  class_select,
+                    'selected_date': selectedDate
+                },
+                success: function(response) {
+
+                    console.log(response);
+
+                    var dataTable = $('#studentsTable').DataTable();
+
+                    dataTable.clear().destroy();
+
+                    var newTableHtml = `<thead>
+                                            <tr>
+                                                <th class="text-center">No</th>
+                                                <th class="text-center">Student Id</th>
+                                                <th class="text-center">Student Name </th>
+                                                <th class="text-center">Father Name</th>
+                                                <th class="text-center">Status</th>
+                                                <th class="text-center">Reason</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>`;
+
+
+                    var counter = 1;
+                    for (var i = 0; i < response.length; i++) {
+                        var student = response[i];
+                        var status = student.user_grade_classes && student.user_grade_classes.length > 0 && student.user_grade_classes[0].attendances && student.user_grade_classes[0].attendances.length > 0 ? student.user_grade_classes[0].attendances[0].status : 'No Status Assigned';
+
+                        var presentClass = status === 'present' ? 'btn-success active' : 'btn-white';
+                        var absentClass = status === 'absent' ? 'btn-warning active' : 'btn-white';
+                        var leaveClass = status === 'leave' ? 'btn-danger active' : 'btn-white';
+
+                        var badgeHtml = `
+                            <input type="hidden" name="student_id" value="${student.user_id}">
+                            <input type="hidden" name="user_grade_class_id" value="${student.user_grade_classes[0].id}">
+
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <label class="btn ${presentClass} mr-1 border border-secondary">
+                                    <input type="radio" name="status[${student.user_id}]" value="present" autocomplete="off" ${status === 'present' ? 'checked' : ''}>
+                                    P
+                                </label>
+
+                                <label class="btn ${absentClass} mr-1 border border-secondary">
+                                    <input type="radio" name="status[${student.user_id}]" value="absent" autocomplete="off" ${status === 'absent' ? 'checked' : ''}>
+                                    A
+                                </label>
+
+                                <label class="btn ${leaveClass} border border-secondary">
+                                    <input type="radio" name="status[${student.user_id}]" value="leave" autocomplete="off" ${status === 'leave' ? 'checked' : ''}>
+                                    L
+                                </label>
+                            </div>
+                        `;
+
+                        newTableHtml += `<tr>
+                            <td class="text-center">${counter}</td>
+                            <td class="text-center">${student.user_id}</td>
+                            <td class="text-center">${student.user_name}</td>
+                            <td class="text-center">${student.father_name ?? ''}</td>
+                            <td class="text-center">${badgeHtml}</td>
+                            <td class="text-center col-3">`;
+
+                        // Check if reason is available for the student
+
+
+                        var reason = student.user_grade_classes && student.user_grade_classes.length > 0 && student.user_grade_classes[0].attendances && student.user_grade_classes[0].attendances.length > 0 ? student.user_grade_classes[0].attendances[0].reason : '';
+
+                        // Render reason button or reason input based on reason availability
+                        if(reason == null || reason == ''){
+                            newTableHtml += `<button type="button" class="btn btn-primary" id="reasonButton"><i class="fa fa-edit mr-2" aria-hidden="true"></i>Reason </button>`;
+                        }else{
+                            newTableHtml += `<div class="d-flex">
+                                <input type="text" class="form-control mr-2" placeholder="Enter Reason" value="${reason}">
+                                <button type="button" class="btn btn-success mr-1">Save</button>
+                                <button type="button" class="btn btn-sm btn-danger" id="cancelBtn">
+                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                </button>
+                            </div>`;
+                        }
+
+                        newTableHtml += `</td></tr>`;
+
+
+                        counter++;
+                    }
+
+                    newTableHtml += '</tbody>';
+                    $('#studentsTable').html(newTableHtml);
+
+                    $('#studentsTable').DataTable();
+                },
+                error: function(xhr, status, error) {
+
+                }
+            });
+        });
 
     });
 

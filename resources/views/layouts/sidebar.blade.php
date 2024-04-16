@@ -336,11 +336,58 @@
 
             @endcan
 
+            @can('manage timetables')
+
+            <li class="nav-item {{ Route::is('timetables.*') ? 'menu-open'  : '' }}">
+
+                <a href="#" class="nav-link {{ Route::is('timetables.*') ? 'active'  : '' }}">
+                {{-- <i class="nav-icon fas fa-tachometer-alt"></i> --}}
+                <img src="{{asset('images/menu_icons/check.png')}}" alt="" width="23px">
+                <p>
+                    Time Tables
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+                </a>
+                <ul class="nav nav-treeview">
+
+                    <li class="nav-item">
+                        <a href="{{ route('timetables.new') }}" class="nav-link {{ Route::is('timetables.new') ? 'active'  : '' }}">
+                            @if(Route::is('timetables.new'))
+                               <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                            @else
+                               <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                            @endif
+                            <p>New</p>
+                        </a>
+                    </li>
+
+
+                    <li class="nav-item">
+                        <a href="{{route('timetables.edit')}}" class="nav-link {{ Route::is('timetables.edit') ? 'active'  : '' }}">
+                            @if(Route::is('timetables.edit'))
+                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                            @else
+                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                            @endif
+                        <p>Edit</p>
+                        </a>
+                    </li>
+                    {{-- <li class="nav-item">
+                        <a href="#" class="nav-link {{ Route::is('classworks.edit') ? 'active'  : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Update or Delete</p>
+                        </a>
+                    </li> --}}
+                </ul>
+            </li>
+
+            @endcan
+
             @can('manage exam marks')
 
-            <li class="nav-item {{ Route::is('exam_marks.*') ? 'menu-open'  : '' }}">
+            <li class="nav-item {{ Route::is('exam-marks.*') ? 'menu-open'  : '' }}">
 
-                <a href="#" class="nav-link {{ Route::is('exam_marks.*') ? 'active'  : '' }}">
+                <a href="#" class="nav-link {{ Route::is('exam-marks.*') ? 'active'  : '' }}">
                 {{-- <i class="nav-icon fas fa-tachometer-alt"></i> --}}
                 <img src="{{asset('images/menu_icons/test-results (1).png')}}" alt="" width="23px">
                 <p>
@@ -350,23 +397,24 @@
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
-                        <a href="{{route('classworks.index')}}" class="nav-link {{ Route::is('classworks.index') ? 'active'  : '' }}">
-                        <i class="far fa-circle nav-icon"></i>
+                        <a href="{{route('exam-marks.search')}}" class="nav-link {{ Route::is('exam-marks.search') ? 'active' : (Route::is('exam-marks.search.results') ? 'active' : '' )}}">
+                            @if(Route::is('exam-marks.search'))
+                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                            @else
+                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                            @endif
                         <p>New</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{route('classworks.create')}}" class="nav-link {{ Route::is('classworks.create') ? 'active'  : '' }}">
+                        <a href="{{route('exam-marks.edit')}}" class="nav-link {{ Route::is('exam-marks.edit') ? 'active'  : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Edit</p>
                         </a>
                     </li>
                 </ul>
             </li>
-
             @endcan
-
-
         </ul>
     </nav>
 

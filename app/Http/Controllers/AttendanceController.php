@@ -42,8 +42,12 @@ class AttendanceController extends Controller
 
     public function searchResults(AttendanceSearchRequest $request){
 
+
         $gradeName = Grade::where('id',$request->grade_select)->value('grade_name');
         $className = Classes::where('id',$request->class_select)->value('class_name');
+
+        $gradeId = $request->grade_select;
+        $classId = $request->class_select;
 
         // dd($gradeName);
 
@@ -67,6 +71,7 @@ class AttendanceController extends Controller
 
 
         $todayDate = Carbon::now()->toDateString();
+        // dd($todayDate);
 
         $attendances = Attendance::get();
 
@@ -74,7 +79,7 @@ class AttendanceController extends Controller
         // dd($students[1]->userGradeClasses);
         // dd($students[0]->userGradeClasses[0]->grade_id);
 
-        return view('attendances.mark_attendance',compact('gradeName','className','students','todayDate','attendances'));
+        return view('attendances.mark_attendance',compact('gradeName','className','students','todayDate','attendances','gradeId','classId'));
     }
 
     public function viewReport(AttendanceSearchRequest $request){
@@ -291,6 +296,32 @@ class AttendanceController extends Controller
         $grades = Grade::with('classes')->get();
 
         return view('attendances.search_grade_class',compact('grades'));
+    }
+
+    public function attendanceByDateInMarkAttendance(Request $request){
+        Log::info($request->all());
+
+        $selectedDate = $request->selected_date;
+
+        $gradeName = Grade::where('id',$request->grade_select)->value('grade_name');
+        $className = Classes::where('id',$request->class_select)->value('class_name');
+
+        $students = User::where('user_type', 'student')
+            ->whereHas('userGradeClasses', function ($query) use ($request) {
+                $query->where('grade_id', $request->grade_select)
+                    ->where('class_id', $request->class_select);
+            })
+            ->with(['userGradeClasses.attendances' => function ($query) use ($selectedDate) {
+                $query->whereDate('attendance_date', $selectedDate);
+            }])
+            ->get();
+
+        Log::info($students);
+
+        // $thisMonth = Carbon::now()->month();
+
+        return response()->json($students);
+
     }
 
     // public function viewReport(){

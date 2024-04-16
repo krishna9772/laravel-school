@@ -166,7 +166,7 @@
                         $('#selectBoxError2').text('Please Select Class To Update');
                     }
                 }
-                });
+            });
 
 
             $('#deleteBtn').click(function(){

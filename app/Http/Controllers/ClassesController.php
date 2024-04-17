@@ -7,6 +7,8 @@ use App\Models\Classes;
 use App\Models\Grade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
+
 
 class ClassesController extends Controller
 {
@@ -46,6 +48,11 @@ class ClassesController extends Controller
             'description' => $request->description,
         ]);
 
+        
+        Session::put('message','Successfully added !');
+        Session::put('alert-type','success');
+
+
         return response()->json('success');
     }
 
@@ -84,6 +91,11 @@ class ClassesController extends Controller
             'description' => $request->description,
         ]);
 
+        
+        Session::put('message','Successfully updated !');
+        Session::put('alert-type','success');
+
+
         return response()->json('success');
     }
 
@@ -93,7 +105,12 @@ class ClassesController extends Controller
     public function destroy(string $id)
     {
         try {
-             Classes::where('id', $id)->delete();
+
+            Classes::where('id', $id)->delete();
+
+            Session::put('message','Successfully deleted !');
+            Session::put('alert-type','success');
+
             return response()->json('success');
         } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred while deleting the grade'], 500);

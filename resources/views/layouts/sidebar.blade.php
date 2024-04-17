@@ -3,8 +3,8 @@
     <!-- Brand Logo -->
     {{-- <div class="" style="margin-right: 30px !important"> --}}
         <a href="{{route('dashboard')}}" class="nav-link" style="margin-left: 8px; margin-top: 10px">
-            <i class="fa fa-university nav-icon" style="color: #000; font-size: 30px;"></i>
-            {{-- <img src="{{asset('dist/img/AdminLTELogo.png')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8"> --}}
+            {{-- <i class="fa fa-university nav-icon" style="color: #000; font-size: 30px;"></i> --}}
+            <img src="{{asset('images/school_logo.png')}}" alt="AdminLTE Logo" class="img-circle elevation-3" style="opacity: .8;width:50px;">
             <span class="brand-text font-weight-bold text-secondary" style="font-size: 18px">La Yaung LMS</span>
         </a>
 
@@ -373,12 +373,8 @@
             <li class="nav-item {{ Route::is('timetables.*') ? 'menu-open'  : '' }}">
 
                 <a href="#" class="nav-link {{ Route::is('timetables.*') ? 'active'  : '' }}">
-                {{-- <i class="nav-icon fas fa-tachometer-alt"></i> --}}
-                <img src="{{asset('images/menu_icons/timetable (3).png')}}" alt="" width="23px">
-                <p>
-                    Time Table
-                    <i class="right fas fa-angle-left"></i>
-                </p>
+                    <i class="nav-icon far fa-calendar-alt"></i><p>Time Table<i class="right fas fa-angle-left"></i></p>
+                    {{-- <img src="{{asset('images/menu_icons/timetable (3).png')}}" alt="" width="23px"> --}}
                 </a>
                 <ul class="nav nav-treeview">
 
@@ -420,13 +416,9 @@
             <li class="nav-item {{ Route::is('exam-marks.*') ? 'menu-open'  : '' }}">
 
                 <a href="#" class="nav-link {{ Route::is('exam-marks.*') ? 'active'  : '' }}">
-                {{-- <i class="nav-icon fas fa-tachometer-alt"></i> --}}
-                <img src="{{asset('images/menu_icons/test-results (1).png')}}" alt="" width="23px">
-                <p>
-                    Exam Mark
-                    <i class="right fas fa-angle-left"></i>
-                </p>
-                </a>
+                <i class="fas fa-clipboard-check nav-icon"></i><p>Exam Mark<i class="right fas fa-angle-left"></i></p></a>
+                    {{-- <img src="{{asset('images/menu_icons/test-results (1).png')}}" alt="" width="23px"> --}}
+
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
                         <a href="{{route('exam-marks.search')}}" class="nav-link {{ Route::is('exam-marks.search') ? 'active' : (Route::is('exam-marks.search.results') ? 'active' : '' )}}">

@@ -12,6 +12,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="{{asset('plugins/fontawesome-free/css/all.min.css')}}">
+    <link rel="icon" type="image/x-icon" href="{{asset('images/favicon.ico')}}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet">
+
+
     <!-- Theme style -->
     <link rel="stylesheet" href="{{asset('dist/css/adminlte.min.css')}}">
 
@@ -61,6 +65,48 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script src="https://cdn.datatables.net/2.0.1/js/dataTables.js"></script>
         <script src="https://cdn.datatables.net/2.0.1/js/dataTables.bootstrap4.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+        
+        <script>
+                @if (Session::has('message'))
+                    var type = "{{ Session::get('alert-type', 'info') }}"
+                    switch (type) {
+                        case 'info':
+
+                            toastr.options.timeOut = 5000;
+                            toastr.info("{{ Session::get('message') }}");
+                            var audio = new Audio('audio.mp3');
+                            audio.play();
+                            break;
+                        case 'success':
+
+                            toastr.options.timeOut = 5000;
+                            toastr.success("{{ Session::get('message') }}");
+                            var audio = new Audio('audio.mp3');
+                            audio.play();
+
+                            break;
+                        case 'warning':
+
+                            toastr.options.timeOut = 5000;
+                            toastr.warning("{{ Session::get('message') }}");
+                            var audio = new Audio('audio.mp3');
+                            audio.play();
+
+                            break;
+                        case 'error':
+
+                            toastr.options.timeOut = 5000;
+                            toastr.error("{{ Session::get('message') }}",);
+                            var audio = new Audio('audio.mp3');
+                            audio.play();
+
+                            break;
+                    }
+                    {{Session::forget('message')}}
+                @endif
+        </script>
+
 
     </div>
 

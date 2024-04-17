@@ -12,6 +12,8 @@ use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
+
 
 class UserController extends Controller
 {
@@ -69,6 +71,9 @@ class UserController extends Controller
                 $user->assignRole('subject teacher');
             }
         }
+
+        Session::put('message','Registered Successfully !');
+        Session::put('alert-type','success');
 
         return response()->json('success');
     }
@@ -143,6 +148,9 @@ class UserController extends Controller
             'class_id' => $request->class_select
             ]);
 
+        Session::put('message','Successfully updated !');
+        Session::put('alert-type','success');
+    
         return response()->json('success');
 
     }
@@ -164,6 +172,9 @@ class UserController extends Controller
         }
 
         User::where('id',$id)->delete();
+
+        Session::put('message','Successfully destroyed !');
+        Session::put('alert-type','success');
 
         return response()->json('success');
     }

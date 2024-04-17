@@ -39,8 +39,8 @@
     @else
         <div class="containter ">
             <div class="text-center pt-5" >
-                <h4>
-                    No Classes Created In this Grade
+                <h4 class="text-capitalize">
+                    No Classes in this Grade
                 </h4>
 
                 <div class="mt-5">

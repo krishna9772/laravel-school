@@ -9,8 +9,9 @@
 <div class="login-box">
     <div class="login-logo">
       {{-- <a href="../../index2.html"><b>Admin</b>LTE</a> --}}
-      School Management System
-    </div>
+      <img src="{{asset('images/school_logo.png')}}" alt="AdminLTE Logo" class="img-circle elevation-3" style="opacity: .8;width:50px;">
+      <span class="brand-text font-weight-bold text-secondary" style="font-size: 18px">La Yaung LMS</span>
+  </a>    </div>
     <!-- /.login-logo -->
     <div class="card">
       <div class="card-body login-card-body">

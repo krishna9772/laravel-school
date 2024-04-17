@@ -86,7 +86,7 @@
                                                 </span>
 
                                                 <div class="info-box-content text-dark">
-                                                    <span class="info-box-text text-lg">{{$class->class_name}}</span>
+                                                    <span class="info-box-text text-lg">{{isset($class->class_name)  ? $class->class_name : 'No class yet'}}</span>
                                                 </div>
                                                 <!-- /.info-box-content -->
                                                 </div>

@@ -82,11 +82,11 @@
                 if ($('#gradeSelect').val() == '' || $('#classSelect').val() == '') {
                     if ($('#gradeSelect').val() == '') {
                         $('#gradeSelect').addClass('is-invalid');
-                        $('#gradeErrorMessage').text('Please Select Grade To Delete');
+                        $('#gradeErrorMessage').text('Please Select Grade');
                     }
                     if ($('#classSelect').val() == '') {
                         $('#classSelect').addClass('is-invalid');
-                        $('#classErrorMessage').text('Please Select Class To Delete');
+                        $('#classErrorMessage').text('Please Select Class');
                     }
                 }
                 else {

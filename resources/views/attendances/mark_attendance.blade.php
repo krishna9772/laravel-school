@@ -48,7 +48,7 @@
                   </div>
                 </div>
             </div>
-             <input type="date" class=" form-control" style="width: 12%" id="dateInput" value="{{$todayDate}}">
+             {{-- <input type="date" class=" form-control" style="width: 12%" id="dateInput" value="{{$todayDate}}"> --}}
 
          </div>
 

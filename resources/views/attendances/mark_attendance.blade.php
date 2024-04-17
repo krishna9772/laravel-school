@@ -48,6 +48,7 @@
                   </div>
                 </div>
             </div>
+             <input type="date" class=" form-control" style="width: 12%" id="dateInput" value="{{$todayDate}}">
 
          </div>
 
@@ -179,6 +180,29 @@
                 </button>
             </div>`);
 
+        $(document).on("click", "#reasonButton", function() {
+
+            var buttonContainer = $(this).parent();
+
+
+            $(this).hide();
+
+
+            var reasonInput = $(`<div class="d-flex">
+                <input type="text" id="reasonInput" class="form-control mr-2" placeholder="Enter Reason">
+                <button type="button" id="saveButton" class="btn btn-success mr-1">Save</button>
+                <button type="button" class="btn btn-sm btn-danger" id="cancelBtn">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </button>
+            </div>`);
+
+
+            buttonContainer.append(reasonInput);
+
+
+            reasonInput.show('slow');
+        });
+
 
             buttonContainer.append(reasonInput);
 
@@ -259,7 +283,6 @@
                    console.log(response);
                 },
                 error: function(xhr, status, error) {
-
                 }
             });
         }
@@ -267,7 +290,6 @@
         function saveReason(studentId, user_grade_class_id, reason) {
 
             var selectedDate = $('#dateInput').val();
-
 
             $.ajax({
                 headers: {

@@ -101,7 +101,7 @@ Route::middleware(['auth'])->group(function(){
 
         Route::get('attendances/view-report/{month}',[AttendanceController::class,'percentagePerMonth'])->name('attendances.view-report.per.month');
         Route::get('attendances/details',[AttendanceController::class,'attendanceDetails'])->name('attendances.details');
-        Route::get('attendances/get-by-date',[AttendanceController::class,'attendanceByDate'])->name('attendances.get-by-date');
+        // Route::get('attendances/get-by-date',[AttendanceController::class,'attendanceByDate'])->name('attendances.get-by-date');
         Route::get('attendances/get-by-date',[AttendanceController::class,'attendanceByDateInMarkAttendance'])->name('attendances.getByDate.in.mark.attendance');
 
         Route::resource('attendances',AttendanceController::class);

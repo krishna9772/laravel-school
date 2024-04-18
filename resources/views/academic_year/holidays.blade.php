@@ -25,9 +25,22 @@
             <!-- form start -->
             <form id="addHolidaysForm">
 
-              <input type="hidden" name="academic_id" value="{{$academicYear->id}}">
+              {{-- <input type="hidden" name="academic_id" value="{{$academicYear->id}}"> --}}
 
               <div class="card-body">
+
+                <div class="form-group">
+                    <label for="" class="form-label required">Select Academic Year</label>
+                    <select name="academic_id" id="academicYearInputBox" class="form-control">
+                        <option value="">Select Academic Year</option>
+
+                        @foreach ($academicYears as $academicYear)
+                            <option value="{{$academicYear->id}}">{{$academicYear->academic_year}}</option>
+                        @endforeach
+                    </select>
+                    <p class="text-danger mt-1" id="academicYearError"></p>
+                </div>
+
 
                 <div id="dynamicRows">
                     <div class="row">
@@ -118,10 +131,19 @@ $(document).ready(function () {
                     console.log(response);
 
 
+                    // var err = eval("(" + xhr.responseText + ")");
+                    // var response = JSON.parse(xhr.responseText);
+                        // console.log(response);
+                    let academicIdErrorMessage = response.errors.academic_id ? response.errors.academic_id[0] : '';
 
-                    $('.curriculum-name-error').text('');
-                    $('.teacher-id-error').text('');
-                    $('.form-control').removeClass('is-invalid');
+                    // $('#nameErrorMessage').html(nameErrorMessage);
+                    $('#academicYearInputBox').addClass('is-invalid');
+                    $('#academicYearError').html(academicIdErrorMessage);
+
+
+                    // $('.curriculum-name-error').text('');
+                    // $('.teacher-id-error').text('');
+                    // $('.form-control').removeClass('is-invalid');
 
                     if (response.errors) {
                         $.each(response.errors, function(key, value) {

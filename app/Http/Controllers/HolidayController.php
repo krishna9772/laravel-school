@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\HolidayRequest;
 use App\Models\AcademicYear;
 use App\Models\Holiday;
 use Illuminate\Http\Request;
@@ -13,10 +14,12 @@ class HolidayController extends Controller
 
         $academicYear = AcademicYear::first();
 
-        return view('academic_year.holidays',compact('academicYear'));
+        $academicYears = AcademicYear::get();
+
+        return view('academic_year.holidays',compact('academicYears'));
     }
 
-    public function store(Request $request){
+    public function store(HolidayRequest $request){
         Log::info($request->all());
 
         $academic_id = $request->academic_id;

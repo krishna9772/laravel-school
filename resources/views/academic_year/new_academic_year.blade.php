@@ -112,7 +112,6 @@
 
         var initialFormHTML = $('#newRegistrationForm').html();
 
-        // Restores the saved initial HTML content of the form
         function restoreInitialForm() {
             $('#newRegistrationForm').html(initialFormHTML);
 

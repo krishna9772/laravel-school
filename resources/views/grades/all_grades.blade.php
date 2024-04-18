@@ -7,7 +7,7 @@
         @if (count($grades) != 0)
 
             <div class="d-flex justify-content-between pt-4 mx-5">
-                <h3>All Grades</h3>
+                <h3>Grades</h3>
                 <div>
                     <a href="{{route('grades.create')}}" class="text-decoration-none">
                         <button class="btn btn-primary"> <i class="fa fa-plus"></i> Add New Grade </button>
@@ -26,9 +26,9 @@
                         </span>
 
                         <div class="info-box-content text-dark">
-                        <span class="info-box-text text-lg">{{$grade->grade_name}}</span>
+                        <span class="info-box-text text-lg text-capitalize">{{$grade->grade_name}}</span>
                         <span class="info-box-number">
-                            {{$grade->classes->count()}} Classes
+                            {{$grade->classes->count()}} Class{{$grade->classes->count() > 1 ? 'es' : ''}}
                         </span>
                         </div>
                         <!-- /.info-box-content -->

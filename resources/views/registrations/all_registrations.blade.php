@@ -5,7 +5,7 @@
 
     @if (count($users) != 0)
         <div class="pt-5 d-flex justify-content-between mx-5">
-            <h4 class="text-center" id="listTitle">All Registrations</h4>
+            <h4 class="text-center" id="listTitle">Registration</h4>
             <div>
                 <select id="filter" name="filter" class="form-control">
                     <option value="all">All</option>
@@ -21,9 +21,9 @@
             <table id="usersTable" class="w-100 my-3 table table-striped" >
                 <thead>
                     <tr>
-                        <th>No</th>
                         <th>User ID</th>
                         <th>Name</th>
+                        <th>Email</th>
                         <th>Type</th>
                         <th>Grade</th>
                         <th>Class</th>
@@ -35,9 +35,9 @@
                     @foreach ($users as $user)
                         <div class="userList">
                         <tr>
-                            <td class="col-1">{{ $count++ }}</td>
                             <td>{{$user->user_id}}</td>
-                            <td>{{ $user->user_name }}</td>
+                            <td>{{$user->user_name}}</td>
+                            <td>{{$user->email}}</td>
                             <td>{{$user->user_type}}</td>
                             @if ($user->userGradeClasses->isNotEmpty())
                                 <td>{{ $user->userGradeClasses[0]->grade->grade_name }}</td>

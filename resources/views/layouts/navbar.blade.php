@@ -1,4 +1,10 @@
 <!-- Navbar -->
+<style>
+  .modal-backdrop {
+  z-index: -1;
+}
+
+</style>
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
@@ -126,12 +132,44 @@
 
       {{-- <ul class="nav nav-pills nav-sidebar flex-column" style="position: absolute; bottom : 20px"> --}}
         <li class="mr-4">
-            <form action="{{route('logout')}}" method="post">
-                @csrf
-                <button type="submit" class="nav-link border-0 bg-white">
+            
+                {{-- <button type="submit" class="nav-link border-0 bg-white">
+                </button> --}}
+                <a type="button" class="nav-link border-0 bg-white" data-toggle="modal" data-target="#logout">
                     <i class="nav-icon fas fa-sign-out-alt "></i> Logout
-                </button>
-            </form>
+                </a>
+
+              <div class="modal fade" id="logout">
+                <form action="{{route('logout')}}" method="post" id="form_logout">
+                  @csrf
+                  <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class='modal-header'>
+                          <p class='col-12 modal-title text-center'>
+                          <span class="ml-5" style="font-size: 17px">Leaving the system ?</span>
+                          <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                              <span aria-hidden='true'>&times;</span>
+                          </button>
+                          </p>
+                      </div>
+                      <div class="modal-body py-4">
+
+                          {{-- <input type="text" class="form-control" value="{{ $user->user_name }}" disabled> --}}
+                          <p class="text-center" style="font-size: 19px; font-weight:bold">
+                              <small>Cancel if you want to stay in session</small>
+                          </p>
+                      </div>
+                      <div class="modal-footer  justify-content-center ">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                      <button type="button" class="btn btn-danger" onclick="logout()">Logout</a>
+                      </div>
+                  </div>
+                  <!-- /.modal-content -->
+                  </div>
+                  <!-- /.modal-dialog -->
+                </form>
+
+              </div>
         </li>
     {{-- </ul> --}}
 
@@ -147,4 +185,11 @@
       </li> --}}
     </ul>
   </nav>
+  <script>
+    function logout()
+    {
+      $("#form_logout").submit()
+
+    }
+  </script>
   <!-- /.navbar -->

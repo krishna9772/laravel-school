@@ -10,6 +10,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
+
 
 class GradeController extends Controller
 {
@@ -20,9 +22,6 @@ class GradeController extends Controller
     {
 
         $grades = Grade::with('classes')->get();
-        // foreach($grades as $grade){
-        //     echo $grade->classes->count();
-        // }
 
         return view('grades.all_grades',compact('grades'));
     }
@@ -55,6 +54,9 @@ class GradeController extends Controller
             'description' => $request->description,
             'created_date' => now(),
         ]);
+
+        Session::put('message','Successfully added !');
+        Session::put('alert-type','success');
 
         return response()->json('success');
     }
@@ -104,6 +106,10 @@ class GradeController extends Controller
             'description' => $request->description
         ]);
 
+        Session::put('message','Successfully updated !');
+        Session::put('alert-type','success');
+
+
         return response()->json('success');
     }
 
@@ -114,6 +120,10 @@ class GradeController extends Controller
     {
         try {
             Grade::where('id', $id)->delete();
+
+            Session::put('message','Successfully deleted !');
+            Session::put('alert-type','success');
+    
             return response()->json('success');
         } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred while deleting the grade'], 500);

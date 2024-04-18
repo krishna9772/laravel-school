@@ -176,7 +176,7 @@
                                 <p class="text-danger" id=""></p>
                             </div>
 
-                            <div class="form-group mb-3">
+                            <div class="form-group mb-3" id="nrc_form">
                                 <label for=""> NRC</label>
 
                                 <div class="row mt-2">
@@ -272,7 +272,7 @@
                             </div>
 
                             <div class="">
-                                <button type="submit" class="btn btn-info mr-2">Submit</button>
+                                <button type="submit" class="btn btn-info mr-2">Register</button>
                                 <button type="button" id="cancelBtn" class="btn btn-default">Cancel</button>
                             </div>
                         </div>
@@ -384,12 +384,15 @@
                     $('#motherNameInputBox').closest('.form-group').hide();
                     $('#transferedSchoolInputBox').closest('.form-group').hide();
                     $('#teacherTypeSelect').closest('.form-group').show();
+                    $('#nrc_form').show();
                 } else {
                     $('.admissionDateClass').closest('.form-group').show();
                     $('#fatherNameInputBox').closest('.form-group').show();
                     $('#motherNameInputBox').closest('.form-group').show();
                     $('#transferedSchoolInputBox').closest('.form-group').show();
                     $('#teacherTypeSelect').closest('.form-group').hide();
+                    $('#nrc_form').hide();
+
                 }
             });
 

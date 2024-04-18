@@ -38,6 +38,7 @@ class CurriculumController extends Controller
             $page, // Current page
             ['path' => request()->url(), 'query' => request()->query()] // Additional options
         );
+        
 
         return view('curriculums.all_curriculums',compact('paginatedData'));
     }
@@ -73,6 +74,10 @@ class CurriculumController extends Controller
                 'curriculum_name' => $curriculumName,
             ]);
         }
+
+        Session::put('message','Successfully added !');
+        Session::put('alert-type','success');
+
         return response()->json('success');
     }
 
@@ -155,6 +160,10 @@ class CurriculumController extends Controller
             );
         }
 
+        Session::put('message','Successfully updated !');
+        Session::put('alert-type','success');
+
+
         return response()->json('success');
     }
 
@@ -184,6 +193,10 @@ class CurriculumController extends Controller
             'status' => '0',
             'deleted_at' => Carbon::now()
         ]);
+
+        Session::put('message','Successfully destroyed !');
+        Session::put('alert-type','success');
+
         return response()->json('success');
     }
 }

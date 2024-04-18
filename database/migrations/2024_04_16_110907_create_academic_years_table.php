@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('academic_year')->nullable();
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
-            $table->
             $table->timestamps();
         });
     }

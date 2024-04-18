@@ -64,25 +64,11 @@ class AttendanceController extends Controller
         $startDate = AcademicYear::first()->start_date;
         $endDate = AcademicYear::first()->end_date;
 
-        // foreach($students as $student){
-        //     $status = $student->userGradeClasses[0]->attendances[0]->status;
-        //     dd($status);
-        // }
-        // dd($status);
-
-        // dd($students->toArray());
-
         $holidays = Holiday::select('date')->get();
-        // dd($holidays->toArray());
-
+     
         $todayDate = Carbon::now()->toDateString();
-        // dd($todayDate);
 
         $attendances = Attendance::get();
-
-        // dd($students);
-        // dd($students[1]->userGradeClasses);
-        // dd($students[0]->userGradeClasses[0]->grade_id);
 
         return view('attendances.mark_attendance',compact('gradeName','className','students','todayDate','attendances','gradeId','classId','startDate','endDate','holidays'));
     }
@@ -93,13 +79,7 @@ class AttendanceController extends Controller
 
         $thisMonth = date('n');
 
-        // $thisMonth = Carbon::now()->month();
-        // dd($thisMonth);
-
-        // $now = Carbon::now();
-        // $month = $now->format('m');
-        // dd($month);
-
+      
         $students = User::where('user_type', 'student')
             ->whereHas('userGradeClasses', function ($query) use ($request) {
                 $query->where('grade_id', $request->grade_select)
@@ -123,7 +103,6 @@ class AttendanceController extends Controller
         }
 
         $todayDate = Carbon::today();
-        // dd($todayDate);
 
         $gradeSelectedId = $request->grade_select;
         $classSelectedId = $request->class_select;

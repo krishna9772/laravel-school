@@ -21,9 +21,17 @@ class GradeRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => 'required',
-            'description' => 'nullable|string'
-        ];
+    
+        if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
+            return [
+                'name' => 'required',
+                'description' => 'nullable|string'
+            ];
+        }else{
+            return [
+                'name' => 'required|unique:grades,grade_name',
+                'description' => 'nullable|string'
+            ];
+        }
     }
 }

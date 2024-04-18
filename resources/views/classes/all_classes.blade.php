@@ -79,14 +79,14 @@
                                 <div class="row">
                                     @foreach ($grade->classes as $class)
                                         <div class="col-12 col-sm-6 col-md-3">
-                                            <a href="" class="text-decoration-none">
+                                            <a href="{{route('grades.classes.show.registrations',['gradeId' => $grade->id, 'classId' => $class->id])}}" class="text-decoration-none">
                                                 <div class="info-box">
                                                 <span class="info-box-icon bg-info elevation-1">
                                                     <i class="fa fa-university" aria-hidden="true"></i>
                                                 </span>
 
                                                 <div class="info-box-content text-dark">
-                                                    <span class="info-box-text text-lg">{{$class->class_name}}</span>
+                                                    <span class="info-box-text text-lg">{{isset($class->class_name)  ? $class->class_name : 'No class yet'}}</span>
                                                 </div>
                                                 <!-- /.info-box-content -->
                                                 </div>

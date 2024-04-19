@@ -53,7 +53,7 @@
 
     <div class="d-flex justify-content-between mb-5">
         <div class="">
-            <h3>{{$gradeName}} / {{$className}} / {{$topicName}}</h3>
+            <h3 class="text-capitalize">{{$gradeName}} / {{$className}} / {{$topicName}}</h3>
         </div>
         <div class="mt-3">
             <a href="{{route('classworks.create') }}">

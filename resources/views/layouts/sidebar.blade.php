@@ -20,7 +20,7 @@
           <i class="fas fa-user m-2"></i>
         </div>
         <div class="info">
-          <a href="#" class="d-block text-capitalize">
+          <a href="#" class="d-block text-capitalize" style="cursor: default !important;">
                 <?php
                     echo Auth::user()->user_name;
                 ?>

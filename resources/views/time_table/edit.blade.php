@@ -181,9 +181,15 @@
                     },
                     success: function (response) {
 
-                        if(response != ''){
-                            $('#inputFile').html("Old file is " + response);
-                        }
+                        console.log(response[0]);
+
+                        // if(response != ''){
+                            // $('#oldFileName').html(" - Old file - " + response[0]);
+
+                            // $('#fileInput').val(response[0]);
+
+                            $('#inputFileLabel').html(response[0]);
+                        // }
 
                     },
                     error: function(xhr, status, error) {

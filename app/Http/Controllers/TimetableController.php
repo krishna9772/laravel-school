@@ -49,6 +49,9 @@ class TimetableController extends Controller
         ],[
             'file' => $fileName,
         ]);
+
+        return redirect()->route('timetables.list');
+
     }
 
 

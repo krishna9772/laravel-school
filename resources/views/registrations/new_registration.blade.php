@@ -153,11 +153,11 @@
                                 <div class="d-flex">
                                     <div class=" mr-5">
                                         <input type="radio" class="mr-1" name="gender" id="male" value="male">
-                                        <span>Male</span>
+                                        <label for="male">Male</label>
                                     </div>
                                     <div>
                                         <input type="radio" class="mr-1" name="gender" id="female" value="female">
-                                        <span>Female</span>
+                                        <label for="female">Female</label>
                                     </div>
                                 </div>
 

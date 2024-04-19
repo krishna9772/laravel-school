@@ -200,11 +200,14 @@
                                 <p class="text-danger" id=""></p>
                             </div>
 
-                            <div class="form-group">
-                                <label for="" class="form-label">NRC</label>
-                                <input type="text" name="nrc" value="{{$data->nrc}}" id="nrcInputBox" class="form-control" placeholder="Enter User NRC">
-                                <p class="text-danger" id=""></p>
-                            </div>
+                            @if($data->user_type == 'teacher')
+                                <div class="form-group" id="nrcInputBox">
+                                    <label for="" class="form-label">NRC</label>
+                                    <input type="text" name="nrc" value="{{$data->nrc}}" class="form-control" placeholder="Enter User NRC">
+                                    <p class="text-danger" id=""></p>
+                                </div>
+                            @endif
+
 
                             <div class="form-group student-fields">
                                 <label for="fatherNameInputBox" class="form-label">Father Name</label>
@@ -374,6 +377,8 @@ $(document).ready(function() {
                 $('#motherNameInputBox').closest('.form-group').hide();
                 $('#transferedSchoolInputBox').closest('.form-group').hide();
                 $('#teacherTypeSelect').closest('.form-group').show();
+                $('#nrcInputBox').show();
+
 
             } else {
                 $('.admissionDateClass').closest('.form-group').show();
@@ -381,6 +386,8 @@ $(document).ready(function() {
                 $('#motherNameInputBox').closest('.form-group').show();
                 $('#transferedSchoolInputBox').closest('.form-group').show();
                 $('#teacherTypeSelect').closest('.form-group').hide();
+                $('#nrcInputBox').hide();
+
 
             }
         });

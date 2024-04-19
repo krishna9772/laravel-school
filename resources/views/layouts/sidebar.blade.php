@@ -4,7 +4,7 @@
     {{-- <div class="" style="margin-right: 30px !important"> --}}
         <a href="{{route('dashboard')}}" class="nav-link" style="margin-left: 8px; margin-top: 10px">
             {{-- <i class="fa fa-university nav-icon" style="color: #000; font-size: 30px;"></i> --}}
-            <img src="{{asset('images/school_logo.png')}}" alt="AdminLTE Logo" class="img-circle elevation-3" style="opacity: .8;width:50px;">
+            <img src="{{asset('images/school_logo.png')}}" alt="AdminLTE Logo" class="img-circle elevation-3" style="opacity: .8;width:35px;">
             <span class="brand-text font-weight-bold text-secondary" style="font-size: 18px">La Yaung LMS</span>
         </a>
 

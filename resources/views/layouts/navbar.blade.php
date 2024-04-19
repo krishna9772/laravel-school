@@ -156,7 +156,7 @@
 
                           {{-- <input type="text" class="form-control" value="{{ $user->user_name }}" disabled> --}}
                           <p class="text-center" style="font-size: 19px; font-weight:bold">
-                              <small>Cancel if you want to stay in session</small>
+                              <small><span class="text-bold">Cancel</span> if you want to stay in session</small>
                           </p>
                       </div>
                       <div class="modal-footer  justify-content-center ">

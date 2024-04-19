@@ -29,7 +29,7 @@
             <!-- general form elements -->
             <div class="card card-primary">
                 <div class="card-header">
-                <h3 class="card-title">Edit {{$gradeName}} Curricula</h3>
+                <h3 class="card-title">Edit {{$gradeName}} Subject</h3>
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
@@ -43,10 +43,10 @@
 
                         <div class="row">
                             <div class="form-group col-5">
-                                <label for="" class="form-label required">Curriculum Name</label>
+                                <label for="" class="form-label required">Subject</label>
                             </div>
                             <div class="form-group ml-3">
-                                <label for="" class="form-label required">Select Teacher</label>
+                                <label for="" class="form-label required">Teacher</label>
                             </div>
                         </div>
 
@@ -55,7 +55,7 @@
                             <div class="row">
                                 <input type="hidden" name="curriculum_id[]" value="{{$curriculum->id}}" data-curriculum-id="{{$curriculum->id}}">
                                 <div class="form-group col-5">
-                                    <input type="text" name="curriculum_name[]" value="{{$curriculum->curriculum_name}}" class="form-control" placeholder="Enter Curriculum Name">
+                                    <input type="text" name="curriculum_name[]" value="{{$curriculum->curriculum_name}}" class="form-control" placeholder="Subject Name">
                                     <p class="text-danger curriculum-name-error"></p>
                                 </div>
                                 <div class="form-group col-5">
@@ -288,7 +288,7 @@
                     <div class="row">
                         <input type="hidden" name="curriculum_id[]" value="${curriculumId}">
                         <div class="form-group col-5">
-                            <input type="text" name="curriculum_name[]" class="form-control" placeholder="Enter Curriculum Name">
+                            <input type="text" name="curriculum_name[]" class="form-control" placeholder="Subject Name">
                             <p class="text-danger curriculum-name-error"></p>
                         </div>
                         <div class="form-group col-5">

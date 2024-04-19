@@ -35,7 +35,7 @@
         <input type="hidden" id="endDate" value="{{$endDate}}">
 
          <div class="d-flex justify-content-between mb-4">
-             <h3>{{$gradeName}} / {{$className}} - Mark Attendance</h3>
+             <h3 class="text-capitalize">{{$gradeName}} / {{$className}} / Mark Attendance</h3>
 
              {{-- <input type="date" class=" form-control" style="width: 12%" id="dateInput" value="{{$todayDate}}"> --}}
 

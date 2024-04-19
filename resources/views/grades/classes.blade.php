@@ -7,7 +7,7 @@
     <div class="mx-3 p-3">
 
         <div class="d-flex justify-content-between mt-3">
-            <h4>{{$grade->grade_name}} classes</h4>
+            <h4 class="text-capitalize">{{$grade->grade_name}} classes</h4>
 
             <div class="">
                 <a href="{{route('classes.createNewClass',['gradeIdParameter' => $grade->id]) }}">

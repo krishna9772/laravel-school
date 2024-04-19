@@ -24,7 +24,7 @@
     {{-- <form action="" method="get"> --}}
 
          <div class="d-flex justify-content-between mb-4">
-             <h3>{{$gradeName}} / {{$className}} - Exam Marks</h3>
+             <h3 class="text-capitalize">{{$gradeName}} / {{$className}} - Exam Marks</h3>
 
              {{-- <input type="date" class=" form-control" style="width: 12%" id="dateInput" value="{{$todayDate}}"> --}}
 
@@ -66,7 +66,9 @@
                                     ?>
 
                                     <div class="form-group d-flex">
-                                        <label for="exampleInputFile" class="mt-2">File</label>
+                                        <label for="exampleInputFile" class="mt-2">
+                                            <input type="month" value={{ date('Y-m', strtotime(today())) }}
+                                            ></label>
                                         <div class="input-group ml-3">
                                             <div class="custom-file">
                                             <input type="file" class="custom-file-input" id="exampleInputFile">

@@ -5,7 +5,7 @@
 
     @if (count($users) != 0)
         <div class="pt-5 d-flex justify-content-between mx-5">
-            <h4 class="text-center" id="listTitle"> {{$gradeName}} / {{$className}}</h4>
+            <h4 class="text-center text-capitalize" id="listTitle"> {{$gradeName}} / {{$className}}</h4>
             <div>
                 <select id="filter" name="filter" class="form-control">
                     <option value="all">All</option>

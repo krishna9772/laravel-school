@@ -93,22 +93,17 @@
                     <div class="card-body">
 
                         <div class="form-group">
-                            <label for="exampleInputFile" class="mt-2">File</label>
+                            <label for="fileInput" class="mt-2">File</label>
+                            <span id="oldFileName"></span>
                             <div class="input-group">
                                 <div class="custom-file">
-                                <input type="file" name="file" class="custom-file-input" id="exampleInputFile">
-                                <label class="custom-file-label" id="inputFileLabel"  for="exampleInputFile"> Choose File
+                                <input type="file" name="file" class="custom-file-input" id="fileInput">
+                                <label class="custom-file-label" id="inputFileLabel"  for="fileInput"> Choose New File
                                     {{-- {{ $student->userGradeClasses[0]->examMarks[0]->file ?? 'Choose File' }} --}}
                                 </label>
                                 </div>
                             </div>
                         </div>
-
-                      {{-- <div class="form-group">
-                          <label for="" class="form-label required">File </label>
-                          <input type="file" name="file" id="fileInputBox" class="form-control">
-                          <p class="text-danger" id="fileErrorMessage"></p>
-                      </div> --}}
 
                     <!-- /.card-body -->
                     <div class="">
@@ -157,7 +152,6 @@
 
                 $('#gradeName').html(selectedGradeName);
 
-
                 $('#grade_id option').each(function() {
 
                     if ($(this).val() == selectedGradeId) {
@@ -175,11 +169,33 @@
 
                 $('#className').html(selectedClassName);
 
-
-
-
                 $('#selectSection').hide();
                 $('#updateTimeTableForm').show();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ route('timetables.get.file.name') }}',
+                    data: {
+                        grade_id : selectedGradeId,
+                        class_id : selectedClassId
+                    },
+                    success: function (response) {
+
+                        if(response != ''){
+                            $('#inputFile').html("Old file is " + response);
+                        }
+
+                    },
+                    error: function(xhr, status, error) {
+                        var err = eval("(" + xhr.responseText + ")");
+                        var response = JSON.parse(xhr.responseText);
+                        console.log(response);
+                    },
+                    failure: function (response) {
+                        console.log('faliure');
+                    }
+                });
+
             } else {
 
                 console.log('error');
@@ -277,9 +293,6 @@
                     let nameErrorMessage = response.errors.name ? response.errors.name[0] : '';
                     let descErrorMessage = response.errors.description ? response.errors.description[0] : '';
 
-                    // $('#nameErrorMessage').html(nameErrorMessage);
-                    // $('#descErrorMessage').html(descErrorMessage);
-
                     if(gradeErrorMessage){
                         $('#gradeErrorMessage').html(gradeErrorMessage);
                         $('#grade_id').addClass('is-invalid');
@@ -296,17 +309,6 @@
                         $('#nameErrorMessage').html('');
                         $('#classInputBox').removeClass('is-invalid');
                     }
-
-                    if (descErrorMessage) {
-                        $('#descErrorMessage').html(descErrorMessage);
-                        $('#descInputBox').addClass('is-invalid');
-                    } else {
-                        $('#descErrorMessage').html('');
-                        $('#descInputBox').removeClass('is-invalid');
-                    }
-
-
-
                 },
                 failure: function (response) {
                     console.log('faliure');

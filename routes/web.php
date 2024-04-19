@@ -118,6 +118,7 @@ Route::middleware(['auth'])->group(function(){
         Route::get('timetable/edit',[TimetableController::class,'edit'])->name('timetables.edit');
         Route::post('timetable/update',[TimetableController::class,'update'])->name('timetables.update');
         Route::get('timetable/destroy/{gradeId}/{classId}',[TimetableController::class,'destroy'])->name('timetables.destroy');
+        Route::get('get-file-name',[TimetableController::class,'getTimetableFileName'])->name('timetables.get.file.name');
 
         // Route::get('exam-marks/search',[ExamMarkController::class,''])
         Route::get('exam-marks/search',[ExamMarkController::class,'addNewExamMark'])->name('exam-marks.search');

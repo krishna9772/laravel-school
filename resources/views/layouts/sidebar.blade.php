@@ -379,6 +379,17 @@
                 <ul class="nav nav-treeview">
 
                     <li class="nav-item">
+                        <a href="{{ route('timetables.list') }}" class="nav-link {{ Route::is('timetables.list') ? 'active'  : '' }}">
+                            @if(Route::is('timetables.list'))
+                               <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                            @else
+                               <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                            @endif
+                            <p>List</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
                         <a href="{{ route('timetables.new') }}" class="nav-link {{ Route::is('timetables.new') ? 'active'  : '' }}">
                             @if(Route::is('timetables.new'))
                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->

@@ -9,7 +9,7 @@ use App\Models\Curriculum;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\Session;
 use App\Http\Requests\CurriculumRequest;
 use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -38,7 +38,7 @@ class CurriculumController extends Controller
             $page, // Current page
             ['path' => request()->url(), 'query' => request()->query()] // Additional options
         );
-        
+
 
         return view('curriculums.all_curriculums',compact('paginatedData'));
     }

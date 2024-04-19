@@ -104,8 +104,45 @@ $(document).ready(function () {
             $('#gradeIdErrorMessage').text('');
         }
 
+        function teacherOptionsInAddMoreBtn() {
+            var gradeId = $('#gradeSelect').val();
+            $('.teacherSelect').empty();
+
+            if (gradeId === '') {
+
+                $('.teacherSelect').append($('<option>', {
+                    value: '',
+                    text: 'Select Teacher',
+                }));
+            } else {
+
+                var teachersFound = false;
+                @foreach ($teachers as $teacher)
+                    @foreach ($teacher->userGradeClasses as $gradeClass)
+                        if ('{{ $gradeClass->grade_id }}' === gradeId) {
+                            $('.teacherSelect').append($('<option>', {
+                                value: '{{ $teacher->id }}',
+                                text: '{{ $teacher->user_name }}'
+                            }));
+                            teachersFound = true;
+                        }
+                    @endforeach
+                @endforeach
+
+                if (!teachersFound) {
+                    $('.teacherSelect').append($('<option>', {
+                        value: '',
+                        text: 'No Teachers in this grade'
+                    }));
+                }
+            }
+        }
+
+        teacherOptionsInAddMoreBtn();
+
         $('#gradeSelect').change(function() {
             clearGradeIdInputBoxError();
+            teacherOptionsInAddMoreBtn();
         });
 
         $('#nameInputBox').on('input', function () {
@@ -207,24 +244,24 @@ $(document).ready(function () {
                 $("#dynamicRows").append(newRow);
                 inputFieldCount++;
                 toggleButtons();
+                teacherOptionsInAddMoreBtn();
             }
         });
 
 
         $('#gradeSelect').change(function() {
             var gradeId = $(this).val();
-            $('.teacherSelect').empty(); // Clear previous options
+            $('.teacherSelect').empty();
             $('#selectBoxError1').text('');
 
 
             if (gradeId === '') {
-                // If 'Select Grade' is selected, show 'Select Class' in class select box
                 $('.teacherSelect').append($('<option>', {
                     value: '',
                     text : 'Select Teacher',
                 }));
             } else {
-                // Filter classes based on selected grade
+
                 var teachersFound = false;
                 @foreach ($teachers as $teacher)
                     @foreach ($teacher->userGradeClasses as $gradeClass)

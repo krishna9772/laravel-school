@@ -15,43 +15,44 @@
                 </div>
 
                 <div class="card-body">
-                    <form id="attendanceSearchForm" action="{{route('timetable.store')}}" method="POST" enctype="multipart/form-data">
+                    <form id="" action="{{route('timetable.store')}}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <label for="" class="form-label required">Select Grade</label>
-                            <select name="grade_select" id="gradeSelect" class="form-control">
+                            <select name="grade_select" id="gradeSelect" class="form-control @error('grade_select') is-invalid @enderror">
                                 <option value="">Select Grade</option>
                                 @foreach ($grades as $grade)
                                     <option value="{{$grade->id}}">{{$grade->grade_name}}</option>
                                 @endforeach
                             </select>
-                            <p class="text-danger mt-1" id="gradeSelectBoxError"></p>
+                            @error('grade_select')
+                                <p class="text-danger">{{$message}}</p>
+                            @enderror
                         </div>
 
                         <div class="form-group">
                             <label for="" class="form-label required">Select Class</label>
-                            <select name="class_select" id="classSelect" class="form-control">
+                            <select name="class_select" id="classSelect" class="form-control @error('class_select') is-invalid @enderror ">
                                 <option value="">Select Class</option>
                             </select>
-                            <p class="text-danger mt-1" id="classSelectBoxError"></p>
+                            @error('class_select')
+                                <p class="text-danger">{{$message}}</p>
+                            @enderror
                         </div>
-
-                        {{-- <div class="form-group">
-                            <label for="" class="form-label required">Browse File</label>
-                            <input type="file" name="file" id="" class="form-control">
-                            <p class="text-danger mt-1" id="fileInputBoxError"></p>
-                        </div> --}}
 
                         <div class="form-group">
                             <label for="exampleInputFile" class="mt-2">File</label>
                             <div class="input-group">
                                 <div class="custom-file">
-                                <input type="file" name="file" class="custom-file-input" id="exampleInputFile">
+                                <input type="file" name="file" class="custom-file-input @error('file') is-invalid @enderror" id="exampleInputFile">
                                 <label class="custom-file-label" id="inputFileLabel"  for="exampleInputFile"> Choose File
                                     {{-- {{ $student->userGradeClasses[0]->examMarks[0]->file ?? 'Choose File' }} --}}
                                 </label>
                                 </div>
                             </div>
+                            @error('file')
+                                <p class="text-danger">{{$message}}</p>
+                            @enderror
                         </div>
 
                         <div class="mt-4">
@@ -99,7 +100,7 @@
             clearClassSelectBoxError();
         });
 
-        // $('#attendanceSearchForm').submit(function(e){
+        // $('#').submit(function(e){
         //     e.preventDefault();
 
         //     $.ajax({

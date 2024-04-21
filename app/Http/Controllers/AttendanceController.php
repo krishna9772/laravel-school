@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AttendanceSearchRequest;
-use App\Models\AcademicYear;
-use App\Models\Attendance;
-use App\Models\Classes;
-use App\Models\Grade;
-use App\Models\Holiday;
-use App\Models\User;
 use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Grade;
+use App\Models\Classes;
+use App\Models\Holiday;
+use App\Models\Attendance;
+use App\Models\AcademicYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
+use App\Http\Requests\AttendanceSearchRequest;
 
 class AttendanceController extends Controller
 {
@@ -44,6 +45,21 @@ class AttendanceController extends Controller
 
     public function searchResults(AttendanceSearchRequest $request){
 
+        $dateToShow = Carbon::now();
+
+        if ($dateToShow->isWeekend()) {
+            $dateToShow = $dateToShow->previous(Carbon::FRIDAY);
+        }
+
+        $holidays = Holiday::pluck('date')->toArray();
+
+        while ($dateToShow->isWeekend() || in_array($dateToShow->toDateString(), $holidays)) {
+            $dateToShow->subDay();
+        }
+
+        $dateToShow = $dateToShow->toDateString();
+
+        // dd($dateToShow);
 
         $gradeName = Grade::where('id',$request->grade_select)->value('grade_name');
         $className = Classes::where('id',$request->class_select)->value('class_name');
@@ -58,19 +74,21 @@ class AttendanceController extends Controller
             $query->where('grade_id', $request->grade_select)
                 ->where('class_id', $request->class_select);
         })
-        ->with('userGradeClasses.attendances')
+        ->with(['userGradeClasses.attendances' => function ($query) use ($dateToShow) {
+            $query->whereDate('attendance_date', $dateToShow);
+        }])
         ->get();
 
         $startDate = AcademicYear::first()->start_date;
         $endDate = AcademicYear::first()->end_date;
 
         $holidays = Holiday::select('date')->get();
-     
-        $todayDate = Carbon::now()->toDateString();
+
+        // $dateToShow = Carbon::now()->toDateString();
 
         $attendances = Attendance::get();
 
-        return view('attendances.mark_attendance',compact('gradeName','className','students','todayDate','attendances','gradeId','classId','startDate','endDate','holidays'));
+        return view('attendances.mark_attendance',compact('gradeName','className','students','dateToShow','attendances','gradeId','classId','startDate','endDate','holidays'));
     }
 
     public function viewReport(AttendanceSearchRequest $request){
@@ -79,7 +97,7 @@ class AttendanceController extends Controller
 
         $thisMonth = date('n');
 
-      
+        // for monthly show
         $students = User::where('user_type', 'student')
             ->whereHas('userGradeClasses', function ($query) use ($request) {
                 $query->where('grade_id', $request->grade_select)
@@ -102,12 +120,46 @@ class AttendanceController extends Controller
             $student->percentage = $totalAttendanceCount > 0 ? ($presentCount / $totalAttendanceCount) * 100 : 0;
         }
 
-        $todayDate = Carbon::today();
+        $dateToShow = Carbon::now();
+
+        if ($dateToShow->isWeekend()) {
+            $dateToShow = $dateToShow->previous(Carbon::FRIDAY);
+        }
+
+        $holidays = Holiday::pluck('date')->toArray();
+
+        while ($dateToShow->isWeekend() || in_array($dateToShow->toDateString(), $holidays)) {
+            $dateToShow->subDay();
+        }
+
+        $dateToShow = $dateToShow->toDateString();
+
+        // students daily status
+
+        $studentsDaily = User::where('user_type', 'student')
+        ->whereHas('userGradeClasses', function ($query) use ($request) {
+            $query->where('grade_id', $request->grade_select)
+                ->where('class_id', $request->class_select);
+        })
+        ->with(['userGradeClasses.attendances' => function ($query) use ($dateToShow) {
+            $query->whereDate('attendance_date', $dateToShow);
+        }])
+        ->get();
+
+
+        // $todayDate = Carbon::today();
 
         $gradeSelectedId = $request->grade_select;
         $classSelectedId = $request->class_select;
 
-        return view('attendances.attendance_report', compact('gradeName','todayDate', 'className', 'students','thisMonth','gradeSelectedId','classSelectedId'));
+        $startDate = AcademicYear::first()->start_date;
+        $endDate = AcademicYear::first()->end_date;
+        // dd($endDate);
+
+
+        $holidays = Holiday::select('date')->get();
+
+        return view('attendances.attendance_report', compact('gradeName','dateToShow', 'className', 'students','studentsDaily','thisMonth','gradeSelectedId','classSelectedId','startDate','endDate','holidays'));
     }
 
 
@@ -146,6 +198,69 @@ class AttendanceController extends Controller
 
         // return view('attendances.attendance_report', compact('gradeName', 'className', 'students','thisMonth'));
     }
+
+    // public function attendanceDetails(Request $request){
+
+    //     // Get the month and user_id from the request
+    //     $month = $request->month;
+    //     $user_id = $request->user_id;
+
+    //     // Fetch user details
+    //     $student = User::where('user_id', $user_id)
+    //         ->with(['userGradeClasses.attendances' => function ($query) use ($month) {
+    //             $query->whereMonth('attendance_date', $month);
+    //         }])
+    //         ->first();
+
+    //     // Calculate total days in the month, excluding weekends and holidays
+    //     $startDate = Carbon::createFromDate(date('Y'), $month, 1)->startOfMonth();
+    //     $endDate = $startDate->copy()->endOfMonth();
+    //     $totalDays = $startDate->diffInDaysFiltered(function($date) {
+    //         return !$date->isWeekend() && !Holiday::where('date', $date)->exists();
+    //     }, $endDate) + 1;
+
+    //     // Calculate attendance
+    //     $presentCount = 0;
+    //     foreach ($student->userGradeClasses as $userGradeClass) {
+    //         foreach ($userGradeClass->attendances as $attendance) {
+    //             if (!$attendance->attendance_date->isWeekend() && !Holiday::where('date', $attendance->attendance_date)->exists()) {
+    //                 if ($attendance->status === 'present') {
+    //                     $presentCount++;
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     // Calculate percentage
+    //     $percentage = $totalDays > 0 ? ($presentCount / $totalDays) * 100 : 0;
+
+    //     // Prepare response
+    //     $studentName = $student->user_name;
+    //     $monthName = $startDate->format('F');
+
+    //     $attendanceStatus = [];
+    //     $dayOfWeek = [];
+
+    //     $currentDate = $startDate->copy();
+    //     while ($currentDate->lte($endDate)) {
+    //         $dateString = $currentDate->toDateString();
+    //         $dayOfWeekString = $currentDate->format('l');
+    //         $attendanceRecord = $student->userGradeClasses->flatMap->attendances->where('attendance_date', $dateString)->first();
+    //         $status = $attendanceRecord ? $attendanceRecord->status : '-';
+    //         $attendanceStatus[$dateString] = $status;
+    //         $dayOfWeek[$dateString] = $dayOfWeekString;
+    //         $currentDate->addDay();
+    //     }
+
+    //     return response()->json([
+    //         'studentName' => $studentName,
+    //         'attendanceStatus' => $attendanceStatus,
+    //         'dayOfWeek' => $dayOfWeek,
+    //         'monthName' => $monthName,
+    //         'percentage' => $percentage
+    //     ]);
+    // }
+
 
     public function attendanceDetails(Request $request){
 
@@ -187,48 +302,70 @@ class AttendanceController extends Controller
 
         $monthName = date('F', strtotime($dateString));
 
-        $startDate = Carbon::createFromFormat('Y-m-d', date('Y-' . $month . '-01'));
-        $endDate = $startDate->copy()->endOfMonth();
+        $holidays = Holiday::select('date')->get();
+
+        $weekends =
+
+        Log::info("holdiays " . $holidays);
 
 
-        $attendanceDetails = User::where('user_id', $request->user_id)
-            ->with(['userGradeClasses.attendances' => function ($query) use ($startDate, $endDate) {
-                $query->whereBetween('attendance_date', [$startDate, $endDate]);
-            }])
-            ->first();
+          $startDate = Carbon::createFromFormat('Y-m-d', date('Y-' . $request->month . '-01'));
+          $endDate = $startDate->copy()->endOfMonth();
 
-        $attendanceStatus = [];
-        $dayOfWeek = [];
+          $weekends = ['Sunday','Saturday'];
+
+        //   while($currentDate)
+
+          $attendanceDetails = User::where('user_id', $request->user_id)
+          ->with(['userGradeClasses.attendances' => function ($query) use ($startDate, $endDate) {
+              $query->whereBetween('attendance_date', [$startDate, $endDate]);
+          }])
+          ->first();
+
+      $attendanceStatus = [];
+      $dayOfWeek = [];
+
+      $currentDate = $startDate->copy();
+      while ($currentDate->lte($endDate)) {
 
 
-        $currentDate = $startDate->copy();
-        while ($currentDate->lte($endDate)) {
-            $dateString = $currentDate->toDateString();
+          $dateString = $currentDate->toDateString();
+          $dayOfWeekString = $currentDate->format('l');
 
-            $dayOfWeekString = $currentDate->format('l');
+          Log::info( $weekends);
 
 
-            $attendanceRecord = $attendanceDetails->userGradeClasses[0]->attendances
-                ->where('attendance_date', $dateString)
-                ->first();
+          if (!$holidays->contains('date', $dateString)) {
 
-            $status = $attendanceRecord ? $attendanceRecord->status : 'absent';
+              if (!in_array($dayOfWeekString, $weekends)) {
 
-            $attendanceStatus[$dateString] = $status;
-            $dayOfWeek[$dateString] = $dayOfWeekString;
+                  $attendanceRecord = $attendanceDetails->userGradeClasses[0]->attendances
+                      ->where('attendance_date', $dateString)
+                      ->first();
 
-            $currentDate->addDay();
-        }
+                  $status = $attendanceRecord ? $attendanceRecord->status : '-';
+                  $attendanceStatus[$dateString] = $status;
 
-        // Log::info($attendanceStatus,$monthName);
+                  $dayOfWeek[$dateString] = $dayOfWeekString;
+              }
+          }
+
+          $currentDate->addDay();
+      }
 
         Log::info($dayOfWeek);
+
+        $filteredDayOfWeek = array_filter($dayOfWeek, function ($day) use ($weekends) {
+            return !in_array($day, $weekends);
+          });
+
+          Log::info($filteredDayOfWeek);
 
 
         return response()->json([
             'studentName' => $studentName,
             'attendanceStatus' => $attendanceStatus,
-            'dayOfWeek' => $dayOfWeek,
+            'dayOfWeek' => $filteredDayOfWeek,
             'monthName' => $monthName,
             'percentage' => $student->percentage
         ]);
@@ -250,25 +387,9 @@ class AttendanceController extends Controller
                     ->where('class_id', $request->class_select);
             })
             ->with(['userGradeClasses.attendances' => function ($query) use ($selectedDate) {
-                $query->whereDate('created_at', $selectedDate);
+                $query->whereDate('attendance_date', $selectedDate);
             }])
             ->get();
-
-        foreach ($students as $student) {
-            $totalAttendanceCount = 0;
-            $presentCount = 0;
-
-            foreach ($student->userGradeClasses as $userGradeClass) {
-                $totalAttendanceCount += $userGradeClass->attendances->count();
-                $presentCount += $userGradeClass->attendances->where('status', 'present')->count();
-            }
-
-            $student->percentage = $totalAttendanceCount > 0 ? ($presentCount / $totalAttendanceCount) * 100 : 0;
-        }
-
-        Log::info($students);
-
-        $thisMonth = Carbon::now()->month();
 
         return response()->json($students);
     }
@@ -346,7 +467,7 @@ class AttendanceController extends Controller
 
         $reason = $request->reason;
 
-        if($reason !== null){
+        if($reason != null){
             Attendance::updateOrCreate([
                 'user_grade_class_id' => $request->user_grade_class_id,
                 'attendance_date' => $request->selectedDate,
@@ -364,8 +485,18 @@ class AttendanceController extends Controller
             ]);
         }
 
+        return response()->json('success');
+    }
 
+    public function updateReasonOnCancelBtn(Request $request){
 
+        Attendance::updateOrCreate([
+            'user_grade_class_id' => $request->user_grade_class_id,
+            'attendance_date' => $request->selectedDate,
+
+        ],[
+            'reason' => $request->reason,
+        ]);
 
         return response()->json('success');
     }

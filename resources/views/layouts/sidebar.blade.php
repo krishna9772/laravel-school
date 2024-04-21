@@ -103,16 +103,9 @@
                         <p>List</p>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
 
                         <a href="{{route('grades.create')}}" class="nav-link {{ Route::is('grades.create') ? 'active'  : '' }}">
-                        {{-- @if(Route::is('grades.index'))
-                        <span class="far fa-circle" style="position: relative;">
-                            <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 5px; height: 5px; background-color: black; border-radius: 50%;"></span>
-                        </span>
-                        @else
-                            <i class='far fa-circle nav-icon'></i>
-                        @endif --}}
 
                         @if(Route::is('grades.create'))
                            <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
@@ -122,7 +115,7 @@
 
                         <p>New</p>
                         </a>
-                    </li>
+                    </li> --}}
                     <li class="nav-item">
                         <a href="{{route('grades.modify')}}" class="nav-link {{ Route::is('grades.modify') ? 'active'  : '' }}">
                             @if(Route::is('grades.modify'))
@@ -349,7 +342,7 @@
 
                     <li class="nav-item">
                         <a href="{{route('attendances.report.search')}}" class="nav-link {{ Route::is('attendances.report.search') ? 'active'  : '' }}">
-                            @if(Route::is('attendances.report.search'))
+                            @if(Route::is('attendances.report.search') || Route::is('attendances.get-by-date') || Route::is('attendances.view-report.per.month') )
                                 <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
                             @else
                                 <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->

@@ -26,8 +26,6 @@
 
 <div class="mx-5 py-5">
 
-    {{-- <form action="" method="get"> --}}
-
         <input type="hidden" name="grade_select" id="gradeIdInputBox" value="{{$gradeId}}">
         <input type="hidden" name="class_select" id="classIdInputBox" value="{{$classId}}">
 
@@ -37,30 +35,30 @@
          <div class="d-flex justify-content-between mb-4">
              <h3 class="text-capitalize">{{$gradeName}} / {{$className}} / Mark Attendance</h3>
 
-             {{-- <input type="date" class=" form-control" style="width: 12%" id="dateInput" value="{{$todayDate}}"> --}}
+             {{-- <input type="date" class=" form-control" style="width: 12%" id="dateInput" value="{{$dateToShow}}"> --}}
 
              <div class="form-group">
                 {{-- <label for="datepicker" class="required">Start Date:</label> --}}
                 <div class="input-group">
-                  <input type="text" class="form-control custom-placeholder changeInputStyle admissionDateClass" name="date" style="width: 12%" id="dateInput" value="{{$todayDate}}">
+                  <input type="text" class="form-control custom-placeholder changeInputStyle admissionDateClass" name="date" style="width: 12%" id="dateInput" value="{{$dateToShow}}">
                   <div class="input-group-append">
                     <span class="input-group-text" id="datepicker-icon" style="cursor: pointer"><i class="fas fa-calendar-alt"></i></span>
                   </div>
                 </div>
             </div>
-             {{-- <input type="date" class=" form-control" style="width: 12%" id="dateInput" value="{{$todayDate}}"> --}}
+             {{-- <input type="date" class=" form-control" style="width: 12%" id="dateInput" value="{{$dateToShow}}"> --}}
 
          </div>
 
 
          <div class="">
 
-            <form  id="markAttendanceForm">
+
                 @csrf
                 <table id="studentsTable" class="w-100 my-3 table table-striped" >
                     <thead>
                         <tr>
-                            <th class="text-center">No</th>
+                            <th class="text-center col-1">No</th>
                             <th class="text-center">Student ID</th>
                             <th class="text-center">Student Name</th>
                             <th class="text-center">Father Name</th>
@@ -79,7 +77,7 @@
                                 <td class="text-center col-1">{{ $count++ }}</td>
                                 <td class="text-center">{{$student->user_id}}</td>
                                 <td class="text-center">{{ $student->user_name }}</td>
-                                <td class="text-center">{{$student->father_name}}</td>
+                                <td class="text-center">{{$student->father_name ?? '-'}}</td>
                                 <td class="text-center">
                                     <input type="hidden" name="student_id" value="{{$student->user_id}}">
                                     <input type="hidden" name="user_grade_class_id" value="{{$student->userGradeClasses[0]->id}}">
@@ -149,9 +147,6 @@
                         @endforeach
                     </tbody>
                 </table>
-            </form>
-
-
         </div>
 
 </div>
@@ -180,38 +175,18 @@
                 </button>
             </div>`);
 
-        $(document).on("click", "#reasonButton", function() {
-
-            var buttonContainer = $(this).parent();
-
-
-            $(this).hide();
-
-
-            var reasonInput = $(`<div class="d-flex">
-                <input type="text" id="reasonInput" class="form-control mr-2" placeholder="Enter Reason">
-                <button type="button" id="saveButton" class="btn btn-success mr-1">Save</button>
-                <button type="button" class="btn btn-sm btn-danger" id="cancelBtn">
-                    <i class="fa fa-times" aria-hidden="true"></i>
-                </button>
-            </div>`);
-
-
             buttonContainer.append(reasonInput);
 
 
             reasonInput.show('slow');
         });
 
+        // $(document).off("click", ".btn-/group-toggle label");
+        $(document).on("click", ".btn-group-toggle label", function(event) {
 
-            buttonContainer.append(reasonInput);
+            event.preventDefault();
 
-
-            reasonInput.show('slow');
-        });
-
-
-        $(document).on("click", ".btn-group-toggle label", function() {
+            console.log('hello world testing');
 
             $(this).closest('td').find('div label').removeClass('btn-danger btn-success btn-warning');
 
@@ -230,9 +205,46 @@
 
         });
 
+
+
         $(document).on("click", "#cancelBtn", function() {
 
-            $(".reasonInput").val("");
+            var reason = '';
+
+            var studentId = $(this).closest('tr').find('[name^="student_id"]').val();
+            // var status = $(this).closest('tr').find('[name^="status"]').val();
+            var user_grade_class_id = $(this).closest('tr').find('[name^="user_grade_class_id"]').val();
+
+            console.log('student id is ' + studentId);
+            console.log('reason is ' + reason);
+            console.log('user grade class id is ' + user_grade_class_id);
+
+            var selectedDate = $('#dateInput').val();
+
+            // saveReason(studentId, user_grade_class_id, reason);
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                method: "POST",
+                url: '{{route('attendances.update.reason.on.cancel.btn')}}',
+                data : {
+                    student_id : studentId,
+                    reason : reason,
+                    user_grade_class_id : user_grade_class_id,
+                    selectedDate: selectedDate,
+                },
+                success: function(response){
+                    if(response == 'success'){
+                        console.log(response);
+                    }
+                }
+            });
+
+
+            // $(".reasonInput").val("");
+            $(this).closest('tr').find('[class^="resonInput"]').val('');
             $(this).closest('.d-flex').replaceWith(`
                 <button type="button" class="btn btn-primary" id="reasonButton">
                     <i class="fa fa-edit mr-2" aria-hidden="true"></i>Reason
@@ -261,9 +273,13 @@
             var user_grade_class_id = $(this).closest('tr').find('[name^="user_grade_class_id"]').val();
 
             saveReason(studentId, user_grade_class_id, reason);
+
+            $(this).closest('tr').find('.reasonInput').blur();
         });
 
         function saveStatus(studentId, status, user_grade_class_id) {
+
+            console.log('hello world lab');
 
             var selectedDate = $('#dateInput').val();
 
@@ -281,6 +297,10 @@
                 },
                 success: function(response) {
                    console.log(response);
+                   if(response == 'success'){
+                        toastr.options.timeOut = 5000;
+                        toastr.success('Successfully added!');
+                   }
                 },
                 error: function(xhr, status, error) {
                 }
@@ -288,6 +308,8 @@
         }
 
         function saveReason(studentId, user_grade_class_id, reason) {
+
+
 
             var selectedDate = $('#dateInput').val();
 
@@ -304,7 +326,13 @@
                     reason : reason
                 },
                 success: function(response) {
-                    console.log(response);
+                    // console.log(response);
+                    if(response == 'success'){
+                        // window.location.reload();
+                        toastr.options.timeOut = 5000;
+                        toastr.success('Successfully added!');
+                    }
+
                 },
                 error: function(xhr, status, error) {
 
@@ -331,17 +359,15 @@
             startDate: startDate,
             endDate: endDate,
             beforeShowDay: function(date) {
-                // Convert date to string in yyyy-mm-dd format
+
                 var dateString = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
 
-                // Check if the date is a holiday
                 var isHoliday = disabledDates.find(function(holidayDate) {
                     return holidayDate.toISOString().split('T')[0] === dateString;
                 });
 
                 var isWeekend = date.getDay() === 0 || date.getDay() === 6;
 
-                // Disable holiday dates
                 return {
                     enabled: !isHoliday && !isWeekend
                 };
@@ -374,7 +400,7 @@
 
                     console.log(response);
 
-                    var dataTable = $('#studentsTable').DataTable();
+                    var dataTable =$('#studentsTable').DataTable()
 
                     dataTable.clear().destroy();
 
@@ -389,7 +415,6 @@
                                             </tr>
                                         </thead>
                                         <tbody>`;
-
 
                     var counter = 1;
                     for (var i = 0; i < response.length; i++) {
@@ -426,16 +451,12 @@
                             <td class="text-center">${counter}</td>
                             <td class="text-center">${student.user_id}</td>
                             <td class="text-center">${student.user_name}</td>
-                            <td class="text-center">${student.father_name ?? ''}</td>
+                            <td class="text-center">${student.father_name ?? '-'}</td>
                             <td class="text-center">${badgeHtml}</td>
                             <td class="text-center col-3">`;
 
-                        // Check if reason is available for the student
-
-
                         var reason = student.user_grade_classes && student.user_grade_classes.length > 0 && student.user_grade_classes[0].attendances && student.user_grade_classes[0].attendances.length > 0 ? student.user_grade_classes[0].attendances[0].reason : '';
 
-                        // Render reason button or reason input based on reason availability
                         if(reason == null || reason == ''){
                             newTableHtml += `<button type="button" class="btn btn-primary" id="reasonButton"><i class="fa fa-edit mr-2" aria-hidden="true"></i>Reason </button>`;
                         }else{
@@ -450,7 +471,6 @@
                         }
 
                         newTableHtml += `</td></tr>`;
-
 
                         counter++;
                     }

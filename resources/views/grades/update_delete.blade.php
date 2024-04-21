@@ -14,7 +14,8 @@
         <div class="col-md-4 mt-5">
 
             <div id="selectSection">
-                <h4>Update or Delete Grade</h4>
+                {{-- <h4>Update or Delete Grade</h4> --}}
+                <h4>Update Grade</h4>
                 <select name="" id="gradeSelect" class="form-control">
                     <option value="">Select Grade</option>
                     @foreach ($grades as $grade)
@@ -25,9 +26,9 @@
 
                 <div class="mt-4">
                     <button id="updateBtn" class="btn btn-primary mr-2">Update</button>
-                    <button id="deleteBtn" class="btn btn-danger" >Delete</button>
+                    {{-- <button id="deleteBtn" class="btn btn-danger" >Delete</button> --}}
 
-                    <div class="modal fade" id="deleteGradeModal">
+                    {{-- <div class="modal fade" id="deleteGradeModal">
                         <div class="modal-dialog">
                           <div class="modal-content">
                             <div class='modal-header'>
@@ -50,7 +51,7 @@
                           <!-- /.modal-content -->
                         </div>
                         <!-- /.modal-dialog -->
-                    </div>
+                    </div> --}}
 
                 </div>
             </div>
@@ -63,8 +64,8 @@
 
                 <input type="hidden" id="idInputBox" name="id" value="">
                 <div class="form-group">
-                    <label for="" class="form-label required">Name</label>
-                    <input type="text" name="name" id="nameInputBox" class="form-control" placeholder="Name of Grade">
+                    <label for="" class="form-label">Name</label>
+                    <input type="text" name="name" id="nameInputBox" class="form-control" placeholder="Name of Grade" readonly>
                     <p class="text-danger" id="nameErrorMessage"></p>
                 </div>
                 <div class="form-group">

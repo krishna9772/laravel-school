@@ -38,6 +38,8 @@ Route::middleware(['auth'])->group(function(){
         // holidays
         Route::get('holidays/index',[HolidayController::class,'index'])->name('holidays.index');
         Route::post('holidays/store',[HolidayController::class,'store'])->name('holidays.store');
+        Route::post('holidays/edit',[HolidayController::class,'update'])->name('holidays.edit');
+        Route::get('holidays/destroy/{id}',[HolidayController::class,'destroy'])->name('holidays.destroy');
 
         // grades
         Route::get('grades/modify',[GradeController::class,'modify'])->name('grades.modify');
@@ -102,8 +104,8 @@ Route::middleware(['auth'])->group(function(){
         Route::get('attendances/view-report/{month}',[AttendanceController::class,'percentagePerMonth'])->name('attendances.view-report.per.month');
         Route::get('attendances/details',[AttendanceController::class,'attendanceDetails'])->name('attendances.details');
         Route::get('attendances/get-by-date',[AttendanceController::class,'attendanceByDate'])->name('attendances.get-by-date');
-        Route::get('attendances/get-by-date',[AttendanceController::class,'attendanceByDateInMarkAttendance'])->name('attendances.getByDate.in.mark.attendance');
-
+        Route::get('attendances/get-by-date-mark-attendance',[AttendanceController::class,'attendanceByDateInMarkAttendance'])->name('attendances.getByDate.in.mark.attendance');
+        Route::post('attedances/update-reason-on-cancel-btn',[AttendanceController::class,'updateReasonOnCancelBtn'])->name('attendances.update.reason.on.cancel.btn');
         Route::resource('attendances',AttendanceController::class);
 
         // promote student

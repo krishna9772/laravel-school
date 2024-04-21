@@ -1,10 +1,7 @@
 @extends('layouts.app')
 
 @section('styles')
-<style>
-
-
-  </style>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css" rel="stylesheet"/>
 @endsection
 
 @section('content')
@@ -15,6 +12,8 @@
         <input type="hidden" name="grade_select" id="grade_select" value="{{$gradeSelectedId}}">
         <input type="hidden" name="class_select" id="class_select" value="{{$classSelectedId}}">
 
+        <input type="hidden" id="startDate" value="{{$startDate}}">
+        <input type="hidden" id="endDate" value="{{$endDate}}">
 
          <div class="d-flex justify-content-between mb-4" id="titleInfo">
              <h3>{{$gradeName}} / {{$className}} - Attendance Report </h3>
@@ -124,9 +123,20 @@
 
         <div id="dailyAttendance" style="display: none">
              {{-- daily attendance section --}}
-             <div id="date-input-section" style=" width: 20%;" class="my-3">
+             {{-- <div id="date-input-section" style=" width: 20%;" class="my-3">
                 <input type="date" name="" id="" value="{{ $todayDate->format('Y-m-d') }}" class="form-control">
-             </div>
+             </div> --}}
+
+
+             <div class="form-group" style="width: 20%">
+                {{-- <label for="datepicker" class="required">Start Date:</label> --}}
+                <div class="input-group">
+                  <input type="text" class="form-control custom-placeholder changeInputStyle admissionDateClass" name="date" id="dateInput" value="{{$dateToShow}}">
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="datepicker-icon" style="cursor: pointer"><i class="fas fa-calendar-alt"></i></span>
+                  </div>
+                </div>
+            </div>
 
 
             <div style="">
@@ -144,44 +154,57 @@
                     <tbody>
                         @php $count = 1 @endphp
 
-                        @foreach ($students as $student)
+                        @if (count($studentsDaily) != 0)
+
+
+                        @foreach ($studentsDaily as $student)
                             <div class="userList">
                             <tr>
                                 <td class="col-1">{{ $count++ }}</td>
                                 <td class="text-center">{{$student->user_id}}</td>
                                 <td class="text-center">{{ $student->user_name }}</td>
-                                <td class="text-center">{{$student->father_name}}</td>
+                                <td class="text-center">{{$student->father_name ?? '-'}}</td>
                                 <td class="text-center">
 
-                                    @php
-                                        $status = $student->userGradeClasses[0]->attendances[0]->status;
-                                        $badgeClass = '';
+                                    {{-- if (student.user_grade_classes && student.user_grade_classes.length > 0 && student.user_grade_classes[0].attendances && student.user_grade_classes[0].attendances.length > 0) {
+                                        status = student.user_grade_classes[0].attendances[0].status; --}}
 
-                                        switch ($status) {
-                                            case 'present':
-                                                $badgeClass = 'badge-success';
-                                                break;
-                                            case 'absent':
-                                                $badgeClass = 'badge-warning';
-                                                break;
-                                            case 'leave':
-                                                $badgeClass = 'badge-danger';
-                                                break;
-                                            default:
-                                                $badgeClass = 'badge-primary';
-                                                break;
+                                    @php
+                                        if ($student->userGradeClasses &&  count($student->userGradeClasses) > 0 &&  $student->userGradeClasses[0]->attendances && count($student->userGradeClasses[0]->attendances) > 0)  {
+                                            # code...
+                                            $status = $student->userGradeClasses[0]->attendances[0]->status;
+
+                                            $badgeClass = '';
+
+                                            switch ($status) {
+                                                case 'present':
+                                                    $badgeClass = 'badge-success';
+                                                    break;
+                                                case 'absent':
+                                                    $badgeClass = 'badge-warning';
+                                                    break;
+                                                case 'leave':
+                                                    $badgeClass = 'badge-danger';
+                                                    break;
+                                                default:
+                                                    $badgeClass = '';
+                                                    break;
+                                            }
+
                                         }
+
+
                                     @endphp
 
                                     <span class="badge {{$badgeClass}}">
-
-                                        {{$student->userGradeClasses[0]->attendances[0]->status}}</td>
+                                        @if ($student->userGradeClasses &&  count($student->userGradeClasses) > 0 &&  $student->userGradeClasses[0]->attendances && count($student->userGradeClasses[0]->attendances) > 0)
+                                        {{$student->userGradeClasses[0]->attendances[0]->status ?? '-'}}</td>
+                                        @endif
                                     </span>
-
-
                             </tr>
                         </div>
                         @endforeach
+                        @endif
                     </tbody>
                 </table>
             </div>
@@ -195,6 +218,7 @@
 @endsection
 
 @section('scripts')
+<script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
 <script>
 
       $(document).ready(function() {
@@ -205,6 +229,44 @@
         );
 
         $('#studentsDailyTable').dataTable();
+
+        var startDate = $('#startDate').val();
+        var endDate = $('#endDate').val();
+
+        var holidays = {!! $holidays->pluck('date') !!};
+
+        console.log(holidays);
+
+        var disabledDates = holidays.map(function(date) {
+            return new Date(date);
+        });
+
+        console.log('disabled  dates are ' + disabledDates);
+
+        $('#dateInput').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            startDate: startDate,
+            endDate: endDate,
+            beforeShowDay: function(date) {
+
+                var dateString = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+
+                var isHoliday = disabledDates.find(function(holidayDate) {
+                    return holidayDate.toISOString().split('T')[0] === dateString;
+                });
+
+                var isWeekend = date.getDay() === 0 || date.getDay() === 6;
+
+                return {
+                    enabled: !isHoliday && !isWeekend
+                };
+            }
+        });
+
+        $('#datepicker-icon').click(function() {
+          $('#dateInput').datepicker('show');
+        });
 
 
         $('#filter').change(function () {
@@ -345,7 +407,7 @@
                             } else if (status == 'leave') {
                                 badgeClass = 'badge-danger';
                             } else {
-                                badgeClass = 'badge-secondary';
+                                badgeClass = '';
                             }
 
                             // console.log('day of week is ' + day);
@@ -379,7 +441,8 @@
         });
 
 
-        $('#date-input-section input[type="date"]').on('change', function() {
+        $('#dateInput').change(function () {
+            console.log('date input selectd ' + $(this).val());
             var selectedDate = $(this).val();
 
             $grade_select = $('#grade_select').val();
@@ -416,9 +479,7 @@
                       for (var i = 0; i < response.length; i++) {
                         var student = response[i];
                         if (student.user_grade_classes && student.user_grade_classes.length > 0 && student.user_grade_classes[0].attendances && student.user_grade_classes[0].attendances.length > 0) {
-                            status = student.user_grade_classes[0].attendances[0].status;
-                        }else{
-                            status = 'No Status Assigned';
+                            status = student.user_grade_classes[0].attendances[0].status ?? '-';
                         }
 
                         var statusClass = '';
@@ -433,7 +494,7 @@
                             statusClass = 'badge-danger';
                             break;
                           default:
-                            statusClass = 'badge-primary';
+                            statusClass = '';
                             break;
                         }
 
@@ -442,9 +503,9 @@
                                                 <td class="text-center">  ${counter}  </td>
                                                 <td class="text-center">  ${student.user_id}  </td>
                                                 <td class="text-center">  ${student.user_name}  </td>
-                                                <td class="text-center">  ${student.father_name ?? '' }  </td>
+                                                <td class="text-center">  ${student.father_name ?? '-' }  </td>
 
-                                                <td class="text-center"> <span class="badge ${statusClass}"> ${status} </span> </td>
+                                                <td class="text-center"> <span class="badge ${statusClass}">  ${status} </span> </td>
                                             </tr>`;
 
                                             counter++;

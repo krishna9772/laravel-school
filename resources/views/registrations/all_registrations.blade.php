@@ -21,13 +21,13 @@
             <table id="usersTable" class="w-100 my-3 table table-striped" >
                 <thead>
                     <tr>
-                        <th>User ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Type</th>
-                        <th>Grade</th>
-                        <th>Class</th>
-                        <th>Actions</th>
+                        <th class="text-center">User ID</th>
+                        <th class="text-center">Name</th>
+                        <th class="text-center">Email</th>
+                        <th class="text-center">Type</th>
+                        <th class="text-center">Grade</th>
+                        <th class="text-center">Class</th>
+                        <th class="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -35,19 +35,19 @@
                     @foreach ($users as $user)
                         <div class="userList">
                         <tr>
-                            <td>{{$user->user_id}}</td>
-                            <td>{{$user->user_name}}</td>
-                            <td>{{$user->email}}</td>
-                            <td>{{$user->user_type}}</td>
+                            <td class="text-center">{{$user->user_id}}</td>
+                            <td class="text-center">{{$user->user_name}}</td>
+                            <td class="text-center">{{$user->email}}</td>
+                            <td class="text-center">{{$user->user_type}}</td>
                             @if ($user->userGradeClasses->isNotEmpty())
-                                <td>{{ $user->userGradeClasses[0]->grade->grade_name }}</td>
-                                <td>{{ $user->userGradeClasses[0]->class->class_name }}</td>
+                                <td class="text-center">{{ $user->userGradeClasses[0]->grade->grade_name }}</td>
+                                <td class="text-center">{{ $user->userGradeClasses[0]->class->class_name }}</td>
                             @else
-                                <td>No grade assigned</td>
-                                <td>No class assigned</td>
+                                <td class="text-center">No grade assigned</td>
+                                <td class="text-center">No class assigned</td>
                             @endif
 
-                            <td>
+                            <td class="text-center">
                                 <a href="{{route('users.edit',$user->user_id)}}" title="Edit" class="mr-3 text-decoration-none">
                                     <i class="fa fa-edit"></i>
                                 </a>
@@ -121,7 +121,11 @@
 
 <script>
     // $(document).ready(function(){
-        $('#usersTable').DataTable();
+        $('#usersTable').DataTable({
+            "columnDefs": [
+                { "targets": "_all", "className": "text-center" }
+            ]
+        });
 
         // $('[data-bs-toggle="tooltip"]').tooltip();
 
@@ -166,12 +170,13 @@
                             var editUrl = "{{ route('users.edit', ':userId') }}".replace(':userId', user.user_id);
 
                             dataTable.row.add([
-                                i + 1,
-                                user.user_id,
-                                user.user_name,
-                                user.user_type,
-                                gradeName,
-                                className,
+                                // i + 1,
+                                '<td class="text-center">' + user.user_id + '</td>',
+                                '<td class="text-center">' + user.user_name + '</td>',
+                                '<td class="text-center">' + user.email + '</td>',
+                                '<td class="text-center">' + user.user_type + '</td>',
+                                '<td class="text-center">' + gradeName + '</td>',
+                                '<td class="text-center">' + className + '</td>',
                                 '<a href="' + editUrl + '" title="Edit" class="mr-3 text-decoration-none"><i class="fa fa-edit"></i></a>' +
                                 // '<a onclick="deleteUser(' + user.id + ')" title="Delete" class="mr-3 text-decoration-none" style="cursor: pointer"><i class="fa fa-trash"></i></a>'
                                 `<a type="button" class="" data-toggle="modal" data-target="#deleteStudentModal_${user.id}">

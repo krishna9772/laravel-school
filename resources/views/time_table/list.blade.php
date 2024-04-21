@@ -31,7 +31,11 @@
                             <td class="text-center">{{$count}}</td>
                             <td class="text-center">{{$timetable->grade_name}}</td>
                             <td class="text-center">{{$timetable->class_name}}</td>
-                            <td class="text-center">{{$timetable->file}}</td>
+                            <td class="text-center">
+                                <a href="{{asset('storage/timetable_files/'. $timetable->file)}}" download>
+                                    {{$timetable->file}}
+                                </a>
+                            </td>
                         </tr>
                     </div>
                     @php $count++ @endphp

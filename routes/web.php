@@ -108,6 +108,8 @@ Route::middleware(['auth'])->group(function(){
         Route::get('attendances/get-by-date',[AttendanceController::class,'attendanceByDate'])->name('attendances.get-by-date');
         Route::get('attendances/get-by-date-mark-attendance',[AttendanceController::class,'attendanceByDateInMarkAttendance'])->name('attendances.getByDate.in.mark.attendance');
         Route::post('attedances/update-reason-on-cancel-btn',[AttendanceController::class,'updateReasonOnCancelBtn'])->name('attendances.update.reason.on.cancel.btn');
+        // Route::get('attendances/get-by-date',[AttendanceController::class,'attendanceByDateInMarkAttendance'])->name('attendances.getByDate.in.mark.attendance');
+
         Route::resource('attendances',AttendanceController::class);
 
         // promote student

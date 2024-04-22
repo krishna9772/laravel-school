@@ -48,6 +48,10 @@
             color: #333;
         }
 
+        .badge-success:hover{
+            cursor: pointer;
+        }
+
   </style>
 @endsection
 
@@ -117,14 +121,81 @@
                                           
                                             {{-- </div> --}}
                                         {{-- </div> --}}
-                                        <div class="input-container ml-1">
-                                            <input type="number" id="examMarks" name="examMarks" placeholder="">
-                                            <label for="examMarks">Exam Marks</label>
-                                          </div>
+                                      
                                        
                                           
                                     </div>
+                                    <a type="button" class="nav-link border-0 bg-white" data-toggle="modal" data-target="#subject_marks">
+                                        {{-- <i class="nav-icon fas fa-sign-out-alt "></i> Logout --}}
+                                        {{-- <label for="examMarks">Exam Marks</label> --}}
+                                        {{-- <input type="number" id="examMarks" name="examMarks" placeholder=""> --}}
 
+                                        <label class="badge badge-success text-white"><i class="fas fa-plus"></i> Add</label>
+                                    </a>               
+
+                                    <div class="modal fade" id="subject_marks">
+                                        <form action="{{route('logout')}}" method="post" id="form_logout">
+                                          @csrf
+                                          <div class="modal-dialog">
+                                          <div class="modal-content">
+                                              <div class='modal-header'>
+                                                  <p class='col-12 modal-title text-center'>
+                                                  <span class="ml-5" style="font-size: 17px">Subject Marks</span>
+                                                  <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                                                      <span aria-hidden='true'>&times;</span>
+                                                  </button>
+                                                  </p>
+                                              </div>
+                                              <div class="modal-body py-4">
+                        
+                                                  {{-- <input type="text" class="form-control" value="{{ $user->user_name }}" disabled> --}}
+                                                  {{-- <p class="text-center" style="font-size: 19px; font-weight:bold">
+                                                      <small>Are you sure that you want to <span class="text-bold">log out ?<span></small>
+                                                  </p> --}}
+                                                  <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <input type="text" class="form-control" name="subject" id="subject" placeholder="eg: English">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+
+                                                                <label class="btn btn-white mr-1 p-0">
+                                                                    <input type="radio" name="marks" value="40" autocomplete="off" onclick="addExamMarks(40)" id="mark_check_40"> <span class="badge badge-primary" id="badge_40">40</span>
+                                                                </label>
+                                                                <label class="btn btn-white mr-1 p-0">
+                                                                    <input type="radio" name="marks" value="55" autocomplete="off" onclick="addExamMarks(55)" id="mark_check_55"> <span class="badge badge-primary" id="badge_55">55</span>
+                                                                </label>
+                                                                <label class="btn btn-white mr-1 p-0">
+                                                                    <input type="radio" name="marks" value="75" autocomplete="off" onclick="addExamMarks(75)" id="mark_check_75"> <span class="badge badge-primary" id="badge_75">75</span>
+                                                                </label> 
+                                                                <label class="btn btn-white mr-1 p-0">
+                                                                    <input type="radio" name="marks" value="90" autocomplete="off" onclick="addExamMarks(90)" id="mark_check_90"> <span class="badge badge-primary" id="badge_90">90</span>
+                                                                </label>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <input type="text" class="form-control" name="subject" id="marks" placeholder="eg: 80" onkeypress='validate(event)'>
+                                                        </div>
+                                                    </div>
+                                                  </div>
+                                              </div>
+                                              <div class="modal-footer  justify-content-center ">
+                                              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                              <button type="button" class="btn btn-danger" onclick="logout()">Save</a>
+                                              </div>
+                                          </div>
+                                          <!-- /.modal-content -->
+                                          </div>
+                                          <!-- /.modal-dialog -->
+                                        </form>
+                        
+                                      </div>
                                     
 
                                     {{-- <input type="file" name="" id="" class="form-control" style="width: 60%"> --}}
@@ -178,7 +249,7 @@
 
       $(document).ready(function() {
 
-       document.getElementById('month-value').textContent = document.getElementById('time').getAttribute('data-value');
+    //    document.getElementById('month-value').textContent = document.getElementById('time').getAttribute('data-value');
 
 
         $.ajaxSetup({
@@ -249,22 +320,62 @@
 
             // Focus on the input element to open the date picker
             myDateInput.focus();
-            // $('#time').datepicker({
-            //     dateFormat: 'MM yy',
-            //     changeMonth: true,
-            //     changeYear: true,
-            //     showButtonPanel: true,
-
-            //     onClose: function(dateText, inst) {
-            //         var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
-            //         var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
-            //         $(this).val($.datepicker.formatDate('MM yy', new Date(year, month, 1)));
-            //     }
-            // });
-
 
         })
     });
+
+    function addExamMarks(id)
+    {
+        var ids = [40,55,90,75];
+
+        if($("#mark_check_"+id).prop('checked',true))
+        {
+
+            $("#badge_"+id).css('background-color', 'green');
+            $("#marks").val($("#mark_check_"+id).val());
+            var selectedValue = $('input[name=marks]:checked').length;
+            array = filterValueFromArray(id, ids);
+  
+            for(var i = 0; i < array.length; i++) {
+                $("#badge_" + array[i]).css('background-color', '#007bff');
+            }
+            
+
+        }else if($("#mark_check_"+id).prop('checked',false)){
+        {
+            $("#badge_"+id).css('background-color', '#007bff');
+        }
+
+     }
+
+
+    }
+
+    function validate(evt) {
+
+        var theEvent = evt || window.event;
+
+        // Handle paste
+        if (theEvent.type === 'paste') {
+            key = event.clipboardData.getData('text/plain');
+        } else {
+        // Handle key press
+            var key = theEvent.keyCode || theEvent.which;
+            key = String.fromCharCode(key);
+        }
+        var regex = /[0-9]|\./;
+        if( !regex.test(key) ) {
+            theEvent.returnValue = false;
+            if(theEvent.preventDefault) theEvent.preventDefault();
+        }
+
+    }
+
+    function filterValueFromArray(value, arr) {
+        return $.grep(arr, function(elem, index) {
+        return elem !== value;
+        });
+    }
 
 </script>
 @endsection

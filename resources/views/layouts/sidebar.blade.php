@@ -44,10 +44,10 @@
 
             {{-- acadamic year section --}}
             @can('manage academic year')
-                <li class="nav-item {{ Route::is('academic-years.*') ? 'menu-open'  : '' }}">
+                <li class="nav-item {{ Route::is('academic-years.*') || Route::is('holidays.*') ? 'menu-open'  : '' }}">
 
-                    <a href="#" class="nav-link {{ Route::is('academic-years.*') ? 'active'  : '' }}">
-                        <i class="nav-icon fas fa-graduation-cap"></i><p>Acadamic Year<i class="right fas fa-angle-left"></i></p>
+                    <a href="#" class="nav-link {{ Route::is('academic-years.*') || Route::is('holidays.*') ? 'active'  : '' }}">
+                        <i class="nav-icon fas fa-calendar-check"></i><p>Acadamic Year<i class="right fas fa-angle-left"></i></p>
                         {{-- <img src="{{asset('images/menu_icons/result.png')}}" alt="" width="25px"> --}}
 
                     </a>

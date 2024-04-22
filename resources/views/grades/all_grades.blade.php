@@ -4,16 +4,16 @@
 
     <div class="">
 
-        @if (count($grades) != 0)
+        {{-- @if (count($grades) != 0) --}}
 
-            <div class="d-flex justify-content-between pt-4 mx-5">
+            {{-- <div class="d-flex justify-content-between pt-4 mx-5">
                 <h3>Grades</h3>
                 <div>
                     <a href="{{route('grades.create')}}" class="text-decoration-none">
                         <button class="btn btn-primary"> <i class="fa fa-plus"></i> Add New Grade </button>
                     </a>
                 </div>
-            </div>
+            </div> --}}
 
 
             <div class="row mx-3 mt-3">
@@ -38,8 +38,8 @@
                 @endforeach
             </div>
 
-        @else
-            <div class="text-center pt-5" >
+        {{-- @else --}}
+            {{-- <div class="text-center pt-5" >
                 <h4>
                     No Grades Created Yet
                 </h4>
@@ -49,8 +49,8 @@
                         <button class="btn btn-primary"> <i class="fa fa-plus"></i> Create Grade</button>
                     </a>
                 </div>
-            </div>
-        @endif
+            </div> --}}
+        {{-- @endif --}}
 
 
     </div>

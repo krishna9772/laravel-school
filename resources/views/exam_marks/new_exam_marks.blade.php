@@ -351,6 +351,8 @@
 
     }
 
+
+
     function validate(evt) {
 
         var theEvent = evt || window.event;
@@ -367,6 +369,12 @@
         if( !regex.test(key) ) {
             theEvent.returnValue = false;
             if(theEvent.preventDefault) theEvent.preventDefault();
+        }
+
+        var ids = [40,55,90,75];
+
+        for(var i = 0; i < ids.length; i++) {
+            $("#badge_" + ids[i]).css('background-color', '#007bff');
         }
 
     }

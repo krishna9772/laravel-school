@@ -20,7 +20,7 @@
                 @foreach ($grades as $grade)
                 <div class="col-12 col-sm-6 col-md-3 mt-4">
                     <a href="{{ route('grades.classes', ['grade' => $grade->id]) }}" class="text-decoration-none">
-                    <div class="info-box">
+                    <div class="info-box" style="position: relative">
                         <span class="info-box-icon bg-info elevation-1">
                             <i class="fas fa-graduation-cap" aria-hidden="true"></i>
                         </span>
@@ -32,6 +32,19 @@
                         </span>
                         </div>
                         <!-- /.info-box-content -->
+
+                        <span class="text-black-50 question-mark" style="position: absolute; right: 10px; bottom: 10px">
+                            <span data-container="body" data-toggle="popover" data-placement="right"  title="{{$grade->grade_name}} Description" data-content="{{$grade->description}}">
+                                <i class="fa fa-question-circle"></i>
+                            </span>
+                        </span>
+
+                        {{-- <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="right" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
+                            Popover on right
+                          </button> --}}
+
+
+
                     </div>
                     </a>
                 </div>
@@ -54,5 +67,17 @@
 
 
     </div>
+
+@endsection
+@section('scripts')
+
+<script>
+    $('[data-toggle="popover"]').popover();
+
+    $('.question-mark').click(function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+    });
+</script>
 
 @endsection

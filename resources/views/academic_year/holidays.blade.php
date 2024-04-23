@@ -110,10 +110,9 @@
 
                         <div class="card card-primary">
                             <div class="card-header">
-                                <h3 class="card-title">New Holiday</h3>
+                                <h3 class="card-title" id="cardTitle">New Holiday</h3>
                                 <div class="card-tools">
-                                    <!-- Buttons, labels, and many other things can be placed here! -->
-                                    <!-- Here is a label for example -->
+
                                 </div>
                                 <!-- /.card-tools -->
                             </div>
@@ -123,17 +122,6 @@
                                     <ul></ul>
                                 </div>
 
-                                {{-- <div class="form-group">
-                                    <label for="" class="form-label required">Select Academic Year</label>
-                                    <select name="academic_id" id="academicYearInputBox" class="form-control">
-                                        <option value="">Select Academic Year</option>
-
-                                        @foreach ($academicYears as $academicYear)
-                                            <option value="{{$academicYear->id}}">{{$academicYear->academic_year}}</option>
-                                        @endforeach
-                                    </select>
-                                    <p class="text-danger mt-1" id="academicYearError"></p>
-                                </div> --}}
 
                                 <div class="card-body">
                                     <div class="form-group">
@@ -158,12 +146,23 @@
 
                                     {{-- <label for="name">Date</label>
                                     <input type="text" class="form-control" id="date"> --}}
-                                    <div class="form-group">
+                                    <div class="form-group" id="newCalendar">
                                         <label for="datepicker" class="required"> Date</label>
                                         <div class="input-group">
-                                          <input type="text" id="date" class="dateInput form-control custom-placeholder changeInputStyle admissionDateClass" placeholder="Enter Holiday Date">
+                                          <input type="text" id="newDate" class="newDateInput form-control custom-placeholder changeInputStyle admissionDateClass" placeholder="Enter Holiday Date">
                                           <div class="input-group-append">
-                                            <span class="input-group-text datepicker-icon" style="cursor: pointer"><i class="fas fa-calendar-alt"></i></span>
+                                            <span class="input-group-text newDatepicker-icon" style="cursor: pointer"><i class="fas fa-calendar-alt"></i></span>
+                                          </div>
+                                        </div>
+                                        <p class="text-danger" id="dateErrorMessage"></p>
+                                    </div>
+
+                                    <div class="form-group" id="editCalendar" style="display: none;">
+                                        <label for="datepicker" class="required"> Date</label>
+                                        <div class="input-group">
+                                          <input type="text" id="editDate" class="editDateInput form-control custom-placeholder changeInputStyle admissionDateClass" placeholder="Enter Holiday Date">
+                                          <div class="input-group-append">
+                                            <span class="input-group-text editDatepicker-icon" style="cursor: pointer"><i class="fas fa-calendar-alt"></i></span>
                                           </div>
                                         </div>
                                         <p class="text-danger" id="dateErrorMessage"></p>
@@ -205,6 +204,86 @@
         }
     });
 
+    $('#newDate').focus(function(event){
+        console.log('hello world ');
+        if( $('#academicId').val() == ''){
+            $('#dateErrorMessage').html('First, select academic year');
+            $('#date').addClass('is-invalid');
+        }
+    });
+
+    $('#newDate').blur(function(event){
+        // console.log('hello world ');
+        if( $('#academicId').val() != ''){
+            $('#dateErrorMessage').html('');
+            $('#date').removeClass('is-invalid');
+        }
+    });
+
+
+
+    $('#academicId').change(function(event){
+        event.preventDefault();
+
+        if( $('#academicId').val() != ''){
+            $('#dateErrorMessage').html('');
+            $('#newDate').removeClass('is-invalid');
+        }
+
+        var academic_id = $(this).val();
+
+        if(academic_id != ''){
+            $.ajax({
+                method: 'GET',
+                url: '{{ route("academic-years.get.calendar.info", ["id" => ":id"]) }}'.replace(':id', academic_id),
+                success: function(response){
+                    console.log(response);
+                    console.log('startDate is ' + response.start_date);
+
+                    var startDate = response.start_date;
+                    var endDate = response.end_date;
+
+
+                    var holidays = {!! $holidays->pluck('date') !!};
+
+                    console.log(holidays);
+
+                    var disabledDates = holidays.map(function(date) {
+                        return new Date(date);
+                    });
+
+                    $('.newDateInput').each(function() {
+                        $(this).datepicker({
+                            format: 'yyyy-mm-dd',
+                            autoclose: true,
+                            startDate: startDate,
+                            endDate: endDate,
+                            beforeShowDay: function(date) {
+
+                            var dateString = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+
+                                var isHoliday = disabledDates.find(function(holidayDate) {
+                                    return holidayDate.toISOString().split('T')[0] === dateString;
+                                });
+
+                                var isWeekend = date.getDay() === 0 || date.getDay() === 6;
+
+                                return {
+                                    enabled: !isHoliday && !isWeekend
+                                };
+                            }
+                        });
+                    });
+
+                    $('.newDatepicker-icon').click(function() {
+                        $(this).closest('.form-group').find('.newDateInput').datepicker('show');
+                    });
+                }
+            });
+        }
+
+    })
+
     $('#holidaysTable').DataTable({
         "paging": true,
         "lengthChange": false,
@@ -217,16 +296,16 @@
         // ]
     });
 
-    $('.dateInput').each(function() {
-        $(this).datepicker({
-            format: 'yyyy-mm-dd',
-            autoclose: true,
-        });
-    });
+    // $('.dateInput').each(function() {
+    //     $(this).datepicker({
+    //         format: 'yyyy-mm-dd',
+    //         autoclose: true,
+    //     });
+    // });
 
-    $('.datepicker-icon').click(function() {
-        $(this).closest('.form-group').find('.dateInput').datepicker('show');
-    });
+    // $('.datepicker-icon').click(function() {
+    //     $(this).closest('.form-group').find('.dateInput').datepicker('show');
+    // });
 
     $("#holiday-store").click(function(e) {
 
@@ -234,7 +313,7 @@
 
         var name = $("#name").val();
 
-        var date = $("#date").val();
+        var date = $("#newDate").val();
 
         var academic_id = $('#academicId').val();
         console.log('academic year is' + academic_id);
@@ -250,11 +329,13 @@
             success: function(response) {
                 if(response == 'success'){
 
-                    $('#holiday-store').closest('form').find("input[type=text],select").val("");
+                    window.location.reload();
 
-                    $("#holidaysTable").load(window.location + " #holidaysTable");
-                    toastr.options.timeOut = 5000;
-                    toastr.success('Successfully added!');
+                    // $('#holiday-store').closest('form').find("input[type=text],select").val("");
+
+                    // $("#holidaysTable").load(window.location + " #holidaysTable");
+                    // toastr.options.timeOut = 5000;
+                    // toastr.success('Successfully added!');
                 }
             },
             error: function(xhr, status, error) {
@@ -298,11 +379,14 @@
 
         e.preventDefault();
 
+        // var startDate = response.start_date;
+        // var endDate = response.end_date;
+
         var academic_id = $('#academicId').val();
         console.log('academic id is ' + academic_id);
         var name = $("#name").val();
         var id = $("#holiday_id").val();
-        var date = $("#date").val();
+        var date = $("#editDate").val();
 
 
         $.ajax({
@@ -318,9 +402,23 @@
             success: function(response) {
 
                     if(response == 'success'){
-                        $("#holidaysTable").load(window.location + " #holidaysTable");
-                        toastr.options.timeOut = 5000;
-                        toastr.success('Successfully updated!');
+
+                        window.location.reload();
+
+                        // $('#holiday-edit').closest('form').find("input[type=text],select").val("");
+
+                        // $("#holiday-store").removeClass('d-none');
+                        // $("#holiday-edit").addClass('d-none');
+                        // $("#holiday-cancel").addClass('d-none');
+
+                        // $('#cardTitle').text('New Holiday');
+
+                        // $("#holidaysTable").load(window.location + " #holidaysTable");
+                        // toastr.options.timeOut = 5000;
+                        // toastr.success('Successfully updated!');
+
+
+
                     }
             },
             error: function(xhr, status, error) {
@@ -381,11 +479,18 @@
 
         e.preventDefault();
 
+        // window.location.reload();
+
         $(this).closest('form').find("input[type=text],select, textarea").val("");
 
         $("#holiday-edit").addClass('d-none');
         $("#holiday-cancel").addClass('d-none');
         $("#holiday-store").removeClass('d-none');
+
+        $('#cardTitle').text('New Holiday');
+        $('#newCalendar').show();
+        $('#editCalendar').hide();
+
 
     });
 
@@ -398,15 +503,71 @@
     }
 
     function editHoliday(id) {
+
+        $('#newCalendar').hide();
+        $('#editCalendar').show();
+
+        var holidays = {!! $holidays->pluck('date') !!};
+
+        console.log(holidays);
+
+        var selectedDate = $('#date_' + id).text();
+        var selectedDateObj = new Date(selectedDate);
+
+        var disabledDates = holidays.map(function(date) {
+            return new Date(date);
+        });
+
+        disabledDates = disabledDates.filter(function(date) {
+            // Return true for dates that are not equal to the selected date
+            return !isSameDate(date, selectedDateObj);
+        });
+
+        function isSameDate(date1, date2) {
+            return date1.getFullYear() === date2.getFullYear() &&
+                date1.getMonth() === date2.getMonth() &&
+                date1.getDate() === date2.getDate();
+        }
+
+        $('.editDateInput').each(function() {
+            $(this).datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                // startDate: startDate,
+                // endDate: endDate,
+                beforeShowDay: function(date) {
+
+                var dateString = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+
+                    var isHoliday = disabledDates.find(function(holidayDate) {
+                        return holidayDate.toISOString().split('T')[0] === dateString;
+                    });
+
+                    var isWeekend = date.getDay() === 0 || date.getDay() === 6;
+
+                    return {
+                        enabled: !isHoliday && !isWeekend
+                    };
+                }
+            });
+        });
+
+        $('.editDatepicker-icon').click(function() {
+            $(this).closest('.form-group').find('.editDateInput').datepicker('show');
+        });
+
+
         // var type = $("#type_"+id).text();
         var name = $("#name_" + id).text();
         var date = $('#date_' + id).text();
         var academic_id = $('#academic_' + id).val();
         console.log('academic_id is dms,f ' + academic_id);
 
+        $('#cardTitle').text('Edit Holiday');
+
 
         $("#name").val(name);
-        $('#date').val(date);
+        $('#editDate').val(date);
         $('#academicId').val(academic_id);
         $("#holiday_id").val(id);
 

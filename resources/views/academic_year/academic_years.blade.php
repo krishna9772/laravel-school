@@ -101,7 +101,7 @@
 
                         <div class="card card-primary">
                             <div class="card-header">
-                                <h3 class="card-title">New Academic Year</h3>
+                                <h3 class="card-title" id="cardTitle">New Academic Year</h3>
                                 <div class="card-tools">
                                     <!-- Buttons, labels, and many other things can be placed here! -->
                                     <!-- Here is a label for example -->
@@ -150,7 +150,7 @@
                                     <div class="form-group">
                                         <label for="datepicker" class="required">Start Date</label>
                                         <div class="input-group">
-                                          <input type="text" id="startDate" class="dateInput form-control custom-placeholder changeInputStyle admissionDateClass" placeholder="Enter academicYear Date">
+                                          <input type="text" id="startDate" class="dateInput form-control custom-placeholder changeInputStyle admissionDateClass" placeholder="Enter Start Date">
                                           <div class="input-group-append">
                                             <span class="input-group-text datepicker-icon" style="cursor: pointer"><i class="fas fa-calendar-alt"></i></span>
                                           </div>
@@ -169,7 +169,7 @@
                                     <div class="form-group">
                                         <label for="datepicker" class="required">End Date</label>
                                         <div class="input-group">
-                                          <input type="text" id="endDate" class="dateInput form-control custom-placeholder changeInputStyle admissionDateClass" placeholder="Enter academicYear Date">
+                                          <input type="text" id="endDate" class="dateInput form-control custom-placeholder changeInputStyle admissionDateClass" placeholder="Enter End Date">
                                           <div class="input-group-append">
                                             <span class="input-group-text datepicker-icon" style="cursor: pointer"><i class="fas fa-calendar-alt"></i></span>
                                           </div>
@@ -329,9 +329,20 @@
             success: function(response) {
 
                     if(response == 'success'){
+
+                        $('#academicYear-edit').closest('form').find("input[type=text],select").val("");
+
+                        $('#cardTitle').text('New Academic Year');
+
+                        $("#academicYear-store").removeClass('d-none');
+                        $("#academicYear-edit").addClass('d-none');
+                        $("#academicYear-cancel").addClass('d-none');
+
                         $("#academicYearsTable").load(window.location + " #academicYearsTable");
                         toastr.options.timeOut = 5000;
                         toastr.success('Successfully updated!');
+
+
                     }
             },
             error: function(xhr, status, error) {
@@ -417,6 +428,8 @@
         console.log('start date is ' + start_date);
         console.log('end date is ' + end_date);
         console.log('academic_id is ' + academic_id);
+
+        $('#cardTitle').text('Edit Academic Year');
 
 
         $('#academicYear').val(academic_year);

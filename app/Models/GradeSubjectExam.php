@@ -5,15 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SubjectMark extends Model
+class GradeSubjectExam extends Model
 {
     use HasFactory;
 
+    protected $table = 'grade_subject_exams';
+
     protected $fillable = [
-        'exam_id',
-        'subject',
-        'marks',
-        'created_date',
-        'updated_date',
+        'grade_id',
+        'subject'
     ];
 }

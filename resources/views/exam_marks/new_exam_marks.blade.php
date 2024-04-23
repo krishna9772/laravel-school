@@ -104,13 +104,13 @@
                                 <td class="text-center">{{$student->user_id}}</td>
                                 <td class="text-center">{{ $student->user_name }}</td>
                                 <td class="text-center">{{$student->father_name}}</td>
-                                <td class="col-3">
+                                <td class="col-3 text-center">
 
                                     <?php
                                         // dd($student->userGradeClasses[0]->examMarks[0]->file);
                                     ?>
 
-                                    <div class="form-group d-flex">
+                                    <div class="form-group d-flex ">
                                         
                                         {{-- <div class="input-group ml-3"> --}}
                                             {{-- <div class="custom-file"> --}}
@@ -121,20 +121,23 @@
                                           
                                             {{-- </div> --}}
                                         {{-- </div> --}}
+                                        <a type="button" class="nav-link border-0" data-toggle="modal" data-target="#subject_marks">
+                                            {{-- <i class="nav-icon fas fa-sign-out-alt "></i> Logout --}}
+                                            {{-- <label for="examMarks">Exam Marks</label> --}}
+                                            {{-- <input type="number" id="examMarks" name="examMarks" placeholder=""> --}}
+    
+                                            <label class="badge badge-success text-white"><i class="fas fa-plus"></i> Add</label>
+                                            
+                                        </a> 
+                                        
                                       
                                        
                                           
                                     </div>
-                                    <a type="button" class="nav-link border-0 bg-white" data-toggle="modal" data-target="#subject_marks">
-                                        {{-- <i class="nav-icon fas fa-sign-out-alt "></i> Logout --}}
-                                        {{-- <label for="examMarks">Exam Marks</label> --}}
-                                        {{-- <input type="number" id="examMarks" name="examMarks" placeholder=""> --}}
-
-                                        <label class="badge badge-success text-white"><i class="fas fa-plus"></i> Add</label>
-                                    </a>               
+                                                               
 
                                     <div class="modal fade" id="subject_marks">
-                                        <form action="{{route('logout')}}" method="post" id="form_logout">
+                                        <form  method="post" id="form_logout">
                                           @csrf
                                           <div class="modal-dialog">
                                           <div class="modal-content">
@@ -152,38 +155,49 @@
                                                   {{-- <p class="text-center" style="font-size: 19px; font-weight:bold">
                                                       <small>Are you sure that you want to <span class="text-bold">log out ?<span></small>
                                                   </p> --}}
-                                                  <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <input type="text" class="form-control" name="subject" id="subject" placeholder="eg: English">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                  {{-- @foreach() --}}
+                                                  @php
+                                                    $count = 1;
+                                                    @endphp
 
-                                                                <label class="btn btn-white mr-1 p-0">
-                                                                    <input type="radio" name="marks" value="40" autocomplete="off" onclick="addExamMarks(40)" id="mark_check_40"> <span class="badge badge-primary" id="badge_40">40</span>
-                                                                </label>
-                                                                <label class="btn btn-white mr-1 p-0">
-                                                                    <input type="radio" name="marks" value="55" autocomplete="off" onclick="addExamMarks(55)" id="mark_check_55"> <span class="badge badge-primary" id="badge_55">55</span>
-                                                                </label>
-                                                                <label class="btn btn-white mr-1 p-0">
-                                                                    <input type="radio" name="marks" value="75" autocomplete="off" onclick="addExamMarks(75)" id="mark_check_75"> <span class="badge badge-primary" id="badge_75">75</span>
-                                                                </label> 
-                                                                <label class="btn btn-white mr-1 p-0">
-                                                                    <input type="radio" name="marks" value="90" autocomplete="off" onclick="addExamMarks(90)" id="mark_check_90"> <span class="badge badge-primary" id="badge_90">90</span>
-                                                                </label>
-                                                                
+                                                  @foreach($gradeResult as $row)
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control" name="subject" id="subject" placeholder="eg: English" value={{$row->subject}} readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            {{-- <div class="form-group">
+                                                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+
+                                                                    <label class="btn btn-white mr-1 p-0">
+                                                                        <input type="radio" name="marks" value="40" autocomplete="off" onclick="addExamMarks(                                                    {{$count += 1}}
+                                                                        )" id="mark_check_{{$count}}"> <span class="badge badge-primary" id="badge_{{$count}}">40</span>
+                                                                    </label>
+                                                                    <label class="btn btn-white mr-1 p-0">
+                                                                        <input type="radio" name="marks" value="55" autocomplete="off" onclick="addExamMarks(                                                    {{$count += 1}}
+                                                                        )" id="mark_check_{{$count}}"> <span class="badge badge-primary" id="badge_{{$count}}">55</span>
+                                                                    </label>
+                                                                    <label class="btn btn-white mr-1 p-0">
+                                                                        <input type="radio" name="marks" value="75" autocomplete="off" onclick="addExamMarks(                                                    {{$count += 1}}
+                                                                        )" id="mark_check_{{$count}}"> <span class="badge badge-primary" id="badge_{{$count}}">75</span>
+                                                                    </label> 
+                                                                    <label class="btn btn-white mr-1 p-0">
+                                                                        <input type="radio" name="marks" value="90" autocomplete="off" onclick="addExamMarks(                                                    {{$count += 1}}
+                                                                        )" id="mark_check_{{$count}}"> <span class="badge badge-primary" id="badge_{{$count}}">90</span>
+                                                                    </label>
+                                                                    
+                                                                </div>
+                                                            </div> --}}
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control" name="subject" id="marks" placeholder="eg: 80" onkeypress='validate(event)'>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <input type="text" class="form-control" name="subject" id="marks" placeholder="eg: 80" onkeypress='validate(event)'>
-                                                        </div>
-                                                    </div>
-                                                  </div>
+                                                  @endforeach
                                               </div>
                                               <div class="modal-footer  justify-content-center ">
                                               <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -334,10 +348,16 @@
             $("#badge_"+id).css('background-color', 'green');
             $("#marks").val($("#mark_check_"+id).val());
             var selectedValue = $('input[name=marks]:checked').length;
-            array = filterValueFromArray(id, ids);
+            array = filterValueFromArray($("#mark_check_"+id).val(), ids);
+
   
-            for(var i = 0; i < array.length; i++) {
-                $("#badge_" + array[i]).css('background-color', '#007bff');
+            for(var i = 1; i < $('input:radio').length; i++) {
+
+                if(i == id)
+                {
+                    return false;
+                }
+                $("#badge_" + i).css('background-color', '#007bff');
             }
             
 

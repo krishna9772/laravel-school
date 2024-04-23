@@ -7,11 +7,15 @@ use App\Http\Requests\SearchRequest;
 use App\Models\Classes;
 use App\Models\ExamMark;
 use App\Models\Grade;
+use App\Models\GradeSubjectExam;
 use App\Models\User;
 use App\Models\UserGradeClass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Validator;
+use Illuminate\Support\Facades\Input;
+use Session;
 
 class ExamMarkController extends Controller
 {
@@ -25,6 +29,9 @@ class ExamMarkController extends Controller
         // dd($request->all());
 
         $gradeName = Grade::where('id',$request->grade_select)->value('grade_name');
+        $grade = Grade::where('id',$request->grade_select)->with('examSubjects')->get();
+        $gradeResult = $grade[0]->examSubjects;
+
         $className = Classes::where('id',$request->class_select)->value('class_name');
 
         $students = User::where('user_type', 'student')
@@ -38,7 +45,7 @@ class ExamMarkController extends Controller
         // dd($students->toArray());
         // dd($students[0]->userGradeClasses[0]->examMarks[0]->file);
 
-        return view('exam_marks.new_exam_marks',compact('students','gradeName','className'));
+        return view('exam_marks.new_exam_marks',compact('students','gradeName','className','gradeResult'));
 
     }
 
@@ -47,17 +54,38 @@ class ExamMarkController extends Controller
 
         Log::info($request->all());
 
-        $file = $request->file;
+        // $file = $request->file;
 
-        $fileName = uniqid() . '_' . $file->getClientOriginalName();
+        // $fileName = uniqid() . '_' . $file->getClientOriginalName();
 
-        $file->storeAs('public/exam_marks_files',$fileName);
+        // $file->storeAs('public/exam_marks_files',$fileName);
 
-        ExamMark::updateOrCreate([
-            'user_grade_class_id' => $request->user_grade_class_id,
-        ],[
-            'file' => $fileName,
-        ]);
+        // ExamMark::updateOrCreate([
+        //     'user_grade_class_id' => $request->user_grade_class_id,
+        // ],[
+        //     'file' => $fileName,
+        // ]);
+
+        $subjectNames = $request->subject_name;
+        $marks = $request->marks;
+
+        if (count($curriculumNames) !== count($teacherIds)) {
+            return response()->json(['error' => 'Number of curriculum names does not match number of teacher IDs'], 400);
+        }
+
+
+        foreach ($curriculumNames as $index => $curriculumName) {
+            Curriculum::create([
+                'user_id' => $teacherIds[$index],
+                'grade_id' => $request->grade_id,
+                'curriculum_name' => $curriculumName,
+            ]);
+        }
+
+        Session::put('message','Successfully added !');
+        Session::put('alert-type','success');
+
+        return response()->json('success');
 
 
         return response()->json('success');
@@ -109,6 +137,51 @@ class ExamMarkController extends Controller
 
             return response()->json('success');
         }
+    }
+
+    public function allExamSubjects()
+    {
+        $grades = Grade::with('examSubjects')->paginate(10);
+        return view('exam_marks.all_exam_subjects',compact('grades'));
+    }
+
+    public function getExamSubject()
+    {
+        $grades = Grade::all();
+
+        $teachers = User::with('userGradeClasses')->where('user_type','teacher')->where('teacher_type','subject')->get();
+        // dd($teachers->toArray());
+
+        return view('exam_marks.create_subject',compact('grades','teachers'));
+    }
+
+    public function saveExamSubject(Request $request)
+    {
+
+        Log::info($request->all());
+
+
+        $validator = \Illuminate\Support\Facades\Validator::make(['grade_id' => $request->grade_id],
+        [
+            'grade_id' => 'required',
+        ]
+        );
+        $validator->validate();
+
+        $subjects = $request->examSubject_name;
+
+        foreach ($subjects as $index => $subjectName) {
+            GradeSubjectExam::create([
+                'grade_id' => $request->grade_id,
+                'subject' => $subjectName,
+            ]);
+        }
+
+        Session::put('message','Successfully added !');
+        Session::put('alert-type','success');
+
+        return response()->json('success');
+
     }
 
 }

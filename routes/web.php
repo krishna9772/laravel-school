@@ -33,6 +33,7 @@ Route::middleware(['auth'])->group(function(){
 
         // acadamic year
         Route::get('academic-year/index',[AcadamicYearController::class,'index'])->name('academic-years.index');
+        Route::get('academic-year/getCalendarInfo/{id}',[AcadamicYearController::class,'getCalendarInfo'])->name('academic-years.get.calendar.info');
         Route::post('academic-year/store',[AcadamicYearController::class,'store'])->name('academic-years.store');
         Route::post('academic-year/edit',[AcadamicYearController::class,'update'])->name('academic-years.edit');
         Route::get('academic-year/destroy/{id}',[AcadamicYearController::class,'destroy'])->name('academic-years.destroy');

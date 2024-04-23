@@ -65,6 +65,9 @@ class HolidayController extends Controller
             'date' => $date,
         ]);
 
+        Session::put('message','Successfully added !');
+        Session::put('alert-type','success');
+
         return response()->json('success');
 
     }
@@ -77,6 +80,9 @@ class HolidayController extends Controller
                     'name' => $request->name,
                     'date' => $request->date,
                ]);
+
+        Session::put('message','Successfully updated !');
+        Session::put('alert-type','success');
 
         return response()->json('success');
     }

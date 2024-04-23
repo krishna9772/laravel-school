@@ -17,6 +17,12 @@ class AcadamicYearController extends Controller
         return view('academic_year.academic_years',compact('academicYears'));
     }
 
+    public function getCalendarInfo($id){
+        $selectedAcademicYear = AcademicYear::where('id',$id)->first();
+
+        return response()->json($selectedAcademicYear);
+    }
+
     public function store(AcademicYearRequest $request){
         // dd($request->all());
 

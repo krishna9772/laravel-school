@@ -67,12 +67,13 @@
 
                 @method('PATCH')
 
+
                 <input type="hidden" name="" id="classId" value="">
 
                 <div class="card-body">
                   <div class="form-group">
                       <label for="" class="form-label required">Select Grade</label>
-                      <select name="grade_id" class="form-control" id="grade_id">
+                      <select name="grade_id" class="form-control" id="grade_id" disabled>
                           <option value="">Select Grade</option>
                           @foreach ($grades as $grade)
                               <option value="{{$grade->id}}">{{$grade->grade_name}}</option>

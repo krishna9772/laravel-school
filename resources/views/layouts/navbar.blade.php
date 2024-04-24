@@ -146,7 +146,7 @@
                   <div class="modal-content">
                       <div class='modal-header'>
                           <p class='col-12 modal-title text-center'>
-                          <span class="ml-5" style="font-size: 17px">Leaving the system ?</span>
+                          {{-- <span class="ml-5" style="font-size: 17px">Leaving the system ?</span> --}}
                           <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
                               <span aria-hidden='true'>&times;</span>
                           </button>
@@ -156,7 +156,7 @@
 
                           {{-- <input type="text" class="form-control" value="{{ $user->user_name }}" disabled> --}}
                           <p class="text-center" style="font-size: 19px; font-weight:bold">
-                              <small><span class="text-bold">Cancel</span> if you want to stay in session</small>
+                              <small>Are you sure that you want to <span class="text-bold">log out ?<span></small>
                           </p>
                       </div>
                       <div class="modal-footer  justify-content-center ">

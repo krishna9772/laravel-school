@@ -109,6 +109,8 @@ Route::middleware(['auth'])->group(function(){
         Route::get('attendances/get-by-date',[AttendanceController::class,'attendanceByDate'])->name('attendances.get-by-date');
         Route::get('attendances/get-by-date-mark-attendance',[AttendanceController::class,'attendanceByDateInMarkAttendance'])->name('attendances.getByDate.in.mark.attendance');
         Route::post('attedances/update-reason-on-cancel-btn',[AttendanceController::class,'updateReasonOnCancelBtn'])->name('attendances.update.reason.on.cancel.btn');
+        // Route::get('attendances/get-by-date',[AttendanceController::class,'attendanceByDateInMarkAttendance'])->name('attendances.getByDate.in.mark.attendance');
+
         Route::resource('attendances',AttendanceController::class);
 
         // promote student
@@ -130,8 +132,17 @@ Route::middleware(['auth'])->group(function(){
         Route::post('exam-marks/search/results',[ExamMarkController::class,'searchResults'])->name('exam-marks.search.results');
         Route::post('exam-marks/store',[ExamMarkController::class,'store'])->name('exam-marks.store');
         Route::get('exam-marks/edit',[ExamMarkController::class,'edit'])->name('exam-marks.edit');
+       
         Route::post('exam-marks/update',[ExamMarkController::class,'update'])->name('exam-marks.update');
         Route::get('exam-marks/destroy/{gradeId}/{classId}',[ExamMarkController::class,'destroy'])->name('exam-marks.destroy');
+
+        Route::get('exam-marks/subjects',[ExamMarkController::class,'allExamSubjects'])->name('exam-marks.subjects');
+
+
+        Route::get('exam-marks/subject/new',[ExamMarkController::class,'getExamSubject'])->name('exam-marks.subject');
+        Route::post('exam-marks/save/subjects',[ExamMarkController::class,'saveExamSubject'])->name('exam-marks.save-subject');
+
+        // Route::post()
 
     });
 

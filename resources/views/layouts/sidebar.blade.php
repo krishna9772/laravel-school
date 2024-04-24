@@ -425,6 +425,16 @@
 
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
+                        <a href="{{route('exam-marks.subjects')}}" class="nav-link {{ Route::is('exam-marks.subjects') ? 'active' : (Route::is('exam-marks.search.results') ? 'active' : '' )}}">
+                            @if(Route::is('exam-marks.subjects'))
+                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                            @else
+                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                            @endif
+                        <p>Subject</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="{{route('exam-marks.search')}}" class="nav-link {{ Route::is('exam-marks.search') ? 'active' : (Route::is('exam-marks.search.results') ? 'active' : '' )}}">
                             @if(Route::is('exam-marks.search'))
                                 <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->

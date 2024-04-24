@@ -48,6 +48,10 @@
             color: #333;
         }
 
+        .badge-success:hover{
+            cursor: pointer;
+        }
+
   </style>
 @endsection
 
@@ -100,13 +104,13 @@
                                 <td class="text-center">{{$student->user_id}}</td>
                                 <td class="text-center">{{ $student->user_name }}</td>
                                 <td class="text-center">{{$student->father_name}}</td>
-                                <td class="col-3">
+                                <td class="col-3 text-center">
 
                                     <?php
                                         // dd($student->userGradeClasses[0]->examMarks[0]->file);
                                     ?>
 
-                                    <div class="form-group d-flex">
+                                    <div class="form-group d-flex ">
                                         
                                         {{-- <div class="input-group ml-3"> --}}
                                             {{-- <div class="custom-file"> --}}
@@ -117,14 +121,95 @@
                                           
                                             {{-- </div> --}}
                                         {{-- </div> --}}
-                                        <div class="input-container ml-1">
-                                            <input type="number" id="examMarks" name="examMarks" placeholder="">
-                                            <label for="examMarks">Exam Marks</label>
-                                          </div>
+                                        <a type="button" class="nav-link border-0" data-toggle="modal" data-target="#subject_marks">
+                                            {{-- <i class="nav-icon fas fa-sign-out-alt "></i> Logout --}}
+                                            {{-- <label for="examMarks">Exam Marks</label> --}}
+                                            {{-- <input type="number" id="examMarks" name="examMarks" placeholder=""> --}}
+    
+                                            <label class="badge badge-success text-white"><i class="fas fa-plus"></i> Add</label>
+                                            
+                                        </a> 
+                                        
+                                      
                                        
                                           
                                     </div>
+                                                               
 
+                                    <div class="modal fade" id="subject_marks">
+                                        <form  method="post" id="form_logout">
+                                          @csrf
+                                          <div class="modal-dialog">
+                                          <div class="modal-content">
+                                              <div class='modal-header'>
+                                                  <p class='col-12 modal-title text-center'>
+                                                  <span class="ml-5" style="font-size: 17px">Subject Marks</span>
+                                                  <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                                                      <span aria-hidden='true'>&times;</span>
+                                                  </button>
+                                                  </p>
+                                              </div>
+                                              <div class="modal-body py-4">
+                        
+                                                  {{-- <input type="text" class="form-control" value="{{ $user->user_name }}" disabled> --}}
+                                                  {{-- <p class="text-center" style="font-size: 19px; font-weight:bold">
+                                                      <small>Are you sure that you want to <span class="text-bold">log out ?<span></small>
+                                                  </p> --}}
+                                                  {{-- @foreach() --}}
+                                                  @php
+                                                    $count = 1;
+                                                    @endphp
+
+                                                  @foreach($gradeResult as $row)
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control" name="subject" id="subject" placeholder="eg: English" value={{$row->subject}} readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            {{-- <div class="form-group">
+                                                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+
+                                                                    <label class="btn btn-white mr-1 p-0">
+                                                                        <input type="radio" name="marks" value="40" autocomplete="off" onclick="addExamMarks(                                                    {{$count += 1}}
+                                                                        )" id="mark_check_{{$count}}"> <span class="badge badge-primary" id="badge_{{$count}}">40</span>
+                                                                    </label>
+                                                                    <label class="btn btn-white mr-1 p-0">
+                                                                        <input type="radio" name="marks" value="55" autocomplete="off" onclick="addExamMarks(                                                    {{$count += 1}}
+                                                                        )" id="mark_check_{{$count}}"> <span class="badge badge-primary" id="badge_{{$count}}">55</span>
+                                                                    </label>
+                                                                    <label class="btn btn-white mr-1 p-0">
+                                                                        <input type="radio" name="marks" value="75" autocomplete="off" onclick="addExamMarks(                                                    {{$count += 1}}
+                                                                        )" id="mark_check_{{$count}}"> <span class="badge badge-primary" id="badge_{{$count}}">75</span>
+                                                                    </label> 
+                                                                    <label class="btn btn-white mr-1 p-0">
+                                                                        <input type="radio" name="marks" value="90" autocomplete="off" onclick="addExamMarks(                                                    {{$count += 1}}
+                                                                        )" id="mark_check_{{$count}}"> <span class="badge badge-primary" id="badge_{{$count}}">90</span>
+                                                                    </label>
+                                                                    
+                                                                </div>
+                                                            </div> --}}
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control" name="subject" id="marks" placeholder="eg: 80" onkeypress='validate(event)'>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                  @endforeach
+                                              </div>
+                                              <div class="modal-footer  justify-content-center ">
+                                              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                              <button type="button" class="btn btn-danger" onclick="logout()">Save</a>
+                                              </div>
+                                          </div>
+                                          <!-- /.modal-content -->
+                                          </div>
+                                          <!-- /.modal-dialog -->
+                                        </form>
+                        
+                                      </div>
                                     
 
                                     {{-- <input type="file" name="" id="" class="form-control" style="width: 60%"> --}}
@@ -178,7 +263,7 @@
 
       $(document).ready(function() {
 
-       document.getElementById('month-value').textContent = document.getElementById('time').getAttribute('data-value');
+    //    document.getElementById('month-value').textContent = document.getElementById('time').getAttribute('data-value');
 
 
         $.ajaxSetup({
@@ -249,22 +334,76 @@
 
             // Focus on the input element to open the date picker
             myDateInput.focus();
-            // $('#time').datepicker({
-            //     dateFormat: 'MM yy',
-            //     changeMonth: true,
-            //     changeYear: true,
-            //     showButtonPanel: true,
-
-            //     onClose: function(dateText, inst) {
-            //         var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
-            //         var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
-            //         $(this).val($.datepicker.formatDate('MM yy', new Date(year, month, 1)));
-            //     }
-            // });
-
 
         })
     });
+
+    function addExamMarks(id)
+    {
+        var ids = [40,55,90,75];
+
+        if($("#mark_check_"+id).prop('checked',true))
+        {
+
+            $("#badge_"+id).css('background-color', 'green');
+            $("#marks").val($("#mark_check_"+id).val());
+            var selectedValue = $('input[name=marks]:checked').length;
+            array = filterValueFromArray($("#mark_check_"+id).val(), ids);
+
+  
+            for(var i = 1; i < $('input:radio').length; i++) {
+
+                if(i == id)
+                {
+                    return false;
+                }
+                $("#badge_" + i).css('background-color', '#007bff');
+            }
+            
+
+        }else if($("#mark_check_"+id).prop('checked',false)){
+        {
+            $("#badge_"+id).css('background-color', '#007bff');
+        }
+
+     }
+
+
+    }
+
+
+
+    function validate(evt) {
+
+        var theEvent = evt || window.event;
+
+        // Handle paste
+        if (theEvent.type === 'paste') {
+            key = event.clipboardData.getData('text/plain');
+        } else {
+        // Handle key press
+            var key = theEvent.keyCode || theEvent.which;
+            key = String.fromCharCode(key);
+        }
+        var regex = /[0-9]|\./;
+        if( !regex.test(key) ) {
+            theEvent.returnValue = false;
+            if(theEvent.preventDefault) theEvent.preventDefault();
+        }
+
+        var ids = [40,55,90,75];
+
+        for(var i = 0; i < ids.length; i++) {
+            $("#badge_" + ids[i]).css('background-color', '#007bff');
+        }
+
+    }
+
+    function filterValueFromArray(value, arr) {
+        return $.grep(arr, function(elem, index) {
+        return elem !== value;
+        });
+    }
 
 </script>
 @endsection

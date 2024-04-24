@@ -22,7 +22,7 @@
                     <a href="{{ route('grades.classes', ['grade' => $grade->id]) }}" class="text-decoration-none">
                     <div class="info-box" style="position: relative">
                         <span class="info-box-icon bg-info elevation-1">
-                            <i class="fa fa-university" aria-hidden="true"></i>
+                            <i class="fas fa-graduation-cap" aria-hidden="true"></i>
                         </span>
 
                         <div class="info-box-content text-dark">

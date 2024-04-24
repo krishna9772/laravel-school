@@ -9,7 +9,7 @@
 <!-- Main content -->
 <div class="content">
     <div class="container-fluid">
-        <div class="card">
+        <div class="card m-3 p-2">
             <div class="card-header">
 
                 <div class="container-fluid">

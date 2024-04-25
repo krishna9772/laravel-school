@@ -78,8 +78,6 @@
 
          <div class="">
 
-            <form id="markAttendanceForm" method="POST">
-                @csrf
                 <table id="studentsTable" class="w-100 my-3 table table-striped" >
                     <thead>
                         <tr>
@@ -129,125 +127,86 @@
                                             <label class="badge badge-success text-white"><i class="fas fa-plus"></i> Add</label>
                                             
                                         </a> 
+
+                                        
                                         
                                       
                                        
                                           
                                     </div>
                                                                
-
-                                    <div class="modal fade" id="subject_marks">
-                                        <form  method="post" id="form_logout">
-                                          @csrf
-                                          <div class="modal-dialog">
-                                          <div class="modal-content">
-                                              <div class='modal-header'>
-                                                  <p class='col-12 modal-title text-center'>
-                                                  <span class="ml-5" style="font-size: 17px">Subject Marks</span>
-                                                  <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                                                      <span aria-hidden='true'>&times;</span>
-                                                  </button>
-                                                  </p>
-                                              </div>
-                                              <div class="modal-body py-4">
-                        
-                                                  {{-- <input type="text" class="form-control" value="{{ $user->user_name }}" disabled> --}}
-                                                  {{-- <p class="text-center" style="font-size: 19px; font-weight:bold">
-                                                      <small>Are you sure that you want to <span class="text-bold">log out ?<span></small>
-                                                  </p> --}}
-                                                  {{-- @foreach() --}}
-                                                  @php
-                                                    $count = 1;
-                                                    @endphp
-
-                                                  @foreach($gradeResult as $row)
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <input type="text" class="form-control" name="subject" id="subject" placeholder="eg: English" value={{$row->subject}} readonly>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            {{-- <div class="form-group">
-                                                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-
-                                                                    <label class="btn btn-white mr-1 p-0">
-                                                                        <input type="radio" name="marks" value="40" autocomplete="off" onclick="addExamMarks(                                                    {{$count += 1}}
-                                                                        )" id="mark_check_{{$count}}"> <span class="badge badge-primary" id="badge_{{$count}}">40</span>
-                                                                    </label>
-                                                                    <label class="btn btn-white mr-1 p-0">
-                                                                        <input type="radio" name="marks" value="55" autocomplete="off" onclick="addExamMarks(                                                    {{$count += 1}}
-                                                                        )" id="mark_check_{{$count}}"> <span class="badge badge-primary" id="badge_{{$count}}">55</span>
-                                                                    </label>
-                                                                    <label class="btn btn-white mr-1 p-0">
-                                                                        <input type="radio" name="marks" value="75" autocomplete="off" onclick="addExamMarks(                                                    {{$count += 1}}
-                                                                        )" id="mark_check_{{$count}}"> <span class="badge badge-primary" id="badge_{{$count}}">75</span>
-                                                                    </label> 
-                                                                    <label class="btn btn-white mr-1 p-0">
-                                                                        <input type="radio" name="marks" value="90" autocomplete="off" onclick="addExamMarks(                                                    {{$count += 1}}
-                                                                        )" id="mark_check_{{$count}}"> <span class="badge badge-primary" id="badge_{{$count}}">90</span>
-                                                                    </label>
-                                                                    
-                                                                </div>
-                                                            </div> --}}
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <div class="form-group">
-                                                                <input type="text" class="form-control" name="subject" id="marks" placeholder="eg: 80" onkeypress='validate(event)'>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                  @endforeach
-                                              </div>
-                                              <div class="modal-footer  justify-content-center ">
-                                              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                              <button type="button" class="btn btn-danger" onclick="logout()">Save</a>
-                                              </div>
-                                          </div>
-                                          <!-- /.modal-content -->
-                                          </div>
-                                          <!-- /.modal-dialog -->
-                                        </form>
-                        
-                                      </div>
+                                    
                                     
 
                                     {{-- <input type="file" name="" id="" class="form-control" style="width: 60%"> --}}
                                 </td>
-                                {{-- <td class="text-center">
-                                    <input type="hidden" name="student_id" value="{{$student->user_id}}">
-                                    <input type="hidden" name="user_grade_class_id" value="{{$student->userGradeClasses[0]->id}}">
-
-
-
-                                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                        <label class="btn btn-white mr-1 border border-secondary active ">
-                                          <input type="radio" name="status[{{ $student->user_id }}]" value="present" autocomplete="off" checked> P
-                                        </label>
-
-
-                                        <label class="btn btn-white mr-1 border border-secondary">
-                                          <input type="radio" name="status[{{ $student->user_id }}]" value="absent" autocomplete="off"> A
-                                        </label>
-
-                                        <label class="btn btn-white border border-secondary">
-                                          <input type="radio" name="status[{{ $student->user_id }}]" value="leave" autocomplete="off"> L
-                                        </label>
-                                      </div>
-                                </td> --}}
-
+                              
                             </tr>
                         </div>
                         @endforeach
                     </tbody>
                 </table>
 
+                    <div class="modal fade" id="subject_marks">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                                <div class='modal-header'>
+                                    <p class='col-12 modal-title text-center'>
+                                    <span class="ml-5" style="font-size: 17px">Subject Marks</span>
+                                    <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                                        <span aria-hidden='true'>&times;</span>
+                                    </button>
+                                    </p>
+                                </div>
+                                <form id="subjectMarksForm" method="POST" action="{{route('exam-marks.store')}}">
+                                    @csrf
+                                    <div class="modal-body py-4">
+
+                                    
+                                        @php
+                                            $count = 1;
+                                            @endphp
+
+                                        @foreach($gradeResult as $row)
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" name="subjects[]" id="subjects" placeholder="eg: English" value={{$row->subject}} readonly>
+                                                        <input type="hidden" name="user_grade_class_id" value="{{$student->userGradeClasses[0]->id}}">
+
+                                                    </div> 
+                                                </div>
+                                              
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" name="marks[]" value="{{$row->marks}}" id="marks" placeholder="eg: 80" onkeypress='validate(event)' required>
+                                                        {{$row}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                        <div class="modal-footer  justify-content-center ">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                            <button type="button" class="btn btn-danger" id="saveExamSubject">Save</a>
+                                        </div>
+
+                                    </div>
+                                </form>
+
+                                    
+
+                        </div>
+                      <!-- /.modal-content -->
+                      </div>
+                      <!-- /.modal-dialog -->
+    
+                    </div>
+
                 {{-- <div class="text-center">
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div> --}}
 
 
-            </form>
 
 
         </div>
@@ -272,6 +231,11 @@
             }
         });
 
+
+        // $("#SubjectMarkSave").on('click',function(){
+        //     document.getElementById("subjectMarksForm").submit();
+
+        // })
 
         $('#studentsTable').dataTable(
 
@@ -336,7 +300,73 @@
             myDateInput.focus();
 
         })
+
+        $('#saveExamSubject').click(function (e) {
+            submitForm();
+        });
     });
+
+
+        function submitForm()
+        {
+
+            // $('#subjects').each(function() {
+            //     var subjectId = $(this).val();
+            //     console.log(subjectId);
+            // });
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('exam-marks.store') }}',
+                data: $('#subjectMarksForm').serialize(),
+                success: function (response) {
+                    if(response == 'success'){
+                        window.location.href = '{{ route('exam-marks.subject') }}';
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var response = xhr.responseJSON;
+                    console.log(response);
+
+                    let gradeSelectBoxError = response.errors.grade_id ? response.errors.grade_id[0] : '';
+
+                    if (gradeSelectBoxError) {
+                        $('#gradeSelectBoxError').html(gradeSelectBoxError);
+                        $('#gradeSelect').addClass('is-invalid');
+                    } else {
+                        $('#gradeSelectBoxError').html('');
+                        $('#gradeSelect').removeClass('is-invalid');
+                    }
+
+                    $('.curriculum-name-error').text('');
+                    $('.teacher-id-error').text('');
+                    $('.form-control').removeClass('is-invalid');
+
+                    if (response.errors) {
+                        $.each(response.errors, function(key, value) {
+                            var errorMessage = value[0];
+
+                            var [fieldName, index] = key.split('.');
+
+                            var $row = $('[name="' + fieldName + '[]"]').eq(index).closest('.row');
+
+                            if (fieldName === 'curriculum_name') {
+                                $row.find('.curriculum-name-error').text('Subject name is required');
+                                $row.find('[name="' + fieldName + '[]"]').addClass('is-invalid');
+                            } else if (fieldName === 'teacher_id') {
+                                $row.find('.teacher-id-error').text('Teacher field is required');
+                                $row.find('[name="' + fieldName + '[]"]').addClass('is-invalid');
+                            }
+                        });
+                    }
+                },
+                failure: function (response) {
+                    console.log('faliure');
+                }
+            });
+    }
+
+        
 
     function addExamMarks(id)
     {

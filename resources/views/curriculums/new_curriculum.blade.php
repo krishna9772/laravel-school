@@ -167,6 +167,9 @@ $(document).ready(function () {
         $('#addCurriculumForm').submit(function (e) {
             e.preventDefault();
 
+            var formData = $(this).serializeArray();
+        console.log(formData);
+
             $.ajax({
                 type: 'POST',
                 url: '{{ route('curricula.store') }}',

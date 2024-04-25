@@ -10,7 +10,7 @@ class SubjectMark extends Model
     use HasFactory;
 
     protected $fillable = [
-        'exam_id',
+        'exam_mark_id',
         'subject',
         'marks',
         'created_date',

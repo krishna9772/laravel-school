@@ -10,6 +10,9 @@ use App\Models\Grade;
 use App\Models\GradeSubjectExam;
 use App\Models\User;
 use App\Models\UserGradeClass;
+use App\Models\SubjectMark;
+
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -26,9 +29,10 @@ class ExamMarkController extends Controller
 
     public function searchResults(SearchRequest $request){
 
-        // dd($request->all());
-
         $gradeName = Grade::where('id',$request->grade_select)->value('grade_name');
+        $user_grade_id = UserGradeClass::where('grade_id',$request->grade_select)->with('examMarks')->get();
+        return $user_grade_id;
+        $examSubject = SubjectMark::where('exam_id',$user_grade_id->examMarks()->id)->get();
         $grade = Grade::where('id',$request->grade_select)->with('examSubjects')->get();
         $gradeResult = $grade[0]->examSubjects;
 
@@ -66,27 +70,28 @@ class ExamMarkController extends Controller
         //     'file' => $fileName,
         // ]);
 
-        $subjectNames = $request->subject_name;
+        $subjectNames = $request->subjects;
         $marks = $request->marks;
 
-        if (count($curriculumNames) !== count($teacherIds)) {
-            return response()->json(['error' => 'Number of curriculum names does not match number of teacher IDs'], 400);
-        }
+        // return $marks;
 
+        $exam_id = ExamMark::updateOrCreate([
+            'user_grade_class_id' => $request->user_grade_class_id,
+        ])->id;
 
-        foreach ($curriculumNames as $index => $curriculumName) {
-            Curriculum::create([
-                'user_id' => $teacherIds[$index],
-                'grade_id' => $request->grade_id,
-                'curriculum_name' => $curriculumName,
+        foreach ($subjectNames as $index => $subject) {
+            
+            SubjectMark::updateOrCreate([
+                'exam_mark_id' => $exam_id,
+                'subject' => $subject,
+                'marks' => $marks[$index],
+
             ]);
+
         }
 
         Session::put('message','Successfully added !');
         Session::put('alert-type','success');
-
-        return response()->json('success');
-
 
         return response()->json('success');
     }

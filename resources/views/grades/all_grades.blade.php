@@ -78,6 +78,12 @@
         event.stopPropagation();
         event.preventDefault();
     });
+
+    $(document).click(function(event) {
+        if (!$(event.target).closest('.popover').length) {
+            $('[data-toggle="popover"]').popover('hide');
+        }
+    });
 </script>
 
 @endsection

@@ -132,7 +132,7 @@ Route::middleware(['auth'])->group(function(){
         Route::post('exam-marks/search/results',[ExamMarkController::class,'searchResults'])->name('exam-marks.search.results');
         Route::post('exam-marks/store',[ExamMarkController::class,'store'])->name('exam-marks.store');
         Route::get('exam-marks/edit',[ExamMarkController::class,'edit'])->name('exam-marks.edit');
-       
+
         Route::post('exam-marks/update',[ExamMarkController::class,'update'])->name('exam-marks.update');
         Route::get('exam-marks/destroy/{gradeId}/{classId}',[ExamMarkController::class,'destroy'])->name('exam-marks.destroy');
 

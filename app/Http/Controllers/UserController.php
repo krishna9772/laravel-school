@@ -150,7 +150,7 @@ class UserController extends Controller
 
         Session::put('message','Successfully updated !');
         Session::put('alert-type','success');
-    
+
         return response()->json('success');
 
     }
@@ -173,7 +173,7 @@ class UserController extends Controller
 
         User::where('id',$id)->delete();
 
-        Session::put('message','Successfully destroyed !');
+        Session::put('message','Successfully deleted !');
         Session::put('alert-type','success');
 
         return response()->json('success');

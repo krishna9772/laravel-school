@@ -1,50 +1,7 @@
 @extends('layouts.app')
 
 @section('styles')
-<style>
-    .accordion .card {
-      margin-bottom: 0;
-    }
-
-    .accordion .card:focus{
-        border: none
-    }
-
-    .accordion .card.show .card-header {
-    }
-
-    .accordion .card.show .card-header:focus {
-        outline:0 !important;
-    }
-
-
-    .accordion .card-header .btn::after {
-        content: '\f078';
-        font-family: 'Font Awesome 5 Free';
-        font-weight: 900;
-        float: right;
-        transition: all 0.4s ease;
-      }
-
-      .accordion .card-header {
-        padding: 0;
-        border: none
-      }
-
-      .accordion .card-header .btn {
-        display: block;
-        width: 100%;
-        height: 100%;
-        padding: 1rem;
-        margin: 0;
-        border: none;
-        text-align: left;
-      }
-
-      .accordion .card-header .btn:focus{
-        border: none;
-      }
-  </style>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 @endsection
 
 @section('content')
@@ -61,57 +18,48 @@
                 </div>
             </div>
 
+            <div class="accordion accordion-flush my-5" id="accordionFlushExample">
 
-            <div class="mt-5">
-                <div class="accordion w-100" id="accordionExample" >
-                    @foreach ($grades as $grade)
-                    <div class="card" class=" w-100">
-                        <div class="card-header" id="heading{{$grade->id}}">
-                            <h2 class="mb-0">
-                                <button class="btn btn-block text-left accordion-btn" type="button" data-toggle="collapse" data-target="#collapse{{$grade->id}}" aria-expanded="false" aria-controls="collapse{{$grade->id}}">
-                                    {{$grade->grade_name}}
-                                </button>
-                            </h2>
-                        </div>
+                @foreach($grades as $grade)
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="flush-headingOne">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordion{{$grade->id}}" aria-expanded="false" aria-controls="flush-collapseOne">
+                      {{$grade->grade_name}}
+                    </button>
+                  </h2>
+                  <div id="accordion{{$grade->id}}" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">
+                        <div class="row">
+                            @if (count($grade->classes) != 0)
+                                @foreach ($grade->classes as $class)
+                                    <div class="col-12 col-sm-6 col-md-3">
+                                        <a href="{{route('grades.classes.show.registrations',['gradeId' => $grade->id, 'classId' => $class->id])}}" class="text-decoration-none">
+                                            <div class="info-box">
+                                            <span class="info-box-icon bg-info elevation-1">
+                                                <i class="fa fa-university" aria-hidden="true"></i>
+                                            </span>
 
-                        <div id="collapse{{$grade->id}}" class="collapse" aria-labelledby="heading{{$grade->id}}" data-parent="#accordionExample">
-                            <div class="card-body">
-                                <div class="row">
-                                    @if (count($grade->classes) != 0)
-                                        @foreach ($grade->classes as $class)
-                                            <div class="col-12 col-sm-6 col-md-3">
-                                                <a href="{{route('grades.classes.show.registrations',['gradeId' => $grade->id, 'classId' => $class->id])}}" class="text-decoration-none">
-                                                    <div class="info-box">
-                                                    <span class="info-box-icon bg-info elevation-1">
-                                                        <i class="fa fa-university" aria-hidden="true"></i>
-                                                    </span>
-
-                                                    <div class="info-box-content text-dark">
-                                                        <span class="info-box-text text-lg">{{isset($class->class_name)  ? $class->class_name : 'No class yet'}}</span>
-                                                    </div>
-                                                    <!-- /.info-box-content -->
-                                                    </div>
-                                                </a>
+                                            <div class="info-box-content text-dark">
+                                                <span class="info-box-text text-lg">{{isset($class->class_name)  ? $class->class_name : 'No class yet'}}</span>
                                             </div>
-                                        @endforeach
-                                    @else
-                                        <span class="mx-4">
-                                            No Classes Created In this Grade
-                                        </span>
-                                    @endif
+                                            <!-- /.info-box-content -->
+                                            </div>
+                                        </a>
+                                    </div>
+                                @endforeach
+                            @else
+                                <span class="mx-4">
+                                    No Classes Created In this Grade
+                                </span>
+                            @endif
 
-                                </div>
-                            </div>
                         </div>
                     </div>
-                    @endforeach
+                  </div>
                 </div>
+                @endforeach
+              </div>
 
-                <div class="mt-3">
-                    {{ $grades->links()}}
-                </div>
-
-            </div>
         @else
 
         <div class="text-center pt-5" >
@@ -131,19 +79,21 @@
 
     </div>
 
+
+
+
 @endsection
 
 @section('scripts')
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
 
 <script>
     // $('.collapse').collapse();
 
     // $('.accordion-btn').click(function(){
-        $('.accordion .card-header .accordion-btn').click(function() {
-            // Toggle rotation using a class
-            $(this).find('.btn-after').toggleClass('rotated');
-            $(this).toggleClass('rotated');
-          });
+
     // });
 
 </script>

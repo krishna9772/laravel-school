@@ -106,9 +106,12 @@ $(document).ready(function () {
 
         function teacherOptionsInAddMoreBtn() {
             var gradeId = $('#gradeSelect').val();
-            $('.teacherSelect').empty();
+            console.log(gradeId);
+            // $('.teacherSelect').empty();
 
-            if (gradeId === '') {
+            if (gradeId == '') {
+
+                console.log('grade id is empty');
 
                 $('.teacherSelect').append($('<option>', {
                     value: '',
@@ -217,16 +220,16 @@ $(document).ready(function () {
 
         var inputFieldCount = 1;
 
-        function toggleButtons() {
-            if (inputFieldCount >= 5) {
-                $("#addMoreBtn").prop("disabled", true);
-            } else {
-                $("#addMoreBtn").prop("disabled", false);
-            }
-        }
+        // function toggleButtons() {
+        //     if (inputFieldCount >= 5) {
+        //         $("#addMoreBtn").prop("disabled", true);
+        //     } else {
+        //         $("#addMoreBtn").prop("disabled", false);
+        //     }
+        // }
 
         $("#addMoreBtn").click(function() {
-            if (inputFieldCount < 5) {
+            // if (inputFieldCount < 5) {
                 var newRow = `
                     <div class="row">
                         <div class="form-group col-6">
@@ -235,7 +238,6 @@ $(document).ready(function () {
                         </div>
                         <div class="form-group col-6">
                             <select name="teacher_id[]" class="form-control teacherSelect">
-                                <option value="">Select Teacher</option>
                             </select>
                             <p class="text-danger mt-1 teacher-id-error"></p> <!-- Unique ID for error message -->
                         </div>
@@ -243,9 +245,12 @@ $(document).ready(function () {
                 `;
                 $("#dynamicRows").append(newRow);
                 inputFieldCount++;
-                toggleButtons();
-                teacherOptionsInAddMoreBtn();
-            }
+                // toggleButtons();
+                $("#dynamicRows .row:last-child .teacherSelect").each(function() {
+                    // $(this).empty();
+                    teacherOptionsInAddMoreBtn();
+                });
+            // }
         });
 
 
@@ -302,11 +307,11 @@ $(document).ready(function () {
             if (inputFieldCount > 1) {
                 $("#dynamicRows .row:last-child").remove();
                 inputFieldCount--;
-                toggleButtons();
+                // toggleButtons();
             }
         });
 
-        toggleButtons();
+        // toggleButtons();
 
         $('#cancelBtn').click(function(){
             restoreInitialForm();

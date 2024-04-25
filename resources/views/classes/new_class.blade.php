@@ -52,6 +52,7 @@
                     <label for="" class="form-label required">Name</label>
                     <input type="text" name="name" id="nameInputBox" class="form-control" placeholder="Enter Class Name">
                     <p class="text-danger" id="nameErrorMessage"></p>
+                    <p class="text-danger" id="uniqueClassNameErrorMessage"></p>
                 </div>
                 <div class="form-group">
                     <label for="" class="form-label">Description</label>
@@ -134,6 +135,19 @@ $(document).ready(function () {
             error: function(xhr, status, error) {
                 var err = eval("(" + xhr.responseText + ")");
                 var response = JSON.parse(xhr.responseText);
+
+                console.log(response);
+
+                var uniqueClassNameErrorMessage = xhr.responseJSON.error;
+                // alert(errorMessage);
+                // classNameUniqueErroMessage
+                if(uniqueClassNameErrorMessage){
+                    $('#nameErrorMessage').html(uniqueClassNameErrorMessage);
+                    $('#nameInputBox').addClass('is-invalid');
+                }else{
+                    $('#nameErrorMessage').html('');
+                    $('#nameInputBox').removeClass('is-invalid');
+                }
 
                 let gradeIdErrorMessage = response.errors.grade_id ? response.errors.grade_id[0] : '';
                 let nameErrorMessage = response.errors.name ? response.errors.name[0] : '';

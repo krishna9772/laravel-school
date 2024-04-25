@@ -17,7 +17,8 @@ class ClassesController extends Controller
      */
     public function index()
     {
-        $grades = Grade::with('classes')->paginate(10);
+        // $grades = Grade::with('classes')->paginate(10);
+        $grades = Grade::with('classes')->get();
         return view('classes.all_classes',compact('grades'));
     }
 
@@ -40,6 +41,14 @@ class ClassesController extends Controller
     public function store(ClassesRequest $request)
     {
 
+        $existingClass = Classes::where('grade_id', $request->grade_id)
+                        ->where('class_name', $request->name)
+                        ->first();
+
+        if($existingClass){
+            return response()->json(['error' => 'This class name is already taken in this grade.'], 422);
+        }
+
         Log::info($request->all());
 
         Classes::create([
@@ -48,7 +57,7 @@ class ClassesController extends Controller
             'description' => $request->description,
         ]);
 
-        
+
         Session::put('message','Successfully added !');
         Session::put('alert-type','success');
 
@@ -63,27 +72,17 @@ class ClassesController extends Controller
         return view('classes.update_delete',compact('grades'));
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(ClassesRequest $request, string $id)
     {
+
+        $existingClass = Classes::where('id','!=',$id)
+                        ->where('grade_id', $request->grade_id)
+                        ->where('class_name', $request->name)
+                        ->first();
+
+        if($existingClass){
+            return response()->json(['error' => 'This class name is already taken in this grade.'], 422);
+        }
 
         Classes::where('id',$id)->update([
             'grade_id' => $request->grade_id,
@@ -91,7 +90,7 @@ class ClassesController extends Controller
             'description' => $request->description,
         ]);
 
-        
+
         Session::put('message','Successfully updated !');
         Session::put('alert-type','success');
 

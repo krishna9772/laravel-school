@@ -40,6 +40,7 @@ class UserRequest extends FormRequest
                 'user_name' => 'required|string|max:50',
                 'user_type' => 'required|string|max:30',
                 'email' => 'required',
+                'password' => 'nullable|min:8',
                 'confirm_password' => 'same:password',
                 'gender' => 'nullable|string|max:30',
                 'grade_select' => 'required',
@@ -54,7 +55,7 @@ class UserRequest extends FormRequest
                 'former_school' => 'nullable|string|max:100',
                 'teacher_type' => 'required_if:user_type,teacher',
             ];
-    
+
         }
 
         return $rules;

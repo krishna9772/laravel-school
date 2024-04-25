@@ -8,13 +8,13 @@
         }
 
         .deleteBtn.disabled {
-            opacity: 0.7; /* Reduce opacity to visually indicate it's disabled */
-            pointer-events: none; /* Disable pointer events to prevent clicks */
-            cursor: not-allowed; /* Change cursor to indicate it's not clickable */
+            opacity: 0.7;
+            pointer-events: none;
+            cursor: not-allowed;
         }
 
         .deleteBtn.disabled:hover {
-            cursor: not-allowed; /* Keep cursor style consistent on hover */
+            cursor: not-allowed;
         }
     </style>
     @endsection
@@ -62,7 +62,7 @@
                                     <select name="teacher_id[]" class="form-control">
                                         <option value="">Select Teacher</option>
                                         @foreach ($teachers as $teacher)
-                                            <option value="{{$teacher->id}}" @if($teacher->user_id == $curriculum->user_id) selected @endif>{{$teacher->user_name}}</option>
+                                            <option value="{{$teacher->id}}" @if($teacher->id == $curriculum->user_id) selected @endif>{{$teacher->user_name}}</option>
                                         @endforeach
                                     </select>
                                     <p class="text-danger mt-1 teacher-id-error"></p>
@@ -227,7 +227,7 @@
             });
 
 
-            // var inputFieldCount = $("input[name='curriculum_name[]']").length;
+            var inputFieldCount = $("input[name='curriculum_name[]']").length;
             // console.log('input field count ' + inputFieldCount);
 
             function toggleButtons() {
@@ -237,11 +237,11 @@
                 inputFieldCount = $("input[name='curriculum_name[]']").length;
                 console.log('toggle button input field count ' + $("input[name='curriculum_name[]']").length);
 
-                if (inputFieldCount >= 5) {
-                    $("#addMoreBtn").prop("disabled", true);
-                } else {
-                    $("#addMoreBtn").prop("disabled", false);
-                }
+                // if (inputFieldCount >= 5) {
+                //     $("#addMoreBtn").prop("disabled", true);
+                // } else {
+                //     $("#addMoreBtn").prop("disabled", false);
+                // }
 
                 if(inputFieldCount == 1){
                     $('.deleteBtn').prop("disabled", true);
@@ -256,37 +256,39 @@
             function checkInputFieldCount() {
                 var curriculumNames = $("input[name='curriculum_name[]']").length;
                 var teacherIds = $("select[name='teacher_id[]']").length;
-                if (curriculumNames >= 5 && teacherIds >= 5) {
-                    $("#addMoreBtn").prop("disabled", true);
-                } else {
-                    toggleButtons();
-                }
+                // if (curriculumNames >= 5 && teacherIds >= 5) {
+                    // $("#addMoreBtn").prop("disabled", true);
+                // } else {
+                    // toggleButtons();
+                // }
             }
 
             $("#addMoreBtn").click(function() {
 
+                addNewRow();
+
                 // console.log('input field count ' + inputFieldCount);
 
-                if (inputFieldCount < 5) {
-                    $.ajax({
-                        url: "{{ route('curricula.getMaxId') }}",
-                        method: 'GET',
-                        success: function(response) {
-                            var maxId = parseInt(response) + 1;
-                            addNewRow(maxId);
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Failed to fetch maximum ID:', error);
-                            // Handle error
-                        }
-                    });
-                }
+                // if (inputFieldCount < 5) {
+                    // $.ajax({
+                    //     url: "{{ route('curricula.getMaxId') }}",
+                    //     method: 'GET',
+                    //     success: function(response) {
+                    //         var maxId = parseInt(response) + 1;
+                    //         addNewRow(maxId);
+                    //     },
+                    //     error: function(xhr, status, error) {
+                    //         console.error('Failed to fetch maximum ID:', error);
+                    //         // Handle error
+                    //     }
+                    // });
+                // }
             });
 
-            function addNewRow(curriculumId) {
+            function addNewRow() {
                 $("#dynamicRows").append(`
                     <div class="row">
-                        <input type="hidden" name="curriculum_id[]" value="${curriculumId}">
+                        <input type="hidden" name="curriculum_id[]" value="">
                         <div class="form-group col-5">
                             <input type="text" name="curriculum_name[]" class="form-control" placeholder="Subject Name">
                             <p class="text-danger curriculum-name-error"></p>
@@ -300,7 +302,7 @@
                             </select>
                             <p class="text-danger mt-1 teacher-id-error"></p>
                         </div>
-                        <div class="col-2 mt-2 pr-2 deleteBtn" data-curriculum-id="${curriculumId}">
+                        <div class="col-2 mt-2 pr-2 deleteBtn">
                             <button type="button" class="btn-danger" title="Delete"> <i class="fa fa-trash" aria-hidden="true"></i></button>
                         </div>
                     </div>
@@ -326,6 +328,7 @@
             $('#cancelBtn').click(function () {
                 restoreInitialForm();
             });
+
         }
 
 

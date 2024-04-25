@@ -232,6 +232,9 @@
                 e.preventDefault();
 
                 var classId = $('#classId').val();
+
+                $('#grade_id').prop('disabled',false);
+
                 console.log(classId);
 
                 $.ajax({
@@ -248,6 +251,17 @@
                         var err = eval("(" + xhr.responseText + ")");
                         var response = JSON.parse(xhr.responseText);
                             console.log(response);
+
+                        var uniqueClassNameErrorMessage = xhr.responseJSON.error;
+
+                        if (uniqueClassNameErrorMessage) {
+                            $('#nameErrorMessage').html(uniqueClassNameErrorMessage);
+                            $('#classInputBox').addClass('is-invalid');
+                        } else {
+                            $('#nameErrorMessage').html('');
+                            $('#classInputBox').removeClass('is-invalid');
+                        }
+
                         let gradeErrorMessage = response.errors.grade_id ? response.errors.grade_id[0] : '' ;
                         let nameErrorMessage = response.errors.name ? response.errors.name[0] : '';
                         let descErrorMessage = response.errors.description ? response.errors.description[0] : '';

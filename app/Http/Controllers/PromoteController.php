@@ -27,6 +27,7 @@ class PromoteController extends Controller
                 ->join('classes', 'user_grade_classes.class_id', '=', 'classes.id')
                 ->where('user_grade_classes.grade_id', $request->gradeSelect)
                 ->where('user_grade_classes.class_id', $request->classSelect)
+                ->where('users.user_type','student')
                 ->get();
 
         $grades = Grade::with('classes')->get();

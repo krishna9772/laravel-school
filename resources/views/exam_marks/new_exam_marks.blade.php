@@ -116,12 +116,32 @@
                                         
                                         <div class="input-group ml-3">
                                             <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="exampleInputFile">
+                                                {{-- <input type="file" class="custom-file-input" id="exampleInputFile">
                                                 <label class="custom-file-label" for="exampleInputFile">
                                                     {{ $student->userGradeClasses[0]->examMarks[0]->file ?? 'Choose File' }}
-                                                </label>
+                                                </label> --}}
+                                                {{-- <div class="col-12 col-lg-4"> --}}
+                                                    <!-- onchange="loadFile(event)" -->
+                                                    <input type="file" multiple="multiple" name="images[]" id="upload" hidden />
+                                                    <label class="file_upload" for="upload" style="background: #E9ECEF;
+                                                    padding: 8px 15px;
+                                                    border: 1px solid #CED4DA; 
+                                                    border-radius: 5px;
+                                                    cursor: pointer;">Upload Exam File</label>
+                                                    <span class="small text-muted" id="fileCount"></span>
+                                                {{-- </div> --}}
                                                
                                             </div>
+
+                                            @isset($student->userGradeClasses[0]->examMarks[0]->file)
+                                                @if($student->userGradeClasses[0]->examMarks[0]->file != '')
+                                                    <a class="nav-icon" href="{{asset('storage/exam_marks_files/'. $student->userGradeClasses[0]->examMarks[0]->file)}}" download>
+                                                        <span class="badge badge-success"><i class="fas fa-file-download fa-2x"></i></span>
+                                                    </a>
+                                                @else
+
+                                                @endif
+                                            @endisset
                                             
                                         </div>
                                         {{-- <a type="button" class="nav-link border-0" data-toggle="modal" data-target="#subject_marks">
@@ -134,15 +154,7 @@
                                             <label for="exam-result" class="badge badge-success"><i class="fas fa-calendar"></i>  Results</label>
 
                                         </a> --}}
-                                        @isset($student->userGradeClasses[0]->examMarks[0]->file)
-                                            @if($student->userGradeClasses[0]->examMarks[0]->file != '')
-                                                    <a class="nav-icon" href="{{asset('storage/exam_marks_files/'. $student->userGradeClasses[0]->examMarks[0]->file)}}" download>
-                                                        <span class="badge badge-success"><i class="fas fa-file-download fa-2x"></i></span>
-                                                    </a>
-                                                @else
-
-                                                @endif
-                                        @endisset
+                                       
                                     </div>
                                                                
                                     

@@ -98,7 +98,7 @@ class AttendanceController extends Controller
     }
 
     public function viewReport(AttendanceSearchRequest $request){
-        
+
         if(AcademicYear::first() == '')
         {
             return redirect()->route('academic-years.index')->with("message","Please fill academic settings first")->with("alert-type","warning");
@@ -141,7 +141,7 @@ class AttendanceController extends Controller
                 $presentCount += $userGradeClass->attendances->where('status', 'present')->count();
             }
 
-            $student->percentage = $totalAttendanceCount > 0 ? ($presentCount / $days) * 100 : 0;
+            $student->percentage = $totalAttendanceCount > 0 ? ($presentCount / Carbon::now()->month($thisMonth)->daysInMonth) * 100 : 0;
         }
 
         $dateToShow = Carbon::now();

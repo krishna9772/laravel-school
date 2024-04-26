@@ -142,6 +142,17 @@ class AttendanceController extends Controller
 
         $thisMonth = date('n');
 
+        $year = date('Y');
+
+        $academic_year = AcademicYear::where('academic_year', '=', $year)->first();
+
+        $toDate = Carbon::parse($academic_year->start_date);
+        $fromDate = Carbon::parse($academic_year->end_date);
+
+        $days = $toDate->diffInDays($fromDate);
+
+        // return $days;
+
         // for monthly show
         $students = User::where('user_type', 'student')
             ->whereHas('userGradeClasses', function ($query) use ($request) {

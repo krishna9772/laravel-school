@@ -78,7 +78,6 @@ class ClassworkController extends Controller
 
     public function store(Request $request)
     {
-        Log::info("hello world");
         Log::info($request->all());
 
         $classwork = new Classwork();
@@ -122,6 +121,8 @@ class ClassworkController extends Controller
 
         // Optionally, log the saved data
         Log::info('Classwork saved:', $classwork->toArray());
+
+        return response()->json('success');
     }
 
 

@@ -437,7 +437,7 @@
                     {{-- <img src="{{asset('images/menu_icons/test-results (1).png')}}" alt="" width="23px"> --}}
 
                 <ul class="nav nav-treeview">
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a href="{{route('exam-marks.subjects')}}" class="nav-link {{ Route::is('exam-marks.subjects') ? 'active' : (Route::is('exam-marks.search.results') ? 'active' : '' )}}">
                             @if(Route::is('exam-marks.subjects'))
                                 <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
@@ -446,7 +446,7 @@
                             @endif
                         <p>Subject</p>
                         </a>
-                    </li>
+                    </li> --}}
                     <li class="nav-item">
                         <a href="{{route('exam-marks.search')}}" class="nav-link {{ Route::is('exam-marks.search') ? 'active' : (Route::is('exam-marks.search.results') ? 'active' : '' )}}">
                             @if(Route::is('exam-marks.search'))

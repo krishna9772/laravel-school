@@ -1,5 +1,14 @@
 @extends('layouts.app')
 
+@section('styles')
+<style>
+    .required:after {
+      content:" *";
+      color: rgba(255, 0, 0, 0.765);
+    }
+</style>
+@endsection
+
 @section('content')
 
 <section class="content">
@@ -15,7 +24,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form id="attendanceSearchForm" action="{{route('exam-marks.search.results')}}" method="POST" >
+                    <form id="examSubjectSearchForm" action="{{route('exam-marks.search.results')}}" method="POST" >
                         @csrf
                         <div class="form-group">
                             <label for="" class="form-label required">Select Grade</label>
@@ -37,7 +46,7 @@
                         </div>
 
                         <div class="mt-4">
-                            <button type="submit" class="btn btn-info mr-2">Search</button>
+                            <button type="submit"id="searchBtn" class="btn btn-info mr-2">Search</button>
                             <button type="button" id="cancelBtn" class="btn btn-default">Cancel</button>
                         </div>
                     </form>
@@ -117,6 +126,25 @@
                 $('#classSelectBoxError').text('First, Select a grade');
             } else {
                 $('#classSelectBoxError').text('');
+            }
+        });
+
+        $('#searchBtn').click(function(e){
+
+            e.preventDefault();
+
+            if ($('#gradeSelect').val() == '' || $('#classSelect').val() == '') {
+                if ($('#gradeSelect').val() == '') {
+                    $('#gradeSelect').addClass('is-invalid');
+                    $('#gradeSelectBoxError').text('Please Select Grade');
+                }
+                if ($('#classSelect').val() == '') {
+                    $('#classSelect').addClass('is-invalid');
+                    $('#classSelectBoxError').text('Please Select Class');
+                }
+            }
+            else {
+                $('#examSubjectSearchForm').submit();
             }
         });
 

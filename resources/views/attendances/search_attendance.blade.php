@@ -1,5 +1,14 @@
 @extends('layouts.app')
 
+@section('styles')
+<style>
+    .required:after {
+      content:" *";
+      color: rgba(255, 0, 0, 0.765);
+    }
+</style>
+@endsection
+
 @section('content')
 
 <section class="content">
@@ -25,7 +34,9 @@
                                     <option value="{{$grade->id}}">{{$grade->grade_name}}</option>
                                 @endforeach
                             </select>
-                            <p class="text-danger mt-1" id="gradeSelectBoxError"></p>
+                            @error('grade_select')
+                            <p class="text-danger mt-1" id="gradeSelectBoxError">{{$message}}</p>
+                            @enderror
                         </div>
 
                         <div class="form-group">
@@ -33,7 +44,9 @@
                             <select name="class_select" id="classSelect" class="form-control">
                                 <option value="">Select Class</option>
                             </select>
-                            <p class="text-danger mt-1" id="classSelectBoxError"></p>
+                            @error('class_select')
+                            <p class="text-danger mt-1" id="classSelectBoxError">{{$message}}</p>
+                            @enderror
                         </div>
 
                         <div class="mt-4">

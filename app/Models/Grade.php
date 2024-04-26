@@ -35,4 +35,10 @@ class Grade extends Model
         return $this->hasMany(GradeSubjectExam::class, 'grade_id');
 
     }
+
+    public function examMarks()
+    {
+        return $this->hasMany(GradeSubjectExam::class, 'grade_id');
+
+    }
 }

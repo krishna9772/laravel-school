@@ -265,6 +265,7 @@
                     $("#academicYearsTable").load(window.location + " #academicYearsTable");
                     toastr.options.timeOut = 5000;
                     toastr.success('Successfully added!');
+                    
                 }
             },
             error: function(xhr, status, error) {

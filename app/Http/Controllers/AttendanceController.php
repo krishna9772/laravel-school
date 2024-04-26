@@ -145,6 +145,12 @@ class AttendanceController extends Controller
     }
 
     public function viewReport(AttendanceSearchRequest $request){
+        
+        if(AcademicYear::first() == '')
+        {
+            return redirect()->route('academic-years.index')->with("message","Please fill academic settings first")->with("alert-type","warning");
+        }
+
         $gradeName = Grade::where('id',$request->grade_select)->value('grade_name');
         $className = Classes::where('id',$request->class_select)->value('class_name');
 

@@ -251,7 +251,7 @@
 
 
           {{-- classwork section --}}
-            @can('manage classworks')
+            @canany(['manage classworks', 'view classworks'])
                 <li class="nav-item {{ Route::is('classworks.*') ? 'menu-open'  : '' }}">
 
                     <a href="#" class="nav-link {{ Route::is('classworks.*') ? 'active'  : '' }}">
@@ -260,6 +260,7 @@
 
                     </a>
                     <ul class="nav nav-treeview">
+                    @can('manage classworks')
                     <li class="nav-item">
                         <a href="{{route('classworks.index')}}" class="nav-link {{ Route::is('classworks.index') ? 'active'  : '' }}">
                             @if(Route::is('classworks.index'))
@@ -280,6 +281,18 @@
                         <p>New</p>
                         </a>
                     </li>
+                    @endcan
+                    @can('view classworks')
+                    <a href="{{route('classworks.index')}}" class="nav-link {{ Route::is('classworks.index') ? 'active'  : '' }}">
+                        @if(Route::is('classworks.index'))
+                            <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                        @else
+                            <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                        @endif
+                        <p>List</p>
+                    </a>
+                    @endcan
+
                     {{-- <li class="nav-item">
                         <a href="#" class="nav-link {{ Route::is('classworks.edit') ? 'active'  : '' }}">
                         <i class="far fa-circle nav-icon"></i>
@@ -288,7 +301,7 @@
                     </li> --}}
                 </ul>
                 </li>
-            @endcan
+            @endcanany
 
 
             @can('manage promotions')

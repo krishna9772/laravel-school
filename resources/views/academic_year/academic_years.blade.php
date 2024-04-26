@@ -405,6 +405,9 @@
 
         $(this).closest('form').find("input[type=text],select, textarea").val("");
 
+        $('#cardTitle').text('New Academic Year');
+
+
         $("#academicYear-edit").addClass('d-none');
         $("#academicYear-cancel").addClass('d-none');
         $("#academicYear-store").removeClass('d-none');

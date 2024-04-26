@@ -70,7 +70,7 @@ Route::middleware(['auth'])->group(function(){
 
     });
 
-    Route::middleware(['role:admin|subject teacher'])->group(function () {
+    Route::middleware(['role:admin|subject teacher|student'])->group(function () {
         // class work
         Route::get('classwork/search',[ClassworkController::class,'search'])->name('classworks.search');
         Route::post('classwork/list',[ClassworkController::class,'searchResults'])->name('classworks.search_results');

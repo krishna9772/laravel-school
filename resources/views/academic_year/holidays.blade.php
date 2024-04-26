@@ -225,14 +225,21 @@
     $('#academicId').change(function(event){
         event.preventDefault();
 
+        console.log('changed');
+
         if( $('#academicId').val() != ''){
             $('#dateErrorMessage').html('');
             $('#newDate').removeClass('is-invalid');
         }
 
+        $('#newDate').val('');
+
         var academic_id = $(this).val();
 
         if(academic_id != ''){
+
+            // $('.newDateInput').datepicker('destroy');
+
             $.ajax({
                 method: 'GET',
                 url: '{{ route("academic-years.get.calendar.info", ["id" => ":id"]) }}'.replace(':id', academic_id),
@@ -251,6 +258,10 @@
                     var disabledDates = holidays.map(function(date) {
                         return new Date(date);
                     });
+
+                    // $('.newDateInput').datepicker('destroy');
+
+                    // $('.newDateInput').val();
 
                     $('.newDateInput').each(function() {
                         $(this).datepicker({

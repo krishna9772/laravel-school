@@ -21,13 +21,17 @@ class PromoteController extends Controller
 
     public function searchResults(PromoteRequest $request){
 
-        $students = User::select('users.*', 'user_grade_classes.grade_id', 'user_grade_classes.class_id', 'grades.grade_name', 'classes.class_name')
+        $students = User::select('users.*', 'user_grade_classes.grade_id',
+                    'user_grade_classes.class_id', 'grades.grade_name',
+                    'classes.class_name')
                 ->join('user_grade_classes', 'users.user_id', '=', 'user_grade_classes.user_id')
                 ->join('grades', 'user_grade_classes.grade_id', '=', 'grades.id')
                 ->join('classes', 'user_grade_classes.class_id', '=', 'classes.id')
+                ->where('users.user_type','student')
                 ->where('user_grade_classes.grade_id', $request->gradeSelect)
                 ->where('user_grade_classes.class_id', $request->classSelect)
                 ->get();
+            // dd($students->toArray());
 
         $grades = Grade::with('classes')->get();
 

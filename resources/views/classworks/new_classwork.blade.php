@@ -226,7 +226,7 @@ $(document).ready(function () {
 
                 var newRowWithLabels = `<div class='newAddedRows'>
                                             <input type="hidden" name="source_type[]" value="url">
-                                                <input type="hidden" name="file[]" value="">
+                                            <input type="hidden" name="file[]" value="">
                                                 <div class="form-group">
                                                     <label for="" class="form-label required">Sub Topic Name</label>
                                                     <input type="text" name="sub_topic_name[]" class="form-control subTopicNameInputBox" placeholder="Enter Sub Topic Name">
@@ -254,7 +254,7 @@ $(document).ready(function () {
                 // Add input fields without labels
                 var newRowWithoutLabels = `<div class='newAddedRows'>
                 <input type="hidden" name="source_type[]" value="url">
-                        <input type="hidden" name="file[]" value="">
+                <input type="hidden" name="file[]" value="">
                         <div class="form-group">
                             <input type="text" name="sub_topic_name[]" class="form-control subTopicNameInputBox" placeholder="Enter Sub Topic Name">
                             <p class="text-danger subTopicNameError"></p>
@@ -328,8 +328,10 @@ $(document).ready(function () {
 
                 labelsAdded = true;
             }else{
-                var newRowWithoutLabels = `<div class='newAddedRows'> <input type="hidden" name="source_type[]" value="file">
-                <input type="hidden" name="url[]" value="">
+                var newRowWithoutLabels = `<div class='newAddedRows'>
+
+                    <input type="hidden" name="source_type[]" value="file">
+                    <input type="hidden" name="url[]" value="">
                 <div class="form-group">
                     <input type="text" name="sub_topic_name[]" class="form-control subTopicNameInputBox" placeholder="Enter Sub Topic Name">
                     <p class="text-danger subTopicNameError"></p>
@@ -424,6 +426,8 @@ $(document).ready(function () {
         $('#addClassworkForm').submit(function (e) {
             e.preventDefault();
             // console.log('hello worl d');
+
+
 
             // Validate all fields
             validateField($('#gradeSelect'), $('#gradeSelectError'), 'Grade select field is required');
@@ -520,7 +524,125 @@ $(document).ready(function () {
 
 
             if ($('#gradeSelect').val() != '' && $('#classSelect').val() != '' && $('#curriculumSelect').val() != '' && $('#topicNameInputBox').val() != '' && $('.subTopicNameInputBox').val() != '' && $('.urlInputBox').val() != '' && $('.fileInputBox').val() != '') {
-                this.submit();
+                // $('input[type="hidden"][name="file[]"]').each(function() {
+                //     // Set the file value dynamically (replace 'example.pdf' with the desired file name)
+                //     $(this).val('../');
+
+
+                var formData = new FormData(this);
+
+                $(this).find('input,select').each(function(index, element) {
+                  var $element = $(element);
+                  var name = $element.attr('name');
+                  var value = $element.val();
+
+                  if (name == 'source_type[]' && value == 'url') {
+                    // Set the file value to null for "url" source type
+                    formData.append('file[]', null);
+                  } else {
+                    formData.append(name, value);
+                  }
+                });
+
+                // $(this).find('input').each(function(index, element) {
+                //     var $element = $(element);
+                //     var name = $element.attr('name');
+                //     var value = $element.val();
+
+                //     console.log('value is ' + value);
+
+                //     console.log(formData);
+
+                //     // Check if source_type[] is 'url'
+                //     if (name == 'source_type[]' && value == 'url[]') {
+                //         // Append null for file field
+                //         formData.append('file[]', null);
+
+                //     }
+                //     // else {
+                //     //     // Append regular form field
+                //     //     formData.append(name, value);
+                //     // }
+                // });
+
+                // // Handle file inputs separately
+                // $(this).find('input[type="file"]').each(function(index, element) {
+                //     var $element = $(element);
+                //     var name = $element.attr('name');
+                //     var file = $element[0].files[0];
+
+                //     // Append file only if it's not null
+                //     if (file) {
+                //         formData.append(name, file);
+                //     }
+                // });
+
+                // Send AJAX request
+                $.ajax({
+                    url: $(this).attr('action'), // URL from form action attribute
+                    method: $(this).attr('method'), // HTTP method from form method attribute
+                    data: formData,
+                    processData: false, // Prevent jQuery from processing the data
+                    contentType: false,
+                    success: function(response) {
+                        // Handle successful response
+                        console.log('Form submitted successfully');
+                        console.log(response);
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error
+                        console.log(error);
+                        console.error('Error submitting form:', error);
+                    }
+                });
+
+
+
+
+                // var files = $('input[type="file"]');
+
+                // files.each(function() {
+                //     var fileInput = $(this)[0];
+                //     var file = fileInput.files[0]; // Get the first file selected
+
+                //     // Append file to formData
+                //     formData.push({ name: fileInput.name, value: file });
+                // });
+                // var formData = new FormData
+
+                // Modify the formData array to set file value to null if source_type is url
+                // formData.forEach(function(item, index) {
+                //     if (item.name == 'source_type[]' && item.value == 'url') {
+                //         // If source type is url, set the corresponding file value to null
+                //         formData.splice(index + 1, 0, {name: 'file[]', value: null});
+                //     }
+                // });
+
+                // Send AJAX request
+                // $.ajax({
+                //     url: $(this).attr('action'), // URL from form action attribute
+                //     method: $(this).attr('method'), // HTTP method from form method attribute
+                //     // data: $.param(formData), // Form data
+                //     data: formData,
+                //     processData: false, // Prevent jQuery from processing the data
+                //     contentType: false,
+                //     success: function(response) {
+                //         // Handle successful response
+                //         // For example, show success message, redirect, etc.
+
+                //         alert('success');
+
+                //         console.log('Form submitted successfully');
+                //         console.log(response);
+                //     },
+                //     error: function(xhr, status, error) {
+                //         // Handle error
+                //         // For example, display error message
+                //         console.error('Error submitting form:', error);
+                //     }
+                // });
+
+
             }
         });
 

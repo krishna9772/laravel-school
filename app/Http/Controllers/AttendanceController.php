@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests\AttendanceSearchRequest;
+use DateTime;
 
 class AttendanceController extends Controller
 {
@@ -79,8 +80,52 @@ class AttendanceController extends Controller
         }])
         ->get();
 
-        $startDate = AcademicYear::first()->start_date;
-        $endDate = AcademicYear::first()->end_date;
+        $currentDate = new DateTime();
+
+        $academicYears = AcademicYear::all(); // Assuming AcademicYear::all() returns all academic years
+
+        // dd($academicYears);
+        // Initialize variables to hold the academic year
+        $academicYear = null;
+
+        // $startDate = AcademicYear::first()->start_date;
+        // $endDate = AcademicYear::first()->end_date;
+
+        $startDate = null;
+        $endDate = null;
+
+        if($academicYears != null || $academicYears != ''){
+            foreach ($academicYears as $year) {
+                $startingDate = new DateTime($year->start_date);
+                $endingDate = new DateTime($year->end_date);
+
+                // Check if the current date is within this academic year
+                if ($currentDate >= $startingDate && $currentDate <= $endingDate) {
+                    $academicYear = $year;
+
+                    $startDate = $academicYear->start_date;
+                    $endDate = $academicYear->end_date;
+
+                }else{
+                    $startDate = null;
+                    $endDate = null;
+                }
+            }
+        }else{
+            $startDate = null;
+            $endDate = null;
+        }
+
+
+
+
+        // Now you can use $academicYear as needed
+        // if ($academicYear) {
+        //     echo "The current academic year is: " . $academicYear->start_date . " to " . $academicYear->end_date;
+        // } else {
+        //     echo "No academic year found for the current date.";
+        // }
+
 
         $holidays = Holiday::select('date')->get();
 
@@ -108,19 +153,44 @@ class AttendanceController extends Controller
             }])
             ->get();
 
+            // dd($students->toArray());
+
+            $holidays = Holiday::whereMonth('date', $thisMonth)->pluck('date')->toArray();
+            // dd($holidays);
+
+            // Calculate weekends for the current month
+            $weekends = [];
+            $totalDays = Carbon::now()->daysInMonth;
+            for ($i = 1; $i <= $totalDays; $i++) {
+                $date = Carbon::createFromDate(Carbon::now()->year, $thisMonth, $i);
+                if ($date->isWeekend()) {
+                    $weekends[] = $date->format('Y-m-d');
+                }
+            }
+
+            $schoolOpenDayCount = $totalDays - count($holidays) - count($weekends);
+
+            // dd($schoolOpenDayCount);
+
+
         foreach ($students as $student) {
-            $totalAttendanceCount = 0;
+            // $totalAttendanceCount = 0;
             $presentCount = 0;
 
             foreach ($student->userGradeClasses as $userGradeClass) {
-                $totalAttendanceCount += $userGradeClass->attendances->count();
+                // $totalAttendanceCount += $userGradeClass->attendances->count();
                 $presentCount += $userGradeClass->attendances->where('status', 'present')->count();
             }
 
-            $student->percentage = $totalAttendanceCount > 0 ? ($presentCount / $totalAttendanceCount) * 100 : 0;
+            $student->percentage = $schoolOpenDayCount > 0 ? ($presentCount / $schoolOpenDayCount) * 100 : 0;
         }
 
+
+
+        // dd($students->toArray());
+
         $dateToShow = Carbon::now();
+
 
         if ($dateToShow->isWeekend()) {
             $dateToShow = $dateToShow->previous(Carbon::FRIDAY);
@@ -178,16 +248,33 @@ class AttendanceController extends Controller
             }])
             ->get();
 
+            $holidays = Holiday::whereMonth('date', $month)->pluck('date')->toArray();
+            // dd($holidays);
+
+            $weekends = [];
+            $totalDays = Carbon::now()->daysInMonth;
+            for ($i = 1; $i <= $totalDays; $i++) {
+                $date = Carbon::createFromDate(Carbon::now()->year, $month, $i);
+                if ($date->isWeekend()) {
+                    $weekends[] = $date->format('Y-m-d');
+                }
+            }
+
+            $schoolOpenDayCount = $totalDays - count($holidays) - count($weekends);
+
+
+
+
         foreach ($students as $student) {
-            $totalAttendanceCount = 0;
+            // $totalAttendanceCount = 0;
             $presentCount = 0;
 
             foreach ($student->userGradeClasses as $userGradeClass) {
-                $totalAttendanceCount += $userGradeClass->attendances->count();
+                // $totalAttendanceCount += $userGradeClass->attendances->count();
                 $presentCount += $userGradeClass->attendances->where('status', 'present')->count();
             }
 
-            $student->percentage = $totalAttendanceCount > 0 ? ($presentCount / $totalAttendanceCount) * 100 : 0;
+            $student->percentage = $schoolOpenDayCount > 0 ? ($presentCount / $schoolOpenDayCount) * 100 : 0;
         }
 
         $thisMonth = Carbon::now()->month();

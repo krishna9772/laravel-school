@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ClassworkRequest;
-use App\Http\Requests\ClassworkSearchRequest;
+use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Grade;
 use App\Models\Classes;
 use App\Models\ClassWork;
 use App\Models\Curriculum;
-use App\Models\Grade;
-use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use PhpParser\Builder\Class_;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\ClassworkRequest;
+use Illuminate\Support\Facades\Session;
+use App\Http\Requests\ClassworkSearchRequest;
+use Illuminate\Support\Facades\Session as FacadesSession;
 
 class ClassworkController extends Controller
 {
@@ -76,52 +78,128 @@ class ClassworkController extends Controller
 
     public function store(Request $request)
     {
+        Log::info("hello world");
+        Log::info($request->all());
 
-        // dd($request->all());
-        // Retrieve data from the request
-        $gradeId = $request->gradeSelect;
-        $classId = $request->classSelect;
-        $curriculumId = $request->curriculumSelect;
-        $topicName = $request->topic_name;
-        $sourceTitles = $request->source_title;
-        $urls = $request->url;
-        $files = $request->file;
-        $sourceTypes = $request->source_type;
-        $subTopicNames = $request->sub_topic_name; // Default to empty array if null
+        $classwork = new Classwork();
 
-        foreach ($sourceTitles as $index => $sourceTitle) {
-            // Retrieve sub topic name if available
-            // $subTopicName = isset($subTopicNames[$index]) ? $subTopicNames[$index] : null;
+        foreach ($request->source_type as $index => $type) {
 
-            $classwork = Classwork::create([
-                'grade_id' => $gradeId,
-                'class_id' => $classId,
-                'curriculum_id' => $curriculumId,
-                'topic_name' => $topicName,
-                'source_title' => $sourceTitle,
-                'sub_topic_name' => $subTopicNames[$index]
-            ]);
+            $classwork->grade_id = $request->gradeSelect;
+            $classwork->class_id = $request->classSelect;
+            $classwork->curriculum_id = $request->curriculumSelect;
+            $classwork->topic_name = $request->topic_name;
+            $classwork->source_title = $request->source_title[$index];
+            $classwork->sub_topic_name = $request->sub_topic_name[$index];
+
+            if ($type == 'url') {
+                $classwork->url = $request->url[$index];
+
+                $classwork->file = null;
+            } elseif ($type == 'file') {
+
+                $file = $request->file;
+
+                $fileName = uniqid() . '_' . $file->getClientOriginalName();
+
+                $classwork->storeAs('public/classwork_files',$fileName);
+
+                // $fileName = $request->file[]->getClientOriginalName();
+                Log::info("file name is " . $fileName);
 
 
-            if ($sourceTypes[$index] == 'url') {
-                $url = $urls[$index] ?? null;
-                $classwork->update(['url' => $url]);
-            } else {
-                $file = $files[$index] ?? null;
 
-                if($file != null){
-                    $fileName = uniqid() . $file->getClientOriginalName();
-                    // dd($fileName);
-
-                    $file->storeAs('public/classwork_files',$fileName);
-
-                    $classwork->update(['file' => $fileName]);
-                }
+                // $classwork->file = $request->file[$index]->getClientOriginalExtension();
+                // $source['file'] = $request->file[$index]->store('classwork_files');
+                $classwork->url = null;
             }
+
+            $classwork->save();
         }
 
-        return redirect()->route('classworks.search');
+        // Save the classwork
+        // $classwork->save();
+
+        // Optionally, log the saved data
+        Log::info('Classwork saved:', $classwork->toArray());
     }
+
+
+    // public function store(Request $request)
+    // {
+
+    //     $classwork = new Classwork();
+
+    //     // Assign request data to model attributes
+    //     $classwork->grade = $request->gradeSelect;
+    //     $classwork->class = $request->classSelect;
+    //     $classwork->curriculum = $request->curriculumSelect;
+    //     $classwork->topic_name = $request->topic_name;
+
+    //     // Loop through source_type array to handle multiple sources
+    //     foreach ($request->source_type as $index => $type) {
+    //         $source = [
+    //             'type' => $type,
+    //             'title' => $request->source_title[$index],
+    //         ];
+
+    //         // Depending on source type, assign appropriate data
+    //         if ($type === 'url') {
+    //             $source['url'] = $request->url[$index];
+    //         } elseif ($type === 'file') {
+    //             // Here, you can handle file upload and storage logic
+    //             // For now, I'm assuming you'll store the file path
+    //             $source['file'] = $request->file[$index];
+    //         }
+
+    //         // Add source to classwork
+    //         $classwork->sources()->create($source);
+    //     }
+
+    //     // Save the classwork
+    //     $classwork->save();
+
+    //     // Optionally, log the saved data
+    //     Log::info('Classwork saved:', $classwork->toArray());
+
+    //     // dd($request->all());
+
+    //     // foreach ($request->input('source_type') as $key => $sourceType) {
+    //     //     // dd($key);
+    //     //     $classwork = new Classwork();
+    //     //     $classwork->grade_id = $request->input('gradeSelect');
+    //     //     $classwork->class_id = $request->input('classSelect');
+    //     //     $classwork->curriculum_id = $request->input('curriculumSelect');
+    //     //     $classwork->topic_name = $request->input('topic_name');
+    //     //     // $classwork->source_type = $sourceType;
+    //     //     $classwork->sub_topic_name = $request->input('sub_topic_name.'.$key);
+    //     //     $classwork->source_title = $request->input('source_title.'.$key);
+
+    //     //     // Handle URL or file based on source type
+    //     //     if ($sourceType === 'url') {
+    //     //         $classwork->url = $request->input('url.'.$key);
+    //     //         $classwork->file = null; // Set file to null if URL is provided
+    //     //     } else {
+    //     //         // Handle file upload
+    //     //         if ($request->hasFile('file.'.$key)) {
+    //     //             $file = $request->file('file.'.$key);
+    //     //             $fileName = $file->getClientOriginalName();
+    //     //             $file->storeAs('uploads', $fileName); // Store the file
+    //     //             $classwork->file = $fileName;
+    //     //         }
+    //     //         $classwork->url = null; // Set URL to null if file is provided
+    //     //     }
+
+    //     //     $classwork->save();
+    //     // }
+
+    //     Session::put('message','Successfully added !');
+    //     Session::put('alert-type','success');
+
+    //     return response()->json('success', 200);
+
+    //     // return redirect()->route('classworks.search');
+    // }
 
     public function search() {
 
@@ -248,6 +326,10 @@ class ClassworkController extends Controller
             }
 
         }
+
+        Session::put('message','Successfully updated !');
+        Session::put('alert-type','success');
+
         return redirect()->route('classworks.index');
     }
 

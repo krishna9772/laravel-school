@@ -61,6 +61,7 @@ class UserController extends Controller
         // update capacity
         if ($request->user_type == 'student') {
             Classes::where('id', $request->class_select)->update(['capacity' => DB::raw('IFNULL(capacity, 0) + 1')]);
+            $user->assignRole('student');
         }
 
 

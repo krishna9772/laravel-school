@@ -24,132 +24,154 @@
 
 @section('content')
 
+@if ($startDate == null || $endDate == null)
+<div class="container mx-auto d-flex justify-content-center align-items-center row col-5" style="height: 70vh">
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="card p-5">
+           <h5 class="mb-5 mt-2">
+            You have not created academic year <br>
+            {{-- Please create academic year first --}}
+           </h5>
+
+            <a href="{{route('academic-years.index')}}" class="btn btn-primary">Create Academic Year</a>
+        </div>
+    </div>
+</div>
+
+@else
 <div class="mx-5 py-5">
 
-        <input type="hidden" name="grade_select" id="gradeIdInputBox" value="{{$gradeId}}">
-        <input type="hidden" name="class_select" id="classIdInputBox" value="{{$classId}}">
+    <input type="hidden" name="grade_select" id="gradeIdInputBox" value="{{$gradeId}}">
+    <input type="hidden" name="class_select" id="classIdInputBox" value="{{$classId}}">
 
-        <input type="hidden" id="startDate" value="{{$startDate}}">
-        <input type="hidden" id="endDate" value="{{$endDate}}">
+    <input type="hidden" id="startDate" value="{{$startDate}}">
+    <input type="hidden" id="endDate" value="{{$endDate}}">
 
-         <div class="d-flex justify-content-between mb-4">
-             <h3 class="text-capitalize">{{$gradeName}} / {{$className}} / Mark Attendance</h3>
+     <div class="d-flex justify-content-between mb-4">
+         <h3 class="text-capitalize">{{$gradeName}} / {{$className}} / Mark Attendance</h3>
 
-             {{-- <input type="date" class=" form-control" style="width: 12%" id="dateInput" value="{{$dateToShow}}"> --}}
+         {{-- <input type="date" class=" form-control" style="width: 12%" id="dateInput" value="{{$dateToShow}}"> --}}
 
-             <div class="form-group">
-                {{-- <label for="datepicker" class="required">Start Date:</label> --}}
-                <div class="input-group">
-                  <input type="text" class="form-control custom-placeholder changeInputStyle admissionDateClass" name="date" style="width: 12%" id="dateInput" value="{{$dateToShow}}">
-                  <div class="input-group-append">
-                    <span class="input-group-text" id="datepicker-icon" style="cursor: pointer"><i class="fas fa-calendar-alt"></i></span>
-                  </div>
-                </div>
+         <div class="form-group">
+            {{-- <label for="datepicker" class="required">Start Date:</label> --}}
+            <div class="input-group">
+              {{-- <input type="text" class="form-control custom-placeholder changeInputStyle admissionDateClass" name="date" style="width: 12%" id="dateInput" value="{{$dateToShow}}" readonly> --}}
+              <input type="text" class="form-control admissionDateClass" name="date" style="width: 12%" id="dateInput" value="{{$dateToShow}}" readonly>
+              <div class="input-group-append">
+                {{-- <span class="input-group-text" id="datepicker-icon" style="cursor: pointer"> --}}
+                <span class="input-group-text" id="" style="cursor: pointer">
+                    <i class="fas fa-calendar-alt"></i>
+                </span>
+              </div>
             </div>
-             {{-- <input type="date" class=" form-control" style="width: 12%" id="dateInput" value="{{$dateToShow}}"> --}}
+        </div>
+         {{-- <input type="date" class=" form-control" style="width: 12%" id="dateInput" value="{{$dateToShow}}"> --}}
 
-         </div>
-
-
-         <div class="">
+     </div>
 
 
-                @csrf
-                <table id="studentsTable" class="w-100 my-3 table table-striped" >
-                    <thead>
+     <div class="">
+
+
+            @csrf
+            <table id="studentsTable" class="w-100 my-3 table table-striped" >
+                <thead>
+                    <tr>
+                        <th class="text-center col-1">No</th>
+                        <th class="text-center">Student ID</th>
+                        <th class="text-center">Student Name</th>
+                        <th class="text-center">Father Name</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php $count = 1 @endphp
+                    @foreach ($students as $student)
+                        <?php
+                            // dd('status is ' . $student->userGradeClasses[0]->attendances[0]->status);
+                        ?>
+                        <div class="userList">
                         <tr>
-                            <th class="text-center col-1">No</th>
-                            <th class="text-center">Student ID</th>
-                            <th class="text-center">Student Name</th>
-                            <th class="text-center">Father Name</th>
-                            <th class="text-center">Status</th>
-                            <th class="text-center">Reason</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php $count = 1 @endphp
-                        @foreach ($students as $student)
-                            <?php
-                                // dd('status is ' . $student->userGradeClasses[0]->attendances[0]->status);
-                            ?>
-                            <div class="userList">
-                            <tr>
-                                <td class="text-center col-1">{{ $count++ }}</td>
-                                <td class="text-center">{{$student->user_id}}</td>
-                                <td class="text-center">{{ $student->user_name }}</td>
-                                <td class="text-center">{{$student->father_name ?? '-'}}</td>
-                                <td class="text-center">
-                                    <input type="hidden" name="student_id" value="{{$student->user_id}}">
-                                    <input type="hidden" name="user_grade_class_id" value="{{$student->userGradeClasses[0]->id}}">
+                            <td class="text-center col-1">{{ $count++ }}</td>
+                            <td class="text-center">{{$student->user_id}}</td>
+                            <td class="text-center">{{ $student->user_name }}</td>
+                            <td class="text-center">{{$student->father_name ?? '-'}}</td>
+                            <td class="text-center">
+                                <input type="hidden" name="student_id" value="{{$student->user_id}}">
+                                <input type="hidden" name="user_grade_class_id" value="{{$student->userGradeClasses[0]->id}}">
 
-                                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                        <label class="btn
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    <label class="btn
 
-                                        @if (isset($student->userGradeClasses[0]) && isset($student->userGradeClasses[0]->attendances[0]))
-                                        @if($student->userGradeClasses[0]->attendances[0]->status == 'present')
-                                            btn-success
-                                        @else
-                                            btn-white
-                                        @endif
+                                    @if (isset($student->userGradeClasses[0]) && isset($student->userGradeClasses[0]->attendances[0]))
+                                    @if($student->userGradeClasses[0]->attendances[0]->status == 'present')
+                                        btn-success
+                                    @else
+                                        btn-white
                                     @endif
-                                            mr-1 border border-secondary active ">
-                                          <input type="radio" name="status[{{ $student->user_id }}]" value="present" autocomplete="off" checked> P
-                                        </label>
+                                @endif
+                                        mr-1 border border-secondary active ">
+                                      <input type="radio" name="status[{{ $student->user_id }}]" value="present" autocomplete="off" checked> P
+                                    </label>
 
-                                        <label class="btn
-                                            @if (isset($student->userGradeClasses[0]) && isset($student->userGradeClasses[0]->attendances[0]))
-                                                @if ($student->userGradeClasses[0]->attendances[0]->status == 'absent' )
-                                                    btn-warning
-                                                @else ($student->userGradeClasses[0]->attendances[0]->status == 'leave')
-                                                    btn-white
-                                                @endif
-                                            @endif
-                                            mr-1 border border-secondary">
-                                            <input type="radio" name="status[{{ $student->user_id }}]" value="absent" autocomplete="off"> A
-                                        </label>
-
-                                        <label class="btn
-
+                                    <label class="btn
                                         @if (isset($student->userGradeClasses[0]) && isset($student->userGradeClasses[0]->attendances[0]))
-                                            @if ($student->userGradeClasses[0]->attendances[0]->status == 'leave')
-                                                btn-danger
+                                            @if ($student->userGradeClasses[0]->attendances[0]->status == 'absent' )
+                                                btn-warning
                                             @else ($student->userGradeClasses[0]->attendances[0]->status == 'leave')
                                                 btn-white
                                             @endif
                                         @endif
+                                        mr-1 border border-secondary">
+                                        <input type="radio" name="status[{{ $student->user_id }}]" value="absent" autocomplete="off"> A
+                                    </label>
 
-                                        border border-secondary">
-                                          <input type="radio" name="status[{{ $student->user_id }}]" value="leave" autocomplete="off"> L
-                                        </label>
-                                      </div>
-
-                                </td>
-                                <td class="text-center col-3">
+                                    <label class="btn
 
                                     @if (isset($student->userGradeClasses[0]) && isset($student->userGradeClasses[0]->attendances[0]))
-                                        @if ($student->userGradeClasses[0]->attendances[0]->reason == null || $student->userGradeClasses[0]->attendances[0]->reason == '' )
-                                            <button type="button" class="btn btn-primary" id="reasonButton"><i class="fa fa-edit mr-2" aria-hidden="true"></i>Reason </button>
-                                        @else
-                                        <div class="d-flex">
-                                            <input type="text" class="reasonInput form-control mr-2" placeholder="Enter Reason" value="{{$student->userGradeClasses[0]->attendances[0]->reason}}">
-                                            <button type="button" id="" class="saveButton btn btn-success mr-1">Save</button>
-                                            <button type="button" class="btn btn-sm btn-danger" id="cancelBtn">
-                                                <i class="fa fa-times" aria-hidden="true"></i>
-                                            </button>
-                                        </div>
+                                        @if ($student->userGradeClasses[0]->attendances[0]->status == 'leave')
+                                            btn-danger
+                                        @else ($student->userGradeClasses[0]->attendances[0]->status == 'leave')
+                                            btn-white
                                         @endif
-                                    @else
-                                        <button type="button" class="btn btn-primary" id="reasonButton"><i class="fa fa-edit mr-2" aria-hidden="true"></i>Reason </button>
                                     @endif
-                                </td>
-                            </tr>
-                        </div>
-                        @endforeach
-                    </tbody>
-                </table>
-        </div>
+
+                                    border border-secondary">
+                                      <input type="radio" name="status[{{ $student->user_id }}]" value="leave" autocomplete="off"> L
+                                    </label>
+                                  </div>
+
+                            </td>
+                            <td class="text-center col-3">
+
+                                @if (isset($student->userGradeClasses[0]) && isset($student->userGradeClasses[0]->attendances[0]))
+                                    @if ($student->userGradeClasses[0]->attendances[0]->reason == null || $student->userGradeClasses[0]->attendances[0]->reason == '' )
+                                        <button type="button" class="btn btn-primary" id="reasonButton"><i class="fa fa-edit mr-2" aria-hidden="true"></i>Reason </button>
+                                    @else
+                                    <div class="d-flex">
+                                        <input type="text" class="reasonInput form-control mr-2" placeholder="Enter Reason" value="{{$student->userGradeClasses[0]->attendances[0]->reason}}">
+                                        <button type="button" id="" class="saveButton btn btn-success mr-1">Save</button>
+                                        <button type="button" class="btn btn-sm btn-danger" id="cancelBtn">
+                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    @endif
+                                @else
+                                    <button type="button" class="btn btn-primary" id="reasonButton"><i class="fa fa-edit mr-2" aria-hidden="true"></i>Reason </button>
+                                @endif
+                            </td>
+                        </tr>
+                    </div>
+                    @endforeach
+                </tbody>
+            </table>
+    </div>
 
 </div>
+@endif
+
+
 
 @endsection
 
@@ -353,26 +375,26 @@
 
         console.log('disabled  dates are ' + disabledDates);
 
-        $('#dateInput').datepicker({
-            format: 'yyyy-mm-dd',
-            autoclose: true,
-            startDate: startDate,
-            endDate: endDate,
-            beforeShowDay: function(date) {
+        // $('#dateInput').datepicker({
+        //     format: 'yyyy-mm-dd',
+        //     autoclose: true,
+        //     startDate: startDate,
+        //     endDate: endDate,
+        //     beforeShowDay: function(date) {
 
-                var dateString = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+        //         var dateString = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
 
-                var isHoliday = disabledDates.find(function(holidayDate) {
-                    return holidayDate.toISOString().split('T')[0] === dateString;
-                });
+        //         var isHoliday = disabledDates.find(function(holidayDate) {
+        //             return holidayDate.toISOString().split('T')[0] === dateString;
+        //         });
 
-                var isWeekend = date.getDay() === 0 || date.getDay() === 6;
+        //         var isWeekend = date.getDay() === 0 || date.getDay() === 6;
 
-                return {
-                    enabled: !isHoliday && !isWeekend
-                };
-            }
-        });
+        //         return {
+        //             enabled: !isHoliday && !isWeekend
+        //         };
+        //     }
+        // });
 
         $('#datepicker-icon').click(function() {
           $('#dateInput').datepicker('show');

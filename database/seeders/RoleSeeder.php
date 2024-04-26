@@ -33,6 +33,11 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'manage timetables']);
         Permission::create(['name' => 'manage exam marks']);
         Permission::create(['name' => 'manage academic year']);
+        Permission::create(['name' => 'view exam marks']);
+        Permission::create(['name' => 'edit classworks']);
+        Permission::create(['name' => 'view classworks']);
+        Permission::create(['name' => 'view timetables']);
+        // Permission::create(['name' => 'edit classworks']);
 
 
         $admin = Role::findByName('admin');
@@ -47,19 +52,18 @@ class RoleSeeder extends Seeder
             'manage classworks',
             'manage exam marks',
             'manage timetables',
-            'manage academic year'
+            'manage academic year',
         ]);
 
         $subjectTeacher = Role::findByName('subject teacher');
         $subjectTeacher->givePermissionTo([
-            'manage classworks',
-            'manage promotions',
-            'manage timetables'
-
+            'view timetables',
+            'edit classworks'
         ]);
 
         $classTeacher = Role::findByName('class teacher');
         $classTeacher->givePermissionTo([
+            'manage timetables',
             'manage promotions',
             'manage attendances',
             'manage exam marks',
@@ -67,7 +71,9 @@ class RoleSeeder extends Seeder
 
         $student = Role::findByName('student');
         $student->givePermissionTo([
-            ''
+            'view timetables',
+            'view exam marks',
+            'view classworks',
         ]);
 
 

@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Storage;
 use Validator;
 use Illuminate\Support\Facades\Input;
 use Session;
+use DB;
 
 class ExamMarkController extends Controller
 {
@@ -31,8 +32,6 @@ class ExamMarkController extends Controller
 
         $gradeName = Grade::where('id',$request->grade_select)->value('grade_name');
         $user_grade_id = UserGradeClass::where('grade_id',$request->grade_select)->with('examMarks')->get();
-        return $user_grade_id;
-        $examSubject = SubjectMark::where('exam_id',$user_grade_id->examMarks()->id)->get();
         $grade = Grade::where('id',$request->grade_select)->with('examSubjects')->get();
         $gradeResult = $grade[0]->examSubjects;
 
@@ -46,49 +45,44 @@ class ExamMarkController extends Controller
         ->with('userGradeClasses.examMarks')
         ->get();
 
-        // dd($students->toArray());
-        // dd($students[0]->userGradeClasses[0]->examMarks[0]->file);
-
         return view('exam_marks.new_exam_marks',compact('students','gradeName','className','gradeResult'));
 
     }
 
-    public function store(Request $request){
-        // dd($request->all());
+    public function store(ExamMarkRequest $request){
 
         Log::info($request->all());
 
-        // $file = $request->file;
+        $file = $request->file;
 
-        // $fileName = uniqid() . '_' . $file->getClientOriginalName();
+        $fileName = uniqid() . '_' . $file->getClientOriginalName();
 
-        // $file->storeAs('public/exam_marks_files',$fileName);
+        $file->storeAs('public/exam_marks_files',$fileName);
 
-        // ExamMark::updateOrCreate([
-        //     'user_grade_class_id' => $request->user_grade_class_id,
-        // ],[
-        //     'file' => $fileName,
-        // ]);
-
-        $subjectNames = $request->subjects;
-        $marks = $request->marks;
-
-        // return $marks;
-
-        $exam_id = ExamMark::updateOrCreate([
+        ExamMark::updateOrCreate([
             'user_grade_class_id' => $request->user_grade_class_id,
-        ])->id;
+        ],[
+            'file' => $fileName,
+        ]);
 
-        foreach ($subjectNames as $index => $subject) {
+        // $subjectNames = $request->subjects;
+        // $marks = $request->marks;
+
+
+        // $exam_id = ExamMark::updateOrCreate([
+        //     'user_grade_class_id' => $request->user_grade_class_id,
+        // ])->id;
+
+        // foreach ($subjectNames as $index => $subject) {
             
-            SubjectMark::updateOrCreate([
-                'exam_mark_id' => $exam_id,
-                'subject' => $subject,
-                'marks' => $marks[$index],
+        //     SubjectMark::updateOrCreate([
+        //         'exam_mark_id' => $exam_id,
+        //         'subject' => $subject,
+        //         'marks' => $marks[$index],
 
-            ]);
+        //     ]);
 
-        }
+        // }
 
         Session::put('message','Successfully added !');
         Session::put('alert-type','success');

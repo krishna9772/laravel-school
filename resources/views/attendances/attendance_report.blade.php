@@ -92,12 +92,12 @@
                                     <td class="text-center">{{$student->user_id}}</td>
                                     <td class="text-center">{{ $student->user_name }}</td>
                                     <td class="text-center">{{$student->father_name}}</td>
-                                    <td class="text-center">
+                                    <td class="text-center bg-secondary">
 
                                         <div class="progress">
                                             <div class="progress-bar progress-bar-striped active bg-success" role="progressbar"
-                                            aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:{{$student->percentage}}%; ">
-                                            {{$student->percentage}}%
+                                            aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:{{number_format($student->percentage,'0')}}0%; ">
+                                            {{number_format($student->percentage,'1')}} %
                                             </div>
                                           </div>
 
@@ -191,6 +191,9 @@
                                                     break;
                                             }
 
+                                        }else{
+
+                                            $badgeClass = '';
                                         }
 
 

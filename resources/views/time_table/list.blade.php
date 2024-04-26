@@ -33,7 +33,7 @@
                             <td class="text-center">{{$timetable->class_name}}</td>
                             <td class="text-center">
                                 <a href="{{asset('storage/timetable_files/'. $timetable->file)}}" download>
-                                    {{$timetable->file}}
+                                    <span class="badge badge-success"><i class="fas fa-file-download fa-2x"></i></span>
                                 </a>
                             </td>
                         </tr>

@@ -12,8 +12,8 @@
             <div class="d-flex justify-content-between ">
                 <h3>All Exam Subjects</h3>
                 <div class="">
-                    <a href="{{route('exam-marks.subjects')}}">
-                        <button class="btn btn-primary"> <i class="fa fa-plus"></i> New Subject</button>
+                    <a href="{{route('exam-marks.subject')}}">
+                        <button class="btn btn-primary"> <i class="fa fa-plus"></i> New Exam Subject</button>
                     </a>
                 </div>
             </div>
@@ -66,11 +66,11 @@
                 No Classes Created Yet
             </h4>
 
-            <div class="mt-5">
+            {{-- <div class="mt-5">
                 <a href="{{route('classes.createNewClass') }}">
                     <button class="btn btn-primary"> <i class="fa fa-plus"></i> Create Class</button>
                 </a>
-            </div>
+            </div> --}}
         </div>
 
         @endif

@@ -97,6 +97,17 @@ class AttendanceController extends Controller
 
         $thisMonth = date('n');
 
+        $year = date('Y');
+
+        $academic_year = AcademicYear::where('academic_year', '=', $year)->first();
+
+        $toDate = Carbon::parse($academic_year->start_date);
+        $fromDate = Carbon::parse($academic_year->end_date);
+  
+        $days = $toDate->diffInDays($fromDate);  
+
+        // return $days;
+
         // for monthly show
         $students = User::where('user_type', 'student')
             ->whereHas('userGradeClasses', function ($query) use ($request) {
@@ -108,6 +119,7 @@ class AttendanceController extends Controller
             }])
             ->get();
 
+
         foreach ($students as $student) {
             $totalAttendanceCount = 0;
             $presentCount = 0;
@@ -117,7 +129,7 @@ class AttendanceController extends Controller
                 $presentCount += $userGradeClass->attendances->where('status', 'present')->count();
             }
 
-            $student->percentage = $totalAttendanceCount > 0 ? ($presentCount / $totalAttendanceCount) * 100 : 0;
+            $student->percentage = $totalAttendanceCount > 0 ? ($presentCount / $days) * 100 : 0;
         }
 
         $dateToShow = Carbon::now();

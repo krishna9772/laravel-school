@@ -52,6 +52,10 @@
             cursor: pointer;
         }
 
+        .error{
+        outline: 1px solid red;
+    } 
+
   </style>
 @endsection
 
@@ -108,31 +112,36 @@
                                         // dd($student->userGradeClasses[0]->examMarks[0]->file);
                                     ?>
 
-                                    <div class="form-group d-flex ">
+                                    <div class="form-group d-flex-column ">
                                         
-                                        {{-- <div class="input-group ml-3"> --}}
-                                            {{-- <div class="custom-file"> --}}
-                                            {{-- <input type="file" class="custom-file-input" id="exampleInputFile">
-                                            <label class="custom-file-label" for="exampleInputFile">
-                                                {{ $student->userGradeClasses[0]->examMarks[0]->file ?? 'Choose File' }}
-                                            </label> --}}
-                                          
-                                            {{-- </div> --}}
-                                        {{-- </div> --}}
-                                        <a type="button" class="nav-link border-0" data-toggle="modal" data-target="#subject_marks">
-                                            {{-- <i class="nav-icon fas fa-sign-out-alt "></i> Logout --}}
-                                            {{-- <label for="examMarks">Exam Marks</label> --}}
-                                            {{-- <input type="number" id="examMarks" name="examMarks" placeholder=""> --}}
-    
+                                        <div class="input-group ml-3">
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="exampleInputFile">
+                                                <label class="custom-file-label" for="exampleInputFile">
+                                                    {{ $student->userGradeClasses[0]->examMarks[0]->file ?? 'Choose File' }}
+                                                </label>
+                                               
+                                            </div>
+                                            
+                                        </div>
+                                        {{-- <a type="button" class="nav-link border-0" data-toggle="modal" data-target="#subject_marks">
                                             <label class="badge badge-success text-white"><i class="fas fa-plus"></i> Add</label>
                                             
                                         </a> 
 
-                                        
-                                        
-                                      
-                                       
-                                          
+                                        <a type="button" class="nav-link border-0" data-toggle="modal" data-target="#subject_marks" id="subjectmark" hidden>
+
+                                            <label for="exam-result" class="badge badge-success"><i class="fas fa-calendar"></i>  Results</label>
+
+                                        </a> --}}
+                                        @if($student->userGradeClasses[0]->examMarks[0]->file != '')
+                                            {{-- <iframe src="{{ asset('storage/app/public/exam_marks_files/') }}/{{ $student->userGradeClasses[0]->examMarks[0]->file }}"  width="50" height="50"></iframe> --}}
+                                                <a class="nav-icon" href="{{asset('storage/exam_marks_files/'. $student->userGradeClasses[0]->examMarks[0]->file)}}" download>
+                                                    <span class="badge badge-success"><i class="fas fa-file-download fa-2x"></i></span>
+                                                </a>
+                                            @else
+
+                                            @endif
                                     </div>
                                                                
                                     
@@ -158,17 +167,16 @@
                                     </button>
                                     </p>
                                 </div>
-                                <form id="subjectMarksForm" method="POST" action="{{route('exam-marks.store')}}">
-                                    @csrf
+                                <form id="subjectMarksForm">
                                     <div class="modal-body py-4">
 
                                     
                                         @php
                                             $count = 1;
-                                            @endphp
+                                            @endphp                                            
+                                    <div class="row">
 
                                         @foreach($gradeResult as $row)
-                                            <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <input type="text" class="form-control" name="subjects[]" id="subjects" placeholder="eg: English" value={{$row->subject}} readonly>
@@ -178,13 +186,13 @@
                                                 </div>
                                               
                                                 <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <input type="text" class="form-control" name="marks[]" value="{{$row->marks}}" id="marks" placeholder="eg: 80" onkeypress='validate(event)' required>
-                                                        {{$row}}
+                                                    <div class="form-group required">
+                                                        <input type="text" class="form-control" name="marks[]" id="marks" placeholder="eg: 80" onkeypress='validate(event)' required>
                                                     </div>
                                                 </div>
-                                            </div>
                                         @endforeach
+                                                                                    </div>
+
                                         <div class="modal-footer  justify-content-center ">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                                             <button type="button" class="btn btn-danger" id="saveExamSubject">Save</a>
@@ -266,10 +274,13 @@
                 contentType: false,
                 success: function(response) {
 
-                    console.log('File uploaded successfully');
+                    toastr.options.timeOut = 5000;
+                    window.location.reload();
                 },
                 error: function(xhr, status, error) {
-
+                    toastr.options.timeOut = 5000;
+                    toastr.success('Error file uploading!');
+                    {{Session::forget('message')}}
                     console.error('Error uploading file:', error);
                 }
             });
@@ -302,26 +313,38 @@
         })
 
         $('#saveExamSubject').click(function (e) {
-            submitForm();
+            // $("input[name=marks[]]").val();
+            var isFormValid = true;
+
+            $('#subjectMarksForm input[id="marks"]').each(function(){
+                if ($.trim($(this).val()).length == 0){
+                    $(this).addClass("error");
+                    isFormValid = false;
+                }
+                else{
+                    $(this).removeClass("error");
+                    submitForm();
+
+                }
+            });
+            if (!isFormValid) alert("Please fill in all the required fields (indicated by *)");
+
+            return isFormValid;
         });
     });
 
 
         function submitForm()
         {
-
-            // $('#subjects').each(function() {
-            //     var subjectId = $(this).val();
-            //     console.log(subjectId);
-            // });
-
             $.ajax({
                 type: 'POST',
                 url: '{{ route('exam-marks.store') }}',
                 data: $('#subjectMarksForm').serialize(),
                 success: function (response) {
                     if(response == 'success'){
-                        window.location.href = '{{ route('exam-marks.subject') }}';
+                        // window.location.href = '{{ route('exam-marks.subject') }}';
+                        $('#subjectmark').removeAttr('hidden');
+                        $("#subjectMarksForm").modal('hide');
                     }
                 },
                 error: function(xhr, status, error) {

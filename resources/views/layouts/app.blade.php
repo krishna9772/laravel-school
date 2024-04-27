@@ -101,6 +101,13 @@
                     }
                     {{Session::forget('message')}}
                 @endif
+
+                $('#examSubmit').click(function (e) {
+
+                    $("#examResults").submit();
+
+                });
+
         </script>
 
 

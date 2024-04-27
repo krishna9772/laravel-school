@@ -499,13 +499,23 @@
                     @endcan
                     @can(['view exam marks'])
                         <li class="nav-item">
-                            <form action="{{route('exam-marks.search.results')}}" method="POST" >
+                            <form id="examResults" action="{{route('exam-marks.search.results')}}" method="POST" >
                                 @csrf
-                                <input type="hidden" name="value" value="value">
-                                <button class="nav-link {{ Route::is('exam-marks.edit') ? 'active'  : '' }}">
-                                <i class="far fa-circle nav-icon" id=""></i>
+                                <a href="#" class="nav-link {{ Route::is('exam-marks.edit') ? 'active'  : '' }}" id="examSubmit">
+                                    @if(Route::is('exam-marks.search.results'))
+
+                                        <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+
+
+                                    @else
+
+                                        <i class="far fa-circle nav-icon" id=""></i>
+
+
+                                    @endif
+                                
                                 <p>View</p>
-                                </button>
+                                </a>
                             </form>
                         </li>
                     @endcan

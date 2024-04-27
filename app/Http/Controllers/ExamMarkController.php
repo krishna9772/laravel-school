@@ -44,7 +44,7 @@ class ExamMarkController extends Controller
     
             $className = Classes::where('id',$classId)->value('class_name');
     
-            $students = User::where('user_type', 'student')
+            $students = User::where('user_type', 'student')->where('user_id',Auth::user()->id)
             ->whereHas('userGradeClasses', function ($query) use ($gradeId,$classId) {
                 $query->where('grade_id', $gradeId)
                     ->where('class_id', $classId);

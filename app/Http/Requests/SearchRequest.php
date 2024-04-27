@@ -29,7 +29,7 @@ class SearchRequest extends FormRequest
             ];
         }else{
 
-        return [];
+            return [];
         }
     }
 }

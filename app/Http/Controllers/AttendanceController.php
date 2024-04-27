@@ -126,6 +126,14 @@ class AttendanceController extends Controller
         //     echo "No academic year found for the current date.";
         // }
 
+        if(AcademicYear::first() == '')
+        {
+            return redirect()->route('academic-years.index')->with("message","Please fill academic settings first")->with("alert-type","warning");
+        }
+
+        $startDate = AcademicYear::first()->start_date;
+
+        $endDate = AcademicYear::first()->end_date;
 
         $holidays = Holiday::select('date')->get();
 

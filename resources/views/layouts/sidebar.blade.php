@@ -484,7 +484,7 @@
                             @else
                                 <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
                             @endif
-                        <p>New</p>
+                        <p>Add Exam Mark</p>
                         </a>
                     </li>
                     <li class="nav-item">

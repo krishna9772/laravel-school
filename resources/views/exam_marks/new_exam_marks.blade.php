@@ -115,7 +115,7 @@
                                     <div class="form-group d-flex-column ">
 
                                         <div class="input-group ml-3">
-                                            @can('manage exams')
+                                            @if(Auth::user()->user_type == 'admin')
                                                 <div class="custom-file">
                                                     {{-- <input type="file" class="custom-file-input" id="exampleInputFile">
                                                     <label class="custom-file-label" for="exampleInputFile">
@@ -128,12 +128,12 @@
                                                         padding: 8px 15px;
                                                         border: 1px solid #CED4DA; 
                                                         border-radius: 5px;
-                                                        cursor: pointer;">Upload Exam File</label>
+                                                        cursor: pointer;">Upload</label>
                                                         <span class="small text-muted" id="fileCount"></span>
                                                     {{-- </div> --}}
                                                 
                                                 </div>
-                                            @endcan
+                                            @endif
 
                                             @isset($student->userGradeClasses[0]->examMarks[0]->file)
                                                 @if($student->userGradeClasses[0]->examMarks[0]->file != '')

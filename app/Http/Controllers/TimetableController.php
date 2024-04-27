@@ -6,7 +6,10 @@ use App\Http\Requests\TimeTableRequest;
 use App\Models\Classes;
 use App\Models\Grade;
 use App\Models\Timetable;
+use App\Models\User;
+use App\Models\UserGradeClass;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Type\Time;
@@ -14,10 +17,30 @@ use Ramsey\Uuid\Type\Time;
 class TimetableController extends Controller
 {
 
+    // for admins and class teacher
     public function list(){
 
-        $timetables = Timetable::get();
-        // $timetable = [];
+        $user = Auth::user();
+        // dd($user->user_type);
+
+        // if ($user->can('view') || $user->hasRole('class teacher')) {
+        if($user->user_type == 'admin' || ($user->user_type == 'teacher' && $user->teacher_type == 'classroom')){
+            // $timetables = Timetable::with(['grade', 'class'])->get();
+            $timetables = Timetable::get();
+
+        }elseif(($user->user_type == 'teacher' && $user->teacher_type == 'subject') || $user->user_type == 'student'){
+
+            $teacher_id = Auth::user()->user_id;
+            // dd($teacher_id);
+
+            $teacherData = UserGradeClass::where('user_id',$teacher_id)->first();
+
+            $timetables = Timetable::where('grade_id',$teacherData->grade_id)->where('class_id',$teacherData->class_id)->get();
+
+        }else{
+            abort(403, 'Unauthorized');
+        }
+
 
         foreach($timetables as $timetable){
             $timetable->grade_name = Grade::where('id', $timetable->grade_id)->pluck('grade_name')->first();
@@ -26,6 +49,18 @@ class TimetableController extends Controller
 
 
         return view('time_table.list',['timetables' => $timetables]);
+    }
+
+    // for subject teacher (can view only timetable)
+    public function subjectTeacherViewTimeTable(){
+        $teacher_id = Auth::user()->user_id;
+
+        $teacherData = UserGradeClass::where('user_id',$teacher_id)->first();
+
+        $timetable = Timetable::where('grade_id',$teacherData->grade_id)->where('class_id',$teacherData->class_id)->get();
+        // dd($timetable->toArray());
+
+        // return view('')
     }
 
     public function addNewTimeTable(){

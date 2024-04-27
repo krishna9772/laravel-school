@@ -251,7 +251,7 @@
 
 
           {{-- classwork section --}}
-            @canany(['manage classworks', 'view classworks'])
+            @canany(['manage classworks', 'view classworks','edit classworks'])
                 <li class="nav-item {{ Route::is('classworks.*') ? 'menu-open'  : '' }}">
 
                     <a href="#" class="nav-link {{ Route::is('classworks.*') ? 'active'  : '' }}">
@@ -282,16 +282,27 @@
                         </a>
                     </li>
                     @endcan
-                    @can('view classworks')
-                    <a href="{{route('classworks.index')}}" class="nav-link {{ Route::is('classworks.index') ? 'active'  : '' }}">
-                        @if(Route::is('classworks.index'))
-                            <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
-                        @else
-                            <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
-                        @endif
-                        <p>List</p>
-                    </a>
-                    @endcan
+                        @can('view classworks')
+                        <a href="{{route('classworks.index')}}" class="nav-link {{ Route::is('classworks.index') ? 'active'  : '' }}">
+                            @if(Route::is('classworks.index'))
+                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                            @else
+                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                            @endif
+                            <p>List</p>
+                        </a>
+                        @endcan
+
+                        @can('edit classworks')
+                        <a href="{{route('classworks.index')}}" class="nav-link {{ Route::is('classworks.index') ? 'active'  : '' }}">
+                            @if(Route::is('classworks.index'))
+                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                            @else
+                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                            @endif
+                            <p>List edit</p>
+                        </a>
+                        @endcan
 
                     {{-- <li class="nav-item">
                         <a href="#" class="nav-link {{ Route::is('classworks.edit') ? 'active'  : '' }}">
@@ -374,7 +385,9 @@
 
             @endcan
 
-            @can('manage timetables')
+
+
+            @canany(['manage timetables','view timetables'])
 
             <li class="nav-item {{ Route::is('timetables.*') ? 'menu-open'  : '' }}">
 
@@ -384,39 +397,56 @@
                 </a>
                 <ul class="nav nav-treeview">
 
-                    <li class="nav-item">
-                        <a href="{{ route('timetables.list') }}" class="nav-link {{ Route::is('timetables.list') ? 'active'  : '' }}">
-                            @if(Route::is('timetables.list'))
-                               <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
-                            @else
-                               <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
-                            @endif
-                            <p>List</p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="{{ route('timetables.new') }}" class="nav-link {{ Route::is('timetables.new') ? 'active'  : '' }}">
-                            @if(Route::is('timetables.new'))
-                               <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
-                            @else
-                               <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
-                            @endif
-                            <p>New</p>
-                        </a>
-                    </li>
-
-
-                    <li class="nav-item">
-                        <a href="{{route('timetables.edit')}}" class="nav-link {{ Route::is('timetables.edit') ? 'active'  : '' }}">
-                            @if(Route::is('timetables.edit'))
+                    @can('manage timetables')
+                        <li class="nav-item">
+                            <a href="{{ route('timetables.list') }}" class="nav-link {{ Route::is('timetables.list') ? 'active'  : '' }}">
+                                @if(Route::is('timetables.list'))
                                 <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
-                            @else
+                                @else
                                 <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
-                            @endif
-                        <p>Edit</p>
-                        </a>
-                    </li>
+                                @endif
+                                <p>List</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('timetables.new') }}" class="nav-link {{ Route::is('timetables.new') ? 'active'  : '' }}">
+                                @if(Route::is('timetables.new'))
+                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                                @else
+                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                                @endif
+                                <p>New</p>
+                            </a>
+                        </li>
+
+
+                        <li class="nav-item">
+                            <a href="{{route('timetables.edit')}}" class="nav-link {{ Route::is('timetables.edit') ? 'active'  : '' }}">
+                                @if(Route::is('timetables.edit'))
+                                    <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                                @else
+                                    <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                                @endif
+                            <p>Edit</p>
+                            </a>
+                        </li>
+                    @endcan
+
+                    @can('view timetables')
+                        <li class="nav-item">
+                            <a href="{{ route('timetables.list') }}" class="nav-link {{ Route::is('timetables.list') ? 'active'  : '' }}">
+                                @if(Route::is('timetables.list'))
+                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                                @else
+                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                                @endif
+                                <p>List</p>
+                            </a>
+                        </li>
+                    @endcan
+
+
                     {{-- <li class="nav-item">
                         <a href="#" class="nav-link {{ Route::is('classworks.edit') ? 'active'  : '' }}">
                         <i class="far fa-circle nav-icon"></i>
@@ -426,9 +456,9 @@
                 </ul>
             </li>
 
-            @endcan
+            @endcanany
 
-            @can('manage exam marks')
+            @canany(['manage exam marks','view exam marks'])
 
             <li class="nav-item {{ Route::is('exam-marks.*') ? 'menu-open'  : '' }}">
 
@@ -465,7 +495,7 @@
                     </li>
                 </ul>
             </li>
-            @endcan
+            @endcanany
         </ul>
     </nav>
 

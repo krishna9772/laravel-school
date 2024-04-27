@@ -15,10 +15,17 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ClassworkRequest;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests\ClassworkSearchRequest;
+use App\Models\UserGradeClass;
 use Illuminate\Support\Facades\Session as FacadesSession;
 
 class ClassworkController extends Controller
 {
+
+    // function __construct()
+    // {
+    //     $this->middleware(['permission:manage classworks'], ['only' => ['index', 'create','searchResults','store','search','show','edit','destory','deleteWithSubTopicName','updateData','getMaxId']]);
+    //     $this->middleware(['permission:edit classworks'], ['only' => ['index', 'create','searchResults','store','search','show','edit','destory','deleteWithSubTopicName','updateData','getMaxId']]);
+    // }
 
     public function index()
     {
@@ -80,47 +87,67 @@ class ClassworkController extends Controller
     {
         Log::info($request->all());
 
-        $classwork = new Classwork();
 
-        foreach ($request->source_type as $index => $type) {
+
+
+
+        foreach ($request->source_type as $index => $sourceType) {
+
+            $classwork = new Classwork();
 
             $classwork->grade_id = $request->gradeSelect;
             $classwork->class_id = $request->classSelect;
             $classwork->curriculum_id = $request->curriculumSelect;
             $classwork->topic_name = $request->topic_name;
+            $classwork->file_type = $sourceType;
             $classwork->source_title = $request->source_title[$index];
             $classwork->sub_topic_name = $request->sub_topic_name[$index];
+            $classwork->url = $request->url[$index];
+            $classwork->file = $request->file[$index];
 
-            if ($type == 'url') {
-                $classwork->url = $request->url[$index];
+            $classwork->save();
 
-                $classwork->file = null;
-            } elseif ($type == 'file') {
 
-                $file = $request->file;
 
-                $fileName = uniqid() . '_' . $file->getClientOriginalName();
+            // if ($type == 'url') {
+            //     $classwork->url = $request->url[$index];
 
-                $classwork->storeAs('public/classwork_files',$fileName);
+            //     $classwork->file = null;
+            // } elseif ($type == 'file') {
+
+            //     $file = $request->file[$index];
+
+                // $classwork->file = $file;
+
+                // $fileName = uniqid() . '_' . $file->getClientOriginalName();
+
+                // $classwork->file = $file;
+
+                // $file->storeAs('public/classwork_files',$file);
 
                 // $fileName = $request->file[]->getClientOriginalName();
-                Log::info("file name is " . $fileName);
+                // Log::info("file name is " . $fileName);
 
 
 
                 // $classwork->file = $request->file[$index]->getClientOriginalExtension();
                 // $source['file'] = $request->file[$index]->store('classwork_files');
-                $classwork->url = null;
-            }
+            //     $classwork->url = null;
+            // }
 
-            $classwork->save();
+
         }
 
         // Save the classwork
         // $classwork->save();
 
         // Optionally, log the saved data
-        Log::info('Classwork saved:', $classwork->toArray());
+        // Log::info('Classwork saved:', $classwork->toArray());
+
+        Session::put('message','Successfully added !');
+        Session::put('alert-type','success');
+
+
 
         return response()->json('success');
     }
@@ -251,21 +278,55 @@ class ClassworkController extends Controller
 
     public function edit(string $subTopicName)
     {
-        $grades = Grade::with(['classes', 'curricula' => function($query) {
-            $query->where('status', '1');
-        }])
-        ->get();
 
-        $classworks = ClassWork::where('sub_topic_name',$subTopicName)->where('status','1')->get();
-        // dd($classworks->toArray());
+        $user = Auth::user();
 
-        $gradeId = $classworks[0]->grade_id;
-        // dd($gradeId);
+        if($user->user_type == 'admin' || ($user->user_type == 'teacher' && $user->teacher_type == 'classroom')){
+            $grades = Grade::with(['classes', 'curricula' => function($query) {
+                $query->where('status', '1');
+            }])
+            ->get();
 
-        $classId = $classworks[0]->class_id;
-        // dd($classId);
+            $classworks = ClassWork::where('sub_topic_name',$subTopicName)->where('status','1')->get();
+            // dd($classworks->toArray());
 
-        $curriculumId = $classworks[0]->curriculum_id;
+            $gradeId = $classworks[0]->grade_id;
+            // dd($gradeId);
+
+            $classId = $classworks[0]->class_id;
+            // dd($classId);
+
+            $curriculumId = $classworks[0]->curriculum_id;
+
+        }elseif($user->user_type == 'teacher' && $user->teacher_type == 'subject'){
+
+            $teacher_id = $user->user_id;
+
+            $teacherData = UserGradeClass::where('user_id',$teacher_id)->first();
+
+            $grades = Grade::where('grade_id',$teacherData->grade_id)
+                ->with(['classes', 'curricula' => function($query) {
+                $query->where('status', '1');
+            }])
+            ->get();
+
+            // dd($grades);
+
+            $classworks = ClassWork::where('sub_topic_name',$subTopicName)->where('status','1')->get();
+            // dd($classworks->toArray());
+
+            $gradeId = $classworks[0]->grade_id;
+            // dd($gradeId);
+
+            $classId = $classworks[0]->class_id;
+            // dd($classId);
+
+            $curriculumId = $classworks[0]->curriculum_id;
+
+
+        }
+
+
         // dd($curriculumId);
 
         return view('classworks.edit',compact('classworks','grades','gradeId','classId','curriculumId'));

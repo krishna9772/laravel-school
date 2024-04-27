@@ -70,16 +70,12 @@ Route::middleware(['auth'])->group(function(){
 
     });
 
-    Route::middleware(['role:admin|subject teacher|student'])->group(function () {
-        // class work
-        Route::get('classwork/search',[ClassworkController::class,'search'])->name('classworks.search');
-        Route::post('classwork/list',[ClassworkController::class,'searchResults'])->name('classworks.search_results');
-        Route::get('classworks/max-id', [ClassworkController::class,'getMaxId'])->name('classworks.getMaxId');
-        Route::post('classworks/updatedata',[ClassworkController::class,'updateData'])->name('classworks.updateData');
+    // Route::middleware(['role:admin|subject teacher|student'])->group(function () {
+    //     // class work
 
-        Route::get('classworks/delete/with/{subTopicName}',[ClassworkController::class,'deleteWithSubTopicName'])->name('classworks.delete.with.subTopicName');
-        Route::resource('classworks',ClassworkController::class);
-    });
+
+
+    // });
 
 
 
@@ -119,7 +115,7 @@ Route::middleware(['auth'])->group(function(){
         Route::post('promote/student',[PromoteController::class,'promoteStudent'])->name('promote.student');
 
         // time table
-        Route::get('timetable/list',[TimetableController::class,'list'])->name('timetables.list');
+        // Route::get('timetable/list',[TimetableController::class,'list'])->name('timetables.list');
         Route::get('timetable/new',[TimetableController::class,'addNewTimeTable'])->name('timetables.new');
         Route::post('timetable/store',[TimetableController::class,'store'])->name('timetable.store');
         Route::get('timetable/edit',[TimetableController::class,'edit'])->name('timetables.edit');
@@ -129,7 +125,7 @@ Route::middleware(['auth'])->group(function(){
 
         // Route::get('exam-marks/search',[ExamMarkController::class,''])
         Route::get('exam-marks/search',[ExamMarkController::class,'addNewExamMark'])->name('exam-marks.search');
-        Route::post('exam-marks/search/results',[ExamMarkController::class,'searchResults'])->name('exam-marks.search.results');
+        // Route::post('exam-marks/search/results',[ExamMarkController::class,'searchResults'])->name('exam-marks.search.results');
         Route::post('exam-marks/store',[ExamMarkController::class,'store'])->name('exam-marks.store');
         Route::get('exam-marks/edit',[ExamMarkController::class,'edit'])->name('exam-marks.edit');
 
@@ -142,9 +138,30 @@ Route::middleware(['auth'])->group(function(){
         Route::get('exam-marks/subject/new',[ExamMarkController::class,'getExamSubject'])->name('exam-marks.subject');
         Route::post('exam-marks/save/subjects',[ExamMarkController::class,'saveExamSubject'])->name('exam-marks.save-subject');
 
-        // Route::post()
 
     });
+
+
+    Route::middleware(['role:admin|class teacher|subject teacher|student'])->group(function () {
+        Route::get('timetable/list',[TimetableController::class,'list'])->name('timetables.list');
+
+        Route::resource('classworks',ClassworkController::class);
+
+        Route::get('classworks/max-id', [ClassworkController::class,'getMaxId'])->name('classworks.getMaxId');
+        Route::post('classworks/updatedata',[ClassworkController::class,'updateData'])->name('classworks.updateData');
+
+        Route::get('classworks/delete/with/{subTopicName}',[ClassworkController::class,'deleteWithSubTopicName'])->name('classworks.delete.with.subTopicName');
+
+        Route::get('classwork/search',[ClassworkController::class,'search'])->name('classworks.search');
+        Route::post('classwork/list',[ClassworkController::class,'searchResults'])->name('classworks.search_results');
+    });
+
+
+    Route::middleware(['role:admin|class teacher|student'])->group(function () {
+        Route::post('exam-marks/search/results',[ExamMarkController::class,'searchResults'])->name('exam-marks.search.results');
+    });
+
+
 
 
 

@@ -154,15 +154,7 @@
                                             <label for="exam-result" class="badge badge-success"><i class="fas fa-calendar"></i>  Results</label>
 
                                         </a> --}}
-                                        @isset($student->userGradeClasses[0]->examMarks[0]->file)
-                                            @if($student->userGradeClasses[0]->examMarks[0]->file != '')
-                                                    <a class="nav-icon" href="{{asset('storage/exam_marks_files/'. $student->userGradeClasses[0]->examMarks[0]->file)}}" download>
-                                                        <span class="badge badge-success"><i class="fas fa-file-download fa-2x"></i></span>
-                                                    </a>
-                                                @else
-
-                                                @endif
-                                        @endisset
+                                       
                                     </div>
 
 

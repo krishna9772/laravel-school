@@ -253,11 +253,11 @@ class AttendanceController extends Controller
 
 
         foreach ($students as $student) {
-            // $totalAttendanceCount = 0;
+            $totalAttendanceCount = 0;
             $presentCount = 0;
 
             foreach ($student->userGradeClasses as $userGradeClass) {
-                // $totalAttendanceCount += $userGradeClass->attendances->count();
+                $totalAttendanceCount += $userGradeClass->attendances->count();
                 $presentCount += $userGradeClass->attendances->where('status', 'present')->count();
             }
 
@@ -443,15 +443,21 @@ class AttendanceController extends Controller
             $totalAttendanceCount = 0;
             $presentCount = 0;
 
+            $year = date('Y');
+
+            $academic_year = AcademicYear::where('academic_year', '=', $year)->first();
+
+            $toDate = Carbon::parse($academic_year->start_date);
+            $fromDate = Carbon::parse($academic_year->end_date);
+
+            $days = $toDate->diffInDays($fromDate);
+
             foreach ($student[0]->userGradeClasses as $userGradeClass) {
                 $totalAttendanceCount += $userGradeClass->attendances->count();
                 $presentCount += $userGradeClass->attendances->where('status', 'present')->count();
             }
 
-            $student->percentage = $totalAttendanceCount > 0 ? ($presentCount / $totalAttendanceCount) * 100 : 0;
-
-
-            Log::info("percentage is " .  $student->percentage);
+            $student->percentage = $totalAttendanceCount > 0 ? ($presentCount / Carbon::now()->month(date('n'))->daysInMonth) * 100 : 0;
 
 
         // Log::info($request->all());
@@ -533,7 +539,7 @@ class AttendanceController extends Controller
             'attendanceStatus' => $attendanceStatus,
             'dayOfWeek' => $filteredDayOfWeek,
             'monthName' => $monthName,
-            'percentage' => $student->percentage
+            'percentage' => number_format($student->percentage,1)
         ]);
 
     }

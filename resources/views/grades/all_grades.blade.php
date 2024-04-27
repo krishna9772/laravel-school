@@ -19,14 +19,14 @@
             <div class="row mx-3 mt-3">
                 @foreach ($grades as $grade)
                 <div class="col-12 col-sm-6 col-md-3 mt-4">
-                    <a href="{{ route('grades.classes', ['grade' => $grade->id]) }}" class="text-decoration-none">
+                    <a href="{{ route('grades.classes', ['grade' => $grade->id]) }}" class="text-decoration-none" data-container="body" data-toggle="popover" data-placement="right"  title="{{$grade->grade_name}} Description" data-content="{{$grade->description}}">
                     <div class="info-box" style="position: relative">
                         <span class="info-box-icon bg-info elevation-1">
                             <i class="fas fa-graduation-cap" aria-hidden="true"></i>
                         </span>
 
                         <div class="info-box-content text-dark">
-                        <span class="info-box-text text-lg text-capitalize">{{$grade->grade_name}}</span>
+                        <span class="info-box-text text-lg text-capitalize" >{{$grade->grade_name}}</span>
                         <span class="info-box-number">
                             {{$grade->classes->count()}} Class{{$grade->classes->count() > 1 ? 'es' : ''}}
                         </span>
@@ -34,9 +34,9 @@
                         <!-- /.info-box-content -->
 
                         <span class="text-black-50 question-mark" style="position: absolute; right: 10px; bottom: 10px">
-                            <span data-container="body" data-toggle="popover" data-placement="right"  title="{{$grade->grade_name}} Description" data-content="{{$grade->description}}">
+                            {{-- <span data-container="body" data-toggle="popover" data-placement="right"  title="{{$grade->grade_name}} Description" data-content="{{$grade->description}}">
                                 <i class="fa fa-question-circle"></i>
-                            </span>
+                            </span> --}}
                         </span>
 
                         {{-- <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="right" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">

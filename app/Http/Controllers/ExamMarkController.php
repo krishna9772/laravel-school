@@ -37,28 +37,45 @@ class ExamMarkController extends Controller
             $gradeId = $teacherGradeClass->userGradeClasses[0]->grade_id;
             $classId = $teacherGradeClass->userGradeClasses[0]->class_id;
 
+            $gradeName = Grade::where('id',$gradeId)->value('grade_name');
+
+            $grade = Grade::where('id',$gradeId)->with('examSubjects')->get();
+            $gradeResult = $grade[0]->examSubjects;
+    
+            $className = Classes::where('id',$classId)->value('class_name');
+    
+            $students = User::where('user_type', 'student')
+            ->whereHas('userGradeClasses', function ($query) use ($gradeId,$classId) {
+                $query->where('grade_id', $gradeId)
+                    ->where('class_id', $classId);
+            })
+            ->with('userGradeClasses.examMarks')
+            ->get();
+
 
         }else if(Auth::user()->user_type == 'admin')
         {
             $gardeId = $request->grade_select;
             $classId = $request->class_select;
+
+            $gradeName = Grade::where('id',$request->grade_select)->value('grade_name');
+
+            $grade = Grade::where('id',$request->grade_select)->with('examSubjects')->get();
+            $gradeResult = $grade[0]->examSubjects;
+    
+            $className = Classes::where('id',$request->class_select)->value('class_name');
+    
+            $students = User::where('user_type', 'student')
+            ->whereHas('userGradeClasses', function ($query) use ($request) {
+                $query->where('grade_id', $request->grade_select)
+                    ->where('class_id', $request->class_select);
+            })
+            ->with('userGradeClasses.examMarks')
+            ->get();
         }
 
 
-        $gradeName = Grade::where('id',$request->grade_select)->value('grade_name');
-
-        $grade = Grade::where('id',$request->grade_select)->with('examSubjects')->get();
-        $gradeResult = $grade[0]->examSubjects;
-
-        $className = Classes::where('id',$request->class_select)->value('class_name');
-
-        $students = User::where('user_type', 'student')
-        ->whereHas('userGradeClasses', function ($query) use ($request) {
-            $query->where('grade_id', $request->grade_select)
-                ->where('class_id', $request->class_select);
-        })
-        ->with('userGradeClasses.examMarks')
-        ->get();
+       
 
         return view('exam_marks.new_exam_marks',compact('students','gradeName','className','gradeResult'));
 

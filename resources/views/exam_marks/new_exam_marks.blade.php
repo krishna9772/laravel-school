@@ -115,23 +115,25 @@
                                     <div class="form-group d-flex-column ">
 
                                         <div class="input-group ml-3">
-                                            <div class="custom-file">
-                                                {{-- <input type="file" class="custom-file-input" id="exampleInputFile">
-                                                <label class="custom-file-label" for="exampleInputFile">
-                                                    {{ $student->userGradeClasses[0]->examMarks[0]->file ?? 'Choose File' }}
-                                                </label> --}}
-                                                {{-- <div class="col-12 col-lg-4"> --}}
-                                                    <!-- onchange="loadFile(event)" -->
-                                                    <input type="file" multiple="multiple" name="images[]" id="upload" hidden />
-                                                    <label class="file_upload" for="upload" style="background: #E9ECEF;
-                                                    padding: 8px 15px;
-                                                    border: 1px solid #CED4DA; 
-                                                    border-radius: 5px;
-                                                    cursor: pointer;">Upload Exam File</label>
-                                                    <span class="small text-muted" id="fileCount"></span>
-                                                {{-- </div> --}}
-                                               
-                                            </div>
+                                            @can('manage exams')
+                                                <div class="custom-file">
+                                                    {{-- <input type="file" class="custom-file-input" id="exampleInputFile">
+                                                    <label class="custom-file-label" for="exampleInputFile">
+                                                        {{ $student->userGradeClasses[0]->examMarks[0]->file ?? 'Choose File' }}
+                                                    </label> --}}
+                                                    {{-- <div class="col-12 col-lg-4"> --}}
+                                                        <!-- onchange="loadFile(event)" -->
+                                                        <input type="file" multiple="multiple" name="images[]" id="upload" hidden />
+                                                        <label class="file_upload" for="upload" style="background: #E9ECEF;
+                                                        padding: 8px 15px;
+                                                        border: 1px solid #CED4DA; 
+                                                        border-radius: 5px;
+                                                        cursor: pointer;">Upload Exam File</label>
+                                                        <span class="small text-muted" id="fileCount"></span>
+                                                    {{-- </div> --}}
+                                                
+                                                </div>
+                                            @endcan
 
                                             @isset($student->userGradeClasses[0]->examMarks[0]->file)
                                                 @if($student->userGradeClasses[0]->examMarks[0]->file != '')
@@ -139,8 +141,12 @@
                                                         <span class="badge badge-success"><i class="fas fa-file-download fa-2x"></i></span>
                                                     </a>
                                                 @else
+                                                    <p class="text-info">No exam data yet.</p>
 
                                                 @endif
+                                            @else
+                                            <p class="text-info text-bold">No exam data yet</p>
+
                                             @endisset
                                             
                                         </div>

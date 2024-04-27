@@ -21,7 +21,7 @@
             @csrf
             <div class="mb-3">
                 <label for="" class="form-label required">Email</label>
-                <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" placeholder="Email">
+                <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" placeholder="Email" value="{{old('email')}}">
                 @error('email')
                     <p class="text-danger">{{$message}}</p>
                 @enderror

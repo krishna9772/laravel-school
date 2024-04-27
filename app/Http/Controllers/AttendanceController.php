@@ -134,6 +134,52 @@ class AttendanceController extends Controller
         $startDate = AcademicYear::first()->start_date;
 
         $endDate = AcademicYear::first()->end_date;
+        $currentDate = new DateTime();
+
+        $academicYears = AcademicYear::all(); // Assuming AcademicYear::all() returns all academic years
+
+        // dd($academicYears);
+        // Initialize variables to hold the academic year
+        $academicYear = null;
+
+        // $startDate = AcademicYear::first()->start_date;
+        // $endDate = AcademicYear::first()->end_date;
+
+        $startDate = null;
+        $endDate = null;
+
+        if($academicYears != null || $academicYears != ''){
+            foreach ($academicYears as $year) {
+                $startingDate = new DateTime($year->start_date);
+                $endingDate = new DateTime($year->end_date);
+
+                // Check if the current date is within this academic year
+                if ($currentDate >= $startingDate && $currentDate <= $endingDate) {
+                    $academicYear = $year;
+
+                    $startDate = $academicYear->start_date;
+                    $endDate = $academicYear->end_date;
+
+                }else{
+                    $startDate = null;
+                    $endDate = null;
+                }
+            }
+        }else{
+            $startDate = null;
+            $endDate = null;
+        }
+
+
+
+
+        // Now you can use $academicYear as needed
+        // if ($academicYear) {
+        //     echo "The current academic year is: " . $academicYear->start_date . " to " . $academicYear->end_date;
+        // } else {
+        //     echo "No academic year found for the current date.";
+        // }
+
 
         $holidays = Holiday::select('date')->get();
 

@@ -260,7 +260,7 @@
 
                     </a>
                     <ul class="nav nav-treeview">
-                    @can('manage classworks')
+                    @can(['manage classworks'])
                     <li class="nav-item">
                         <a href="{{route('classworks.index')}}" class="nav-link {{ Route::is('classworks.index') ? 'active'  : '' }}">
                             @if(Route::is('classworks.index'))
@@ -283,14 +283,16 @@
                     </li>
                     @endcan
                         @can('view classworks')
-                        <a href="{{route('classworks.index')}}" class="nav-link {{ Route::is('classworks.index') ? 'active'  : '' }}">
-                            @if(Route::is('classworks.index'))
-                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
-                            @else
-                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
-                            @endif
-                            <p>List</p>
-                        </a>
+                        <li class="nav-item">
+                            <a href="{{route('classworks.index')}}" class="nav-link {{ Route::is('classworks.index') ? 'active'  : '' }}">
+                                @if(Route::is('classworks.index'))
+                                    <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                                @else
+                                    <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                                @endif
+                                <p>List</p>
+                            </a>
+                        </li>
                         @endcan
 
                         @can('edit classworks')
@@ -477,22 +479,38 @@
                         <p>Subject</p>
                         </a>
                     </li> --}}
-                    <li class="nav-item">
-                        <a href="{{route('exam-marks.search')}}" class="nav-link {{ Route::is('exam-marks.search') ? 'active' : (Route::is('exam-marks.search.results') ? 'active' : '' )}}">
-                            @if(Route::is('exam-marks.search'))
-                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
-                            @else
-                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
-                            @endif
-                        <p>Add Exam Mark</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{route('exam-marks.edit')}}" class="nav-link {{ Route::is('exam-marks.edit') ? 'active'  : '' }}">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>Edit</p>
-                        </a>
-                    </li>
+                    @can(['manage exam marks'])
+                        <li class="nav-item">
+                            <a href="{{route('exam-marks.search')}}" class="nav-link {{ Route::is('exam-marks.search') ? 'active' : (Route::is('exam-marks.search.results') ? 'active' : '' )}}">
+                                @if(Route::is('exam-marks.search'))
+                                    <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                                @else
+                                    <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                                @endif
+                            <p>Add Exam Mark</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{route('exam-marks.edit')}}" class="nav-link {{ Route::is('exam-marks.edit') ? 'active'  : '' }}">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Edit</p>
+                            </a>
+                        </li>
+                    @endcan
+                    @can(['view exam marks'])
+                        <li class="nav-item">
+                            <form action="{{route('exam-marks.search.results')}}" method="POST" >
+                                @csrf
+                                <input type="hidden" name="value" value="value">
+                                <button class="nav-link {{ Route::is('exam-marks.edit') ? 'active'  : '' }}">
+                                <i class="far fa-circle nav-icon" id=""></i>
+                                <p>View</p>
+                                </button>
+                            </form>
+                        </li>
+                    @endcan
+
+                   
                 </ul>
             </li>
             @endcanany

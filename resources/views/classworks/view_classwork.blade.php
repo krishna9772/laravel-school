@@ -55,11 +55,14 @@
         <div class="">
             <h3 class="text-capitalize">{{$gradeName}} / {{$className}} / {{$topicName}}</h3>
         </div>
-        <div class="mt-3">
-            <a href="{{route('classworks.create') }}">
-                <button class="btn btn-primary mr-3"> <i class="fa fa-plus"></i> Create Classwork</button>
-            </a>
-        </div>
+        @can(['manage classworks'])
+
+            <div class="mt-3">
+                <a href="{{route('classworks.create') }}">
+                    <button class="btn btn-primary mr-3"> <i class="fa fa-plus"></i> Create Classwork</button>
+                </a>
+            </div>
+        @endcan
     </div>
 
     <div class="accordion w-100" id="accordionExample" >

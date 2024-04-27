@@ -30,12 +30,12 @@ class ClassworkController extends Controller
     public function index()
     {
 
-        if(Auth::user()->user_type != 'teacher' && Auth::user()->user_type != 'student'){
+        if(Auth::user()->user_type == 'admin'){
             $grades = Grade::with('classes')->get();
 
             return view('classworks.search_classwork',compact('grades'));
         }
-        elseif(Auth::user()->user_type == 'teacher' && Auth::user()->teacher_type == 'subject'){
+        elseif(Auth::user()->user_type == 'teacher' || Auth::user()->user_type == 'student'){
 
             $teacherGradeClass = User::where('user_id',Auth::user()->user_id)->with('userGradeClasses')->first();
             // dd($teacherGradeClass->toArray());

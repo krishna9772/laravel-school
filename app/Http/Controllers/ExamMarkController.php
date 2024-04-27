@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Storage;
 use Validator;
 use Illuminate\Support\Facades\Input;
 use Session;
+use Auth;
 use DB;
 
 class ExamMarkController extends Controller
@@ -30,9 +31,17 @@ class ExamMarkController extends Controller
 
     public function searchResults(SearchRequest $request){
 
-        $gradeName = Grade::where('id',$request->grade_select)->value('grade_name');
+        if(Auth::user()->user_type == 'student'){
+
+            $teacherGradeClass = User::where('user_id',Auth::user()->user_id)->with('userGradeClasses')->first();
+            $gradeId = $teacherGradeClass->userGradeClasses[0]->grade_id;
+
+        }
+
+        $gradeName = Grade::where('id',$gradeId)->value('grade_name');
+
         $user_grade_id = UserGradeClass::where('grade_id',$request->grade_select)->with('examMarks')->get();
-        $grade = Grade::where('id',$request->grade_select)->with('examSubjects')->get();
+        $grade = Grade::where('id',$gradeId)->with('examSubjects')->get();
         $gradeResult = $grade[0]->examSubjects;
 
         $className = Classes::where('id',$request->class_select)->value('class_name');

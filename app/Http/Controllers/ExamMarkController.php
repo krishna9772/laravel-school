@@ -31,25 +31,31 @@ class ExamMarkController extends Controller
 
     public function searchResults(SearchRequest $request){
 
-        if(Auth::user()->user_type == 'student'){
+        if(Auth::user()->user_type == 'student' || Auth::user()->user_type == 'teacher'){
 
             $teacherGradeClass = User::where('user_id',Auth::user()->user_id)->with('userGradeClasses')->first();
             $gradeId = $teacherGradeClass->userGradeClasses[0]->grade_id;
+            $classId = $teacherGradeClass->userGradeClasses[0]->class_id;
 
+
+        }else if(Auth::user()->user_type == 'admin')
+        {
+            $gardeId = $request->grade_select;
+            $classId = $request->class_select;
         }
+
 
         $gradeName = Grade::where('id',$gradeId)->value('grade_name');
 
-        $user_grade_id = UserGradeClass::where('grade_id',$request->grade_select)->with('examMarks')->get();
         $grade = Grade::where('id',$gradeId)->with('examSubjects')->get();
         $gradeResult = $grade[0]->examSubjects;
 
-        $className = Classes::where('id',$request->class_select)->value('class_name');
+        $className = Classes::where('id',$classId)->value('class_name');
 
         $students = User::where('user_type', 'student')
         ->whereHas('userGradeClasses', function ($query) use ($request) {
-            $query->where('grade_id', $request->grade_select)
-                ->where('class_id', $request->class_select);
+            $query->where('grade_id', $gardeId)
+                ->where('class_id', $classId);
         })
         ->with('userGradeClasses.examMarks')
         ->get();

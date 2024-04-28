@@ -627,7 +627,10 @@ class AttendanceController extends Controller
                 $presentCount += $userGradeClass->attendances->where('status', 'present')->count();
             }
 
-            $student->percentage = $schoolOpenDayCount > 0 ? ($presentCount / $schoolOpenDayCount) * 100 : 0;
+            $student->percentage = $schoolOpenDayCount > 0 ? ($presentCount / Carbon::now()->month(date('n'))->daysInMonth) * 100 : 0;
+
+            // $student->percentage = $totalAttendanceCount > 0 ? ($presentCount / Carbon::now()->month($thisMonth)->daysInMonth) * 100 : 0;
+
         }
 
         $thisMonth = Carbon::now()->month();

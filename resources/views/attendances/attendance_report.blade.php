@@ -92,14 +92,20 @@
                                     <td class="text-center">{{$student->user_id}}</td>
                                     <td class="text-center">{{ $student->user_name }}</td>
                                     <td class="text-center">{{$student->father_name}}</td>
-                                    <td class="text-center bg-secondary">
+                                    <td class="text-center">
+                                        <div class="w-100 text-center">{{number_format($student->percentage,'0')}}%</div>
+                                        <div class="progress w-100 text-center">
+                                                <div class="progress-bar progress-bar-striped active bg-success" role="progressbar" aria-valuenow="" aria-valuemin="{{number_format($student->percentage,'0')}}" aria-valuemax="100" style="width: {{number_format($student->percentage,'0')}}0%;">{{number_format($student->percentage,'0')}}</div>
+                                        </div>
 
-                                        <div class="progress">
+                                        {{-- <div class="progress">
                                             <div class="progress-bar progress-bar-striped active bg-success" role="progressbar"
                                             aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:{{number_format($student->percentage,'0')}}0%; ">
                                             {{number_format($student->percentage,'1')}} %
                                             </div>
-                                          </div>
+                                          </div> --}}
+
+                                               
 
                                         {{-- <div class="progress">
                                             <div class="progress-bar progress-bar-success active border " role="progressbar" aria-valuenow="40"
@@ -319,9 +325,9 @@
                                 '<div class="w-100 text-center">' + student.user_id + '</div>' ,
                                 '<div class="w-100 text-center">' + student.user_name + '</div>' ,
                                 '<div class="w-100 text-center">' + (student.father_name ? student.father_name : '') + '</div>' ,
-                                '<div class="w-100 text-center">' + student.percentage.toFixed(2) + '%</div>' +
-                                    '<div class="progress w-100 text-center"><div class="progress-bar progress-bar-striped active bg-success" role="progressbar" aria-valuenow="' + student.percentage + '" aria-valuemin="0" aria-valuemax="100" style="width:' + student.percentage + '%">' + '</div></div>',
-                                '<div class="w-100 text-center"><a href="#" class="view-details-link" data-user-id="' + (student.user_id || '') + '" data-percentage="' + (student.percentage.toFixed(2) || '') + '">View Details</a></div>'
+                                '<div class="w-100 text-center">' + student.percentage.toFixed(0) + '%</div>' +
+                                    '<div class="progress w-100 text-center"><div class="progress-bar progress-bar-striped active bg-success" role="progressbar" aria-valuenow="' + student.percentage + '" aria-valuemin="0" aria-valuemax="100" style="width:' + student.percentage.toFixed(0) + '0%">' + '</div></div>',
+                                '<div class="w-100 text-center"><a href="#" class="view-details-link" data-user-id="' + (student.user_id || '') + '" data-percentage="' + (student.percentage.toFixed(0) || '') + '">View Details</a></div>'
                             ];
 
                             dataTable.row.add(rowData).draw();

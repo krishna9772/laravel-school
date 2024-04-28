@@ -143,7 +143,7 @@ class AttendanceController extends Controller
             {
                 return redirect()->route('academic-years.index')->with("message","Please fill academic settings first")->with("alert-type","warning");
             }
-
+            
             $startDate = AcademicYear::first()->start_date;
 
             $endDate = AcademicYear::first()->end_date;
@@ -363,7 +363,7 @@ class AttendanceController extends Controller
 
         $year = date('Y');
 
-        $academic_year = AcademicYear::where('academic_year', '=', $year)->first();
+        $academic_year = AcademicYear::first();
 
         $toDate = Carbon::parse($academic_year->start_date);
         $fromDate = Carbon::parse($academic_year->end_date);
@@ -474,6 +474,7 @@ class AttendanceController extends Controller
 
             $userData = UserGradeClass::where('user_id',$user->user_id)->first();
 
+
             $gradeName = Grade::where('id',$userData->grade_id)->value('grade_name');
             $className = Classes::where('id',$userData->class_id)->value('class_name');
 
@@ -481,7 +482,7 @@ class AttendanceController extends Controller
 
             $year = date('Y');
 
-            $academic_year = AcademicYear::where('academic_year', '=', $year)->first();
+            $academic_year = AcademicYear::first();
 
             $toDate = Carbon::parse($academic_year->start_date);
             $fromDate = Carbon::parse($academic_year->end_date);
@@ -718,7 +719,7 @@ class AttendanceController extends Controller
 
             $year = date('Y');
 
-            $academic_year = AcademicYear::where('academic_year', '=', $year)->first();
+            $academic_year = AcademicYear::first();
 
             $toDate = Carbon::parse($academic_year->start_date);
             $fromDate = Carbon::parse($academic_year->end_date);

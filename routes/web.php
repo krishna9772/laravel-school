@@ -108,11 +108,10 @@ Route::middleware(['auth'])->group(function(){
         // Route::get('attendances/get-by-date',[AttendanceController::class,'attendanceByDateInMarkAttendance'])->name('attendances.getByDate.in.mark.attendance');
 
         Route::get('attendances/mark-attendance/class-teacher',[AttendanceController::class,'markAttendanceForClassTeacher'])->name('attendances.mark.for.class.teacher');
-        // Route::get('attendances/view-report/class-teacher',[AttendanceController::class,'viewReportForClassTeacher'])->name('attendances.view-report.for.class.teacher');
+        Route::get('attendances/view-report-teacher/class-teacher',[AttendanceController::class,'viewReportForClassTeacher'])->name('attendances.view-report.for.class.teacher');
 
-        Route::get('attendances/view-report/class-teacher',[AttendanceController::class,function(){
-            dd('hello world');
-        }])->name('attendances.view-report.for.class.teacher');
+        // Route::get('attendances/view-report/class-teacher',[AttendanceController::class,function(){
+        // }])->name('attendances.view-report.for.class.teacher');
 
 
         Route::resource('attendances',AttendanceController::class);

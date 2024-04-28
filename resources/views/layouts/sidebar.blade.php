@@ -398,7 +398,7 @@
 
                     @if (Auth::user()->hasRole('class teacher'))
                     <li class="nav-item">
-                        <a href="{{ route('attendances.mark.for.class.teacher') }}" class="nav-link {{ Route::is('attendances.mark.for.class.teacher') || Route::is('attendances.search_results') ? 'active' : '' }}">
+                        <a href="{{ route('attendances.mark.search') }}" class="nav-link {{ Route::is('attendances.mark.for.class.teacher') || Route::is('attendances.search_results') ? 'active' : '' }}">
                             @if(Route::is('attendances.mark.for.class.teacher') || Route::is('attendances.search_results') )
                             <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
                             @else

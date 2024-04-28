@@ -156,7 +156,7 @@ Route::middleware(['auth'])->group(function(){
         Route::get('classwork/search',[ClassworkController::class,'search'])->name('classworks.search');
         Route::post('classwork/list',[ClassworkController::class,'searchResults'])->name('classworks.search_results');
 
-        // list of classwork for user_type - student
+        // list of classwork for user_type - student or teacher
         Route::get('classworks/user/lists',[ClassworkController::class,'studentorTeacherClassworkList'])->name('classworks.student.teacher.list');
     });
 

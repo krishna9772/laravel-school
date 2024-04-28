@@ -29,11 +29,21 @@
                     </div>
                 @endforeach
             @else
+            @can(['manage classworks'])
+
                 <div class="m-auto">
                     <a href="{{route('classworks.create') }}">
                         <button class="btn btn-primary"> <i class="fa fa-plus"></i> New ClassWork</button>
                     </a>
                 </div>
+            @endcan
+            @can(['view classworks'])
+            <div class="m-auto">
+
+                <p class="text-bold badge badge-info">No classworks assigned yet.</p>
+            </div>
+            @endcan
+
             @endif
         </div>
 

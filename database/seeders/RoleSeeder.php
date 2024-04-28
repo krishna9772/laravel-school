@@ -21,7 +21,6 @@ class RoleSeeder extends Seeder
         Role::create(['name' => 'class teacher']);
         Role::create(['name' => 'student']);
 
-
         Permission::create(['name' => 'manage dashboard']);
         Permission::create(['name' => 'manage registrations']);
         Permission::create(['name' => 'manage grades']);

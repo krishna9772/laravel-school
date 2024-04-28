@@ -6,77 +6,82 @@
     <div class="container-fluid">
       <div class="row justify-content-center">
         <!-- left column -->
-        <div class="col-md-5 mt-5" id="selectSection">
-            <div class="card card-primary">
-                <div class="card-header">
-                    <div>
-                    <h3 class="card-title">Edit Time Table</h3>
-                    </div>
-                </div>
 
-                <div class="card-body">
-                     {{-- action="{{route('timetable.store')}}" method="POST" enctype="multipart/form-data"> --}}
-                        {{-- @csrf --}}
+            @if (Auth::user()->hasRole('admin'))
+                <div class="col-md-5 mt-5" id="selectSection">
 
 
-                        <div class="form-group">
-                            <label for="" class="form-label required">Select Grade</label>
-                            <select name="grade_select" id="gradeSelect" class="form-control">
-                                <option value="">Select Grade</option>
-                                @foreach ($grades as $grade)
-                                    <option value="{{$grade->id}}">{{$grade->grade_name}}</option>
-                                @endforeach
-                            </select>
-                            <p class="text-danger mt-1" id="gradeSelectBoxError"></p>
-                        </div>
 
-                        <div class="form-group">
-                            <label for="" class="form-label required">Select Class</label>
-                            <select name="class_select" id="classSelect" class="form-control">
-                                <option value="">Select Class</option>
-                            </select>
-                            <p class="text-danger mt-1" id="classSelectBoxError"></p>
-                        </div>
-
-                        {{-- <div class="form-group">
-                            <input type="text" name="file" id="" value="">
-                        </div> --}}
-
-                        <div class="mt-4">
-                            <button type="button" id="updateBtn" class="btn btn-primary mr-2">Update</button>
-                            <button type="button" id="deleteBtn" class="btn btn-danger">Delete</button>
-
-                            <div class="modal fade" id="deleteClassModal">
-                                <div class="modal-dialog">
-                                  <div class="modal-content">
-                                    <div class='modal-header'>
-                                        <p class='col-12 modal-title text-center'>
-                                            <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                                                <span aria-hidden='true'>&times;</span>
-                                              </button><br><br>
-                                          <span class=" text-dark" style="font-size: 18px">Are you sure to delete <br>
-                                            <span class=" font-weight-bold text-dark" style="font-size: 19px" id="textInsideModal">  </span>
-                                          </span>
-
-                                        </p>
-                                      </div>
-
-                                    <div class="modal-footer  justify-content-center ">
-                                      <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                      <button type="button" id="deleteBtnInsideModal" class="btn btn-danger deleteBtn">Delete</button>
-                                    </div>
-                                  </div>
-                                  <!-- /.modal-content -->
-                                </div>
-                                <!-- /.modal-dialog -->
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <div>
+                            <h3 class="card-title">Edit Time Table</h3>
                             </div>
                         </div>
 
-               </div>
-            </div>
-        </div>
+                        <div class="card-body">
+                            {{-- action="{{route('timetable.store')}}" method="POST" enctype="multipart/form-data"> --}}
+                                {{-- @csrf --}}
 
-            {{-- <div id="updateSection"> --}}
+
+                                <div class="form-group">
+                                    <label for="" class="form-label required">Select Grade</label>
+                                    <select name="grade_select" id="gradeSelect" class="form-control">
+                                        <option value="">Select Grade</option>
+                                        @foreach ($grades as $grade)
+                                            <option value="{{$grade->id}}">{{$grade->grade_name}}</option>
+                                        @endforeach
+                                    </select>
+                                    <p class="text-danger mt-1" id="gradeSelectBoxError"></p>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="" class="form-label required">Select Class</label>
+                                    <select name="class_select" id="classSelect" class="form-control">
+                                        <option value="">Select Class</option>
+                                    </select>
+                                    <p class="text-danger mt-1" id="classSelectBoxError"></p>
+                                </div>
+
+                                {{-- <div class="form-group">
+                                    <input type="text" name="file" id="" value="">
+                                </div> --}}
+
+                                <div class="mt-4">
+                                    <button type="button" id="updateBtn" class="btn btn-primary mr-2">Update</button>
+                                    <button type="button" id="deleteBtn" class="btn btn-danger">Delete</button>
+
+                                    <div class="modal fade" id="deleteClassModal">
+                                        <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class='modal-header'>
+                                                <p class='col-12 modal-title text-center'>
+                                                    <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                                                        <span aria-hidden='true'>&times;</span>
+                                                    </button><br><br>
+                                                <span class=" text-dark" style="font-size: 18px">Are you sure to delete <br>
+                                                    <span class=" font-weight-bold text-dark" style="font-size: 19px" id="textInsideModal">  </span>
+                                                </span>
+
+                                                </p>
+                                            </div>
+
+                                            <div class="modal-footer  justify-content-center ">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                            <button type="button" id="deleteBtnInsideModal" class="btn btn-danger deleteBtn">Delete</button>
+                                            </div>
+                                        </div>
+                                        <!-- /.modal-content -->
+                                        </div>
+                                        <!-- /.modal-dialog -->
+                                    </div>
+                                </div>
+
+                    </div>
+                    </div>
+                </div>
+
+                {{-- <div id="updateSection"> --}}
                 <form id="updateTimeTableForm" style="display: none" class="mt-5" enctype="multipart/form-data">
                     @csrf
 
@@ -107,13 +112,55 @@
 
                     <!-- /.card-body -->
                     <div class="">
-                      <button type="submit" class="btn btn-info mr-2">Save</button>
-                      <button type="button" id="cancelBtn" class="btn btn-default">Cancel</button>
+                        <button type="submit" class="btn btn-info mr-2">Save</button>
+                        <button type="button" id="cancelBtn" class="btn btn-default">Cancel</button>
                     </div>
                     <!-- /.card-footer -->
-                  </form>
-            </div>
-        </div>
+                </form>
+            @endif
+
+            @if (Auth::user()->hasRole('class teacher') )
+                <div class="card card-primary mt-5">
+                    <div class="card-header">
+                        <div>
+                        <h3 class="card-title">Update TimeTable In {{$gradeName}} - {{$className}} </h3>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <form id="" action="{{route('timetables.update')}}" method="POST" enctype="multipart/form-data">
+                            @csrf
+
+                            <input type="hidden" name="grade_select" id="gradeSelect" value="{{$userData->grade_id}}">
+                            <input type="hidden" name="class_select" id="classSelect" value="{{$userData->class_id}}">
+
+                            <div class="form-group">
+                                <label for="exampleInputFile" class="mt-2">File</label>
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                    <input type="file" name="file" class="custom-file-input @error('file') is-invalid @enderror" id="exampleInputFile">
+                                    <label class="custom-file-label" id="inputFileLabel"  for="exampleInputFile"> Choose File
+                                        {{-- {{ $student->userGradeClasses[0]->examMarks[0]->file ?? 'Choose File' }} --}}
+                                    </label>
+                                    </div>
+                                </div>
+                                @error('file')
+                                    <p class="text-danger">{{$message}}</p>
+                                @enderror
+                            </div>
+
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-info mr-2">Update</button>
+                                {{-- <button type="button" id="cancelBtn" class="btn btn-default">Cancel</button> --}}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            @endif
+
+
+            {{-- </div> --}}
     </div>
 </div>
 </section>
@@ -288,7 +335,8 @@
                     // alert('hello');
                     if(response == 'success'){
                         console.log(response);
-                        // window.location.href = '{{ route('classes.index') }}';
+
+                        window.location.href = '{{ route('timetables.list') }}';
                     }
                     },
                 error: function(xhr, status, error) {

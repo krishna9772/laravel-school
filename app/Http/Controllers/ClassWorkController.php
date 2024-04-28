@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Session;
 use App\Http\Requests\ClassworkSearchRequest;
 use App\Models\UserGradeClass;
 use Illuminate\Support\Facades\Session as FacadesSession;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Traits\HasRoles;
 
 class ClassworkController extends Controller
 {
@@ -27,15 +29,25 @@ class ClassworkController extends Controller
     //     $this->middleware(['permission:edit classworks'], ['only' => ['index', 'create','searchResults','store','search','show','edit','destory','deleteWithSubTopicName','updateData','getMaxId']]);
     // }
 
+
+
     public function index()
     {
 
-        if(Auth::user()->user_type != 'teacher' && Auth::user()->user_type != 'student'){
+        $user = Auth::user();
+
+        if($user->hasRole('admin')){
+
             $grades = Grade::with('classes')->get();
 
             return view('classworks.search_classwork',compact('grades'));
+        }elseif($user->hasRole('class teacher')){}
+
+
+        if(Auth::user()->user_type == 'admin'){
+
         }
-        elseif(Auth::user()->user_type == 'teacher' && Auth::user()->teacher_type == 'subject'){
+        elseif(Auth::user()->user_type == 'teacher' || Auth::user()->user_type == 'student'){
 
             $teacherGradeClass = User::where('user_id',Auth::user()->user_id)->with('userGradeClasses')->first();
             // dd($teacherGradeClass->toArray());
@@ -240,20 +252,74 @@ class ClassworkController extends Controller
 
         // Log::info($request->all());
 
-        $gradeName = Grade::where('id',$request->grade_select)->value('grade_name');
-        $className = Classes::where('id',$request->class_select)->value('class_name');
+        $user = Auth::user();
 
-        $classworks = ClassWork::where('grade_id',$request->grade_select)
-                      ->where('class_id',$request->class_select)
-                      ->where('status','1')
-                      ->get();
+        if($user->hasRole('admin')){
+            $gradeName = Grade::where('id',$request->grade_select)->value('grade_name');
+            $className = Classes::where('id',$request->class_select)->value('class_name');
 
-        $groupedClasswork = $classworks->groupBy('topic_name');
+            $classworks = ClassWork::where('grade_id',$request->grade_select)
+                          ->where('class_id',$request->class_select)
+                          ->where('status','1')
+                          ->get();
 
-        // dd($groupedClasswork);
-        Log::info($groupedClasswork);
+            $groupedClasswork = $classworks->groupBy('topic_name');
 
-        return view('classworks.search_results',compact('groupedClasswork','gradeName','className'));
+            // dd($groupedClasswork);
+            // Log::info($groupedClasswork);
+
+            return view('classworks.search_results',compact('groupedClasswork','gradeName','className'));
+        }
+
+        // elseif($user->hasRole('class teacher')){
+        //     $user_grade_class = UserGradeClass::where('user_id',Auth::user()->user_id)->first();
+
+        //     $gradeName = Grade::where('id',$user_grade_class->grade_id)->value('grade_name');
+        //     $className = Classes::where('id',$user_grade_class->class_id)->value('class_name');
+
+        //     $classworks = ClassWork::where('grade_id',$user_grade_class->grade_id)
+        //                   ->where('class_id',$user_grade_class->class_id)
+        //                   ->where('status','1')
+        //                   ->get();
+
+        //     $groupedClasswork = $classworks->groupBy('topic_name');
+
+        //     // dd($groupedClasswork);
+        //     // Log::info($groupedClasswork);
+
+        //     return view('classworks.search_results',compact('groupedClasswork','gradeName','className'));
+        // }
+
+        else{
+            abort(403);
+        }
+
+
+    }
+
+    public function studentorTeacherClassworkList(){
+
+        $user = Auth::user();
+
+        if($user->hasRole('student') || $user->hasRole('subject teacher')){
+
+            $user_grade_class = UserGradeClass::where('user_id',Auth::user()->user_id)->first();
+
+            $gradeName = Grade::where('id',$user_grade_class->grade_id)->value('grade_name');
+            $className = Classes::where('id',$user_grade_class->class_id)->value('class_name');
+
+            $classworks = ClassWork::where('grade_id',$user_grade_class->grade_id)
+                          ->where('class_id',$user_grade_class->class_id)
+                          ->where('status','1')
+                          ->get();
+
+            $groupedClasswork = $classworks->groupBy('topic_name');
+
+            // dd($groupedClasswork);
+            // Log::info($groupedClasswork);
+
+            return view('classworks.search_results',compact('groupedClasswork','gradeName','className'));
+        }
     }
 
     public function show(string $topicName,Request $request)

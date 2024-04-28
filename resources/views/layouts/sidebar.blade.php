@@ -260,7 +260,8 @@
 
                     </a>
                     <ul class="nav nav-treeview">
-                    @can('manage classworks')
+                    @can(['manage classworks'])
+
                     <li class="nav-item">
                         <a href="{{route('classworks.index')}}" class="nav-link {{ Route::is('classworks.index') ? 'active'  : '' }}">
                             @if(Route::is('classworks.index'))
@@ -283,25 +284,29 @@
                     </li>
                     @endcan
                         @can('view classworks')
-                        <a href="{{route('classworks.index')}}" class="nav-link {{ Route::is('classworks.index') ? 'active'  : '' }}">
-                            @if(Route::is('classworks.index'))
-                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
-                            @else
-                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
-                            @endif
-                            <p>List</p>
-                        </a>
+                        <li class="nav-item">
+                            <a href="{{route('classworks.student.teacher.list')}}" class="nav-link {{ Route::is('classworks.student.teacher.list') ? 'active'  : '' }}">
+                                @if(Route::is('classworks.student.teacher.list'))
+                                    <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                                @else
+                                    <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                                @endif
+                                <p>List</p>
+                            </a>
+                        </li>
                         @endcan
 
                         @can('edit classworks')
-                        <a href="{{route('classworks.index')}}" class="nav-link {{ Route::is('classworks.index') ? 'active'  : '' }}">
-                            @if(Route::is('classworks.index'))
-                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
-                            @else
-                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
-                            @endif
-                            <p>List edit</p>
-                        </a>
+                        <li class="nav-item">
+                            <a href="{{route('classworks.student.teacher.list')}}" class="nav-link {{ Route::is('classworks.student.teacher.list') ? 'active'  : '' }}">
+                                @if(Route::is('classworks.student.teacher.list'))
+                                    <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                                @else
+                                    <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                                @endif
+                                <p>List</p>
+                            </a>
+                        </li>
                         @endcan
 
                     {{-- <li class="nav-item">
@@ -326,16 +331,32 @@
 
                     </a>
                     <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{route('promote.search')}}" class="nav-link {{ Route::is('promote.search') ? 'active'  : '' }}">
-                            @if(Route::is('promote.search'))
-                                <i class="fas fa-dot-circle nav-icon"></i>
-                            @else
-                                <i class="far fa-circle nav-icon"></i>
-                            @endif
-                            <p>Promote Student</p>
-                            </a>
-                        </li>
+                        @if (Auth::user()->hasRole('admin'))
+                            <li class="nav-item">
+                                <a href="{{route('promote.search')}}" class="nav-link {{ Route::is('promote.search') ? 'active'  : '' }}">
+                                    @if(Route::is('promote.search'))
+                                        <i class="fas fa-dot-circle nav-icon"></i>
+                                    @else
+                                        <i class="far fa-circle nav-icon"></i>
+                                    @endif
+                                    <p>Promote Student</p>
+                                </a>
+                            </li>
+                        @endif
+
+                        @if (Auth::user()->hasRole('class teacher'))
+                            <li class="nav-item">
+                                <a href="{{route('promote.student.class.teacher')}}" class="nav-link {{ Route::is('promote.student.class.teacher') ? 'active'  : '' }}">
+                                    @if(Route::is('promote.student.class.teacher'))
+                                        <i class="fas fa-dot-circle nav-icon"></i>
+                                    @else
+                                        <i class="far fa-circle nav-icon"></i>
+                                    @endif
+                                    <p>Promote Student</p>
+                                </a>
+                            </li>
+                        @endif
+
                     </ul>
                 </li>
             @endcan
@@ -352,21 +373,43 @@
 
                 <ul class="nav nav-treeview">
 
+                    @if (Auth::user()->hasRole('admin'))
+                        <li class="nav-item">
+                            <a href="{{ route('attendances.mark.search') }}" class="nav-link {{ Route::is('attendances.mark.search') || Route::is('attendances.search_results') ? 'active' : '' }}">
+                                @if(Route::is('attendances.mark.search') || Route::is('attendances.search_results') )
+                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                                @else
+                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                                @endif
+                                <p>Mark Attendance</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{route('attendances.report.search')}}" class="nav-link {{ Route::is('attendances.report.search') ? 'active'  : '' }}">
+                                @if(Route::is('attendances.report.search') || Route::is('attendances.get-by-date') || Route::is('attendances.view-report.per.month') )
+                                    <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                                @else
+                                    <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                                @endif
+                            <p>Attendance Report</p>
+                            </a>
+                        </li>
+                    @endif
+
+                    @if (Auth::user()->hasRole('class teacher'))
                     <li class="nav-item">
-                        <a href="{{ route('attendances.mark.search') }}" class="nav-link {{ Route::is('attendances.mark.search') || Route::is('attendances.search_results') ? 'active' : '' }}">
-                            @if(Route::is('attendances.mark.search') || Route::is('attendances.search_results') )
-                               <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                        <a href="{{ route('attendances.mark.for.class.teacher') }}" class="nav-link {{ Route::is('attendances.mark.for.class.teacher') || Route::is('attendances.search_results') ? 'active' : '' }}">
+                            @if(Route::is('attendances.mark.for.class.teacher') || Route::is('attendances.search_results') )
+                            <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
                             @else
-                               <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                            <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
                             @endif
                             <p>Mark Attendance</p>
                         </a>
                     </li>
-
-
                     <li class="nav-item">
-                        <a href="{{route('attendances.report.search')}}" class="nav-link {{ Route::is('attendances.report.search') ? 'active'  : '' }}">
-                            @if(Route::is('attendances.report.search') || Route::is('attendances.get-by-date') || Route::is('attendances.view-report.per.month') )
+                        <a href="{{route('attendances.view-report.for.class.teacher')}}" class="nav-link {{ Route::is('attendances.view-report.for.class.teacher') ? 'active'  : '' }}">
+                            @if(Route::is('attendances.view-report.for.class.teacher') || Route::is('attendances.get-by-date') || Route::is('attendances.view-report.per.month') )
                                 <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
                             @else
                                 <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
@@ -374,6 +417,12 @@
                         <p>Attendance Report</p>
                         </a>
                     </li>
+                    @endif
+
+
+
+
+
                     {{-- <li class="nav-item">
                         <a href="#" class="nav-link {{ Route::is('classworks.edit') ? 'active'  : '' }}">
                         <i class="far fa-circle nav-icon"></i>
@@ -398,39 +447,82 @@
                 <ul class="nav nav-treeview">
 
                     @can('manage timetables')
-                        <li class="nav-item">
-                            <a href="{{ route('timetables.list') }}" class="nav-link {{ Route::is('timetables.list') ? 'active'  : '' }}">
-                                @if(Route::is('timetables.list'))
-                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
-                                @else
-                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
-                                @endif
-                                <p>List</p>
-                            </a>
-                        </li>
 
-                        <li class="nav-item">
-                            <a href="{{ route('timetables.new') }}" class="nav-link {{ Route::is('timetables.new') ? 'active'  : '' }}">
-                                @if(Route::is('timetables.new'))
-                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
-                                @else
-                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
-                                @endif
-                                <p>New</p>
-                            </a>
-                        </li>
-
-
-                        <li class="nav-item">
-                            <a href="{{route('timetables.edit')}}" class="nav-link {{ Route::is('timetables.edit') ? 'active'  : '' }}">
-                                @if(Route::is('timetables.edit'))
+                        @if (Auth::user()->hasRole('admin'))
+                            <li class="nav-item">
+                                <a href="{{ route('timetables.list') }}" class="nav-link {{ Route::is('timetables.list') ? 'active'  : '' }}">
+                                    @if(Route::is('timetables.list'))
                                     <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
-                                @else
+                                    @else
                                     <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
-                                @endif
-                            <p>Edit</p>
-                            </a>
-                        </li>
+                                    @endif
+                                    <p>List</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('timetables.new') }}" class="nav-link {{ Route::is('timetables.new') ? 'active'  : '' }}">
+                                    @if(Route::is('timetables.new'))
+                                    <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                                    @else
+                                    <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                                    @endif
+                                    <p>New</p>
+                                </a>
+                            </li>
+
+
+                            <li class="nav-item">
+                                <a href="{{route('timetables.edit')}}" class="nav-link {{ Route::is('timetables.edit') ? 'active'  : '' }}">
+                                    @if(Route::is('timetables.edit'))
+                                        <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                                    @else
+                                        <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                                    @endif
+                                <p>Edit</p>
+                                </a>
+                            </li>
+                        @endif
+
+                        @if (Auth::user()->hasRole('class teacher'))
+
+                            <li class="nav-item">
+                                <a href="{{ route('timetables.list') }}" class="nav-link {{ Route::is('timetables.list') ? 'active'  : '' }}">
+                                    @if(Route::is('timetables.list'))
+                                    <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                                    @else
+                                    <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                                    @endif
+                                    <p>List</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('timetables.new') }}" class="nav-link {{ Route::is('timetables.new') ? 'active'  : '' }}">
+                                    @if(Route::is('timetables.new'))
+                                    <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                                    @else
+                                    <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                                    @endif
+                                    <p>New</p>
+                                </a>
+                            </li>
+
+
+                            <li class="nav-item">
+                                <a href="{{route('timetables.edit')}}" class="nav-link {{ Route::is('timetables.edit') ? 'active'  : '' }}">
+                                    @if(Route::is('timetables.edit'))
+                                        <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                                    @else
+                                        <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                                    @endif
+                                <p>Edit</p>
+                                </a>
+                            </li>
+
+                        @endif
+
+
                     @endcan
 
                     @can('view timetables')
@@ -477,22 +569,71 @@
                         <p>Subject</p>
                         </a>
                     </li> --}}
-                    <li class="nav-item">
-                        <a href="{{route('exam-marks.search')}}" class="nav-link {{ Route::is('exam-marks.search') ? 'active' : (Route::is('exam-marks.search.results') ? 'active' : '' )}}">
-                            @if(Route::is('exam-marks.search'))
-                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
-                            @else
-                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
-                            @endif
-                        <p>New</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{route('exam-marks.edit')}}" class="nav-link {{ Route::is('exam-marks.edit') ? 'active'  : '' }}">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>Edit</p>
-                        </a>
-                    </li>
+                    @can(['manage exam marks'])
+
+                        @if (Auth::user()->hasRole('admin'))
+                            <li class="nav-item">
+                                <a href="{{route('exam-marks.search')}}" class="nav-link {{ Route::is('exam-marks.search') ? 'active' : (Route::is('exam-marks.search.results') ? 'active' : '' )}}">
+                                    @if(Route::is('exam-marks.search'))
+                                        <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                                    @else
+                                        <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                                    @endif
+                                <p>Add Exam Mark</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('exam-marks.edit')}}" class="nav-link {{ Route::is('exam-marks.edit') ? 'active'  : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Edit</p>
+                                </a>
+                            </li>
+                        @endif
+
+                        @if (Auth::user()->hasRole('class teacher'))
+                            <li class="nav-item">
+                                <a href="{{route('exam-marks.class.teacher.search.results')}}" class="nav-link {{ Route::is('exam-marks.class.teacher.search.results') ? 'active' : (Route::is('exam-marks.class.teacher.search.results') ? 'active' : '' )}}">
+                                    @if(Route::is('exam-marks.class.teacher.search.results'))
+                                        <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                                    @else
+                                        <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                                    @endif
+                                <p>Add Exam Mark</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('exam-marks.edit')}}" class="nav-link {{ Route::is('exam-marks.edit') ? 'active'  : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Edit</p>
+                                </a>
+                            </li>
+                        @endif
+                    @endcan
+
+                    @can(['view exam marks'])
+                        <li class="nav-item">
+                            <form id="examResults" action="{{route('exam-marks.search.results')}}" method="POST" >
+                                @csrf
+                                <a href="#" class="nav-link {{ Route::is('exam-marks.edit') ? 'active'  : '' }}" id="examSubmit">
+                                    @if(Route::is('exam-marks.search.results'))
+
+                                        <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+
+
+                                    @else
+
+                                        <i class="far fa-circle nav-icon" id=""></i>
+
+
+                                    @endif
+
+                                <p>View</p>
+                                </a>
+                            </form>
+                        </li>
+                    @endcan
+
+
                 </ul>
             </li>
             @endcanany

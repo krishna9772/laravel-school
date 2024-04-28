@@ -55,11 +55,14 @@
         <div class="">
             <h3 class="text-capitalize">{{$gradeName}} / {{$className}} / {{$topicName}}</h3>
         </div>
-        <div class="mt-3">
-            <a href="{{route('classworks.create') }}">
-                <button class="btn btn-primary mr-3"> <i class="fa fa-plus"></i> Create Classwork</button>
-            </a>
-        </div>
+        @can(['manage classworks'])
+
+            <div class="mt-3">
+                <a href="{{route('classworks.create') }}">
+                    <button class="btn btn-primary mr-3"> <i class="fa fa-plus"></i> Create Classwork</button>
+                </a>
+            </div>
+        @endcan
     </div>
 
     <div class="accordion w-100" id="accordionExample" >
@@ -71,17 +74,23 @@
                         {{$classwork[0]->sub_topic_name}}
 
 
-                        <a href="{{route('classworks.edit',$classwork[0]->sub_topic_name)}}" onclick="event.stopPropagation();">
-                            <i class="fa fa-edit mr-2 ml-3" aria-hidden="true"></i>
-                        </a>
+                        @can('manage classworks')
+                            <a href="{{route('classworks.edit',$classwork[0]->sub_topic_name)}}" onclick="event.stopPropagation();">
+                                <i class="fa fa-edit mr-2 ml-3" aria-hidden="true"></i>
+                            </a>
 
-                        {{-- <a href="">
-                            <i class="fa fa-trash text-danger" aria-hidden="true"></i>
-                        </a> --}}
+                            <a type="button" class="trash-btn" data-toggle="modal" data-target="#deleteClassworkModal_{{$classwork[0]->id}}">
+                                <i class="fa fa-trash text-danger"></i>
+                            </a>
+                        @endcan
 
-                        <a type="button" class="trash-btn" data-toggle="modal" data-target="#deleteClassworkModal_{{$classwork[0]->id}}">
-                            <i class="fa fa-trash text-danger"></i>
-                        </a>
+                        @can('edit classworks')
+                            <a href="{{route('classworks.edit',$classwork[0]->sub_topic_name)}}" onclick="event.stopPropagation();">
+                                <i class="fa fa-edit mr-2 ml-3" aria-hidden="true"></i>
+                            </a>
+                        @endcan
+
+
                     </button>
 
                 </h2>

@@ -5,7 +5,7 @@
 
     @if (count($timetables) != 0)
         <div class="pt-5 d-flex justify-content-between mx-5">
-            <h4 class="text-center" id="listTitle">Time Tables</h4>
+            <h4 class="text-center" id="listTitle">Time Table</h4>
         </div>
 
 
@@ -51,11 +51,13 @@
             No TimeTables Created Yet
         </h4>
 
-        <div class="mt-5">
-            <a href="{{route('timetables.new') }}">
-                <button class="btn btn-primary"> <i class="fa fa-plus"></i> New Timetable</button>
-            </a>
-        </div>
+        @can('manage timetable')
+            <div class="mt-5">
+                <a href="{{route('timetables.new') }}">
+                    <button class="btn btn-primary"> <i class="fa fa-plus"></i> New Timetable</button>
+                </a>
+            </div>
+        @endcan
     </div>
 
     @endif

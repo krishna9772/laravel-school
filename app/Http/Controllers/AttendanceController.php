@@ -13,7 +13,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests\AttendanceSearchRequest;
+use App\Models\UserGradeClass;
 use DateTime;
+use Illuminate\Support\Facades\Auth;
 
 class AttendanceController extends Controller
 {
@@ -38,113 +40,313 @@ class AttendanceController extends Controller
 
     public function search(){
 
-        $grades = Grade::all();
+        $user = Auth::user();
 
-        return view('attendances.search_attendance',compact('grades'));
+        if($user->hasRole('admin')){
+
+            $grades = Grade::all();
+
+            return view('attendances.search_attendance',compact('grades'));
+        }else{
+            abort(403);
+        }
 
     }
 
     public function searchResults(AttendanceSearchRequest $request){
 
-        $dateToShow = Carbon::now();
+        $user = Auth::user();
 
-        if ($dateToShow->isWeekend()) {
-            $dateToShow = $dateToShow->previous(Carbon::FRIDAY);
-        }
+        if($user->hasRole('admin')){
 
-        $holidays = Holiday::pluck('date')->toArray();
+            $dateToShow = Carbon::now();
 
-        while ($dateToShow->isWeekend() || in_array($dateToShow->toDateString(), $holidays)) {
-            $dateToShow->subDay();
-        }
-
-        $dateToShow = $dateToShow->toDateString();
-
-        // dd($dateToShow);
-
-        $gradeName = Grade::where('id',$request->grade_select)->value('grade_name');
-        $className = Classes::where('id',$request->class_select)->value('class_name');
-
-        $gradeId = $request->grade_select;
-        $classId = $request->class_select;
-
-        // dd($gradeName);
-
-        $students = User::where('user_type', 'student')
-        ->whereHas('userGradeClasses', function ($query) use ($request) {
-            $query->where('grade_id', $request->grade_select)
-                ->where('class_id', $request->class_select);
-        })
-        ->with(['userGradeClasses.attendances' => function ($query) use ($dateToShow) {
-            $query->whereDate('attendance_date', $dateToShow);
-        }])
-        ->get();
-
-<<<<<<< HEAD
-        $currentDate = new DateTime();
-
-        $academicYears = AcademicYear::all(); // Assuming AcademicYear::all() returns all academic years
-
-        // dd($academicYears);
-        // Initialize variables to hold the academic year
-        $academicYear = null;
-
-        // $startDate = AcademicYear::first()->start_date;
-        // $endDate = AcademicYear::first()->end_date;
-
-        $startDate = null;
-        $endDate = null;
-
-        if($academicYears != null || $academicYears != ''){
-            foreach ($academicYears as $year) {
-                $startingDate = new DateTime($year->start_date);
-                $endingDate = new DateTime($year->end_date);
-
-                // Check if the current date is within this academic year
-                if ($currentDate >= $startingDate && $currentDate <= $endingDate) {
-                    $academicYear = $year;
-
-                    $startDate = $academicYear->start_date;
-                    $endDate = $academicYear->end_date;
-
-                }else{
-                    $startDate = null;
-                    $endDate = null;
-                }
+            if ($dateToShow->isWeekend()) {
+                $dateToShow = $dateToShow->previous(Carbon::FRIDAY);
             }
-        }else{
+
+            $holidays = Holiday::pluck('date')->toArray();
+
+            while ($dateToShow->isWeekend() || in_array($dateToShow->toDateString(), $holidays)) {
+                $dateToShow->subDay();
+            }
+
+            $dateToShow = $dateToShow->toDateString();
+
+            // dd($dateToShow);
+
+            $gradeName = Grade::where('id',$request->grade_select)->value('grade_name');
+            $className = Classes::where('id',$request->class_select)->value('class_name');
+
+            $gradeId = $request->grade_select;
+            $classId = $request->class_select;
+
+            // dd($gradeName);
+
+            $students = User::where('user_type', 'student')
+            ->whereHas('userGradeClasses', function ($query) use ($request) {
+                $query->where('grade_id', $request->grade_select)
+                    ->where('class_id', $request->class_select);
+            })
+            ->with(['userGradeClasses.attendances' => function ($query) use ($dateToShow) {
+                $query->whereDate('attendance_date', $dateToShow);
+            }])
+            ->get();
+
+            $currentDate = new DateTime();
+
+            $academicYears = AcademicYear::all(); // Assuming AcademicYear::all() returns all academic years
+
+            // dd($academicYears);
+            // Initialize variables to hold the academic year
+            $academicYear = null;
+
+            // $startDate = AcademicYear::first()->start_date;
+            // $endDate = AcademicYear::first()->end_date;
+
             $startDate = null;
             $endDate = null;
+
+            if($academicYears != null || $academicYears != ''){
+                foreach ($academicYears as $year) {
+                    $startingDate = new DateTime($year->start_date);
+                    $endingDate = new DateTime($year->end_date);
+
+                    // Check if the current date is within this academic year
+                    if ($currentDate >= $startingDate && $currentDate <= $endingDate) {
+                        $academicYear = $year;
+
+                        $startDate = $academicYear->start_date;
+                        $endDate = $academicYear->end_date;
+
+                    }else{
+                        $startDate = null;
+                        $endDate = null;
+                    }
+                }
+            }else{
+                $startDate = null;
+                $endDate = null;
+            }
+
+
+
+
+            // Now you can use $academicYear as needed
+            // if ($academicYear) {
+            //     echo "The current academic year is: " . $academicYear->start_date . " to " . $academicYear->end_date;
+            // } else {
+            //     echo "No academic year found for the current date.";
+            // }
+
+            if(AcademicYear::first() == '')
+            {
+                return redirect()->route('academic-years.index')->with("message","Please fill academic settings first")->with("alert-type","warning");
+            }
+
+            $startDate = AcademicYear::first()->start_date;
+
+            $endDate = AcademicYear::first()->end_date;
+            $currentDate = new DateTime();
+
+            $academicYears = AcademicYear::all(); // Assuming AcademicYear::all() returns all academic years
+
+            // dd($academicYears);
+            // Initialize variables to hold the academic year
+            $academicYear = null;
+
+            // $startDate = AcademicYear::first()->start_date;
+            // $endDate = AcademicYear::first()->end_date;
+
+            $startDate = null;
+            $endDate = null;
+
+            if($academicYears != null || $academicYears != ''){
+                foreach ($academicYears as $year) {
+                    $startingDate = new DateTime($year->start_date);
+                    $endingDate = new DateTime($year->end_date);
+
+                    // Check if the current date is within this academic year
+                    if ($currentDate >= $startingDate && $currentDate <= $endingDate) {
+                        $academicYear = $year;
+
+                        $startDate = $academicYear->start_date;
+                        $endDate = $academicYear->end_date;
+
+                    }else{
+                        $startDate = null;
+                        $endDate = null;
+                    }
+                }
+            }else{
+                $startDate = null;
+                $endDate = null;
+            }
+
+
+
+
+            // Now you can use $academicYear as needed
+            // if ($academicYear) {
+            //     echo "The current academic year is: " . $academicYear->start_date . " to " . $academicYear->end_date;
+            // } else {
+            //     echo "No academic year found for the current date.";
+            // }
+
+            if(AcademicYear::first() == '')
+            {
+                return redirect()->route('academic-years.index')->with("message","Please fill academic settings first")->with("alert-type","warning");
+            }
+
+            $startDate = AcademicYear::first()->start_date;
+
+            $endDate = AcademicYear::first()->end_date;
+
+            $holidays = Holiday::select('date')->get();
+
+            // $dateToShow = Carbon::now()->toDateString();
+
+            $attendances = Attendance::get();
+
+            return view('attendances.mark_attendance',compact('gradeName','className','students','dateToShow','attendances','gradeId','classId','startDate','endDate','holidays'));
+
+        }else{
+            abort(403);
         }
 
-
-
-
-        // Now you can use $academicYear as needed
-        // if ($academicYear) {
-        //     echo "The current academic year is: " . $academicYear->start_date . " to " . $academicYear->end_date;
-        // } else {
-        //     echo "No academic year found for the current date.";
-        // }
-
-=======
-        if(AcademicYear::first() == '')
-        {
-            return redirect()->route('academic-years.index')->with("message","Please fill academic settings first")->with("alert-type","warning");
         }
 
-        $startDate = AcademicYear::first()->start_date;
+    public function markAttendanceForClassTeacher(){
+        $user = Auth::user();
+        // dd($user->toArray());
 
-        $endDate = AcademicYear::first()->end_date;
->>>>>>> b055e1ba81de42107628aa42242e490a073fca87
+        if($user->hasRole('class teacher')){
 
-        $holidays = Holiday::select('date')->get();
+            $dateToShow = Carbon::now();
 
-        // $dateToShow = Carbon::now()->toDateString();
+            if ($dateToShow->isWeekend()) {
+                $dateToShow = $dateToShow->previous(Carbon::FRIDAY);
+            }
 
-        $attendances = Attendance::get();
+            $holidays = Holiday::pluck('date')->toArray();
 
-        return view('attendances.mark_attendance',compact('gradeName','className','students','dateToShow','attendances','gradeId','classId','startDate','endDate','holidays'));
+            while ($dateToShow->isWeekend() || in_array($dateToShow->toDateString(), $holidays)) {
+                $dateToShow->subDay();
+            }
+
+            $dateToShow = $dateToShow->toDateString();
+
+            // dd($dateToShow);
+
+            $userData = UserGradeClass::where('user_id',$user->user_id)->first();
+
+            $gradeName = Grade::where('id',$userData->grade_id)->value('grade_name');
+            $className = Classes::where('id',$userData->class_id)->value('class_name');
+            // dd($userData->grade_id);
+
+            $gradeId = $userData->grade_id;
+            $classId = $userData->class_id;
+
+            // dd($gradeName);
+
+            $students = User::where('user_type', 'student')
+            ->whereHas('userGradeClasses', function ($query) use ($userData) {
+                $query->where('grade_id', $userData->grade_id)
+                    ->where('class_id', $userData->class_id);
+            })
+            ->with(['userGradeClasses.attendances' => function ($query) use ($dateToShow) {
+                $query->whereDate('attendance_date', $dateToShow);
+            }])
+            ->get();
+
+            $currentDate = new DateTime();
+
+            $academicYears = AcademicYear::all();
+
+            $academicYear = null;
+
+            $startDate = null;
+            $endDate = null;
+
+            if($academicYears != null || $academicYears != ''){
+                foreach ($academicYears as $year) {
+                    $startingDate = new DateTime($year->start_date);
+                    $endingDate = new DateTime($year->end_date);
+
+                    // Check if the current date is within this academic year
+                    if ($currentDate >= $startingDate && $currentDate <= $endingDate) {
+                        $academicYear = $year;
+
+                        $startDate = $academicYear->start_date;
+                        $endDate = $academicYear->end_date;
+
+                    }else{
+                        $startDate = null;
+                        $endDate = null;
+                    }
+                }
+            }else{
+                $startDate = null;
+                $endDate = null;
+            }
+
+            if(AcademicYear::first() == '')
+            {
+                return redirect()->route('academic-years.index')->with("message","Please fill academic settings first")->with("alert-type","warning");
+            }
+
+            $startDate = AcademicYear::first()->start_date;
+
+            $endDate = AcademicYear::first()->end_date;
+            $currentDate = new DateTime();
+
+            $academicYears = AcademicYear::all();
+
+            $academicYear = null;
+
+            $startDate = null;
+            $endDate = null;
+
+            if($academicYears != null || $academicYears != ''){
+                foreach ($academicYears as $year) {
+                    $startingDate = new DateTime($year->start_date);
+                    $endingDate = new DateTime($year->end_date);
+
+                    if ($currentDate >= $startingDate && $currentDate <= $endingDate) {
+                        $academicYear = $year;
+
+                        $startDate = $academicYear->start_date;
+                        $endDate = $academicYear->end_date;
+
+                    }else{
+                        $startDate = null;
+                        $endDate = null;
+                    }
+                }
+            }else{
+                $startDate = null;
+                $endDate = null;
+            }
+
+
+            if(AcademicYear::first() == '')
+            {
+                return redirect()->route('academic-years.index')->with("message","Please fill academic settings first")->with("alert-type","warning");
+            }
+
+            $startDate = AcademicYear::first()->start_date;
+
+            $endDate = AcademicYear::first()->end_date;
+
+            $holidays = Holiday::select('date')->get();
+
+            $attendances = Attendance::get();
+
+            return view('attendances.mark_attendance',compact('gradeName','className','students','dateToShow','attendances','gradeId','classId','startDate','endDate','holidays'));
+
+        }else{
+            abort(403);
+        }
     }
 
     public function viewReport(AttendanceSearchRequest $request){
@@ -202,19 +404,15 @@ class AttendanceController extends Controller
 
 
         foreach ($students as $student) {
-            // $totalAttendanceCount = 0;
+            $totalAttendanceCount = 0;
             $presentCount = 0;
 
             foreach ($student->userGradeClasses as $userGradeClass) {
-                // $totalAttendanceCount += $userGradeClass->attendances->count();
+                $totalAttendanceCount += $userGradeClass->attendances->count();
                 $presentCount += $userGradeClass->attendances->where('status', 'present')->count();
             }
 
-<<<<<<< HEAD
-            $student->percentage = $schoolOpenDayCount > 0 ? ($presentCount / $schoolOpenDayCount) * 100 : 0;
-=======
             $student->percentage = $totalAttendanceCount > 0 ? ($presentCount / Carbon::now()->month($thisMonth)->daysInMonth) * 100 : 0;
->>>>>>> b055e1ba81de42107628aa42242e490a073fca87
         }
 
 
@@ -262,6 +460,128 @@ class AttendanceController extends Controller
         $holidays = Holiday::select('date')->get();
 
         return view('attendances.attendance_report', compact('gradeName','dateToShow', 'className', 'students','studentsDaily','thisMonth','gradeSelectedId','classSelectedId','startDate','endDate','holidays'));
+    }
+
+    public function viewReportForClassTeacher(){
+        // dd('hello worl d');
+        $user = Auth::user();
+
+        if($user->hasRole('class teacher')){
+            if(AcademicYear::first() == '')
+            {
+                return redirect()->route('academic-years.index')->with("message","Please fill academic settings first")->with("alert-type","warning");
+            }
+
+            $userData = UserGradeClass::where('user_id',$user->user_id)->first();
+
+            $gradeName = Grade::where('id',$userData->grade_id)->value('grade_name');
+            $className = Classes::where('id',$userData->class_id)->value('class_name');
+
+            $thisMonth = date('n');
+
+            $year = date('Y');
+
+            $academic_year = AcademicYear::where('academic_year', '=', $year)->first();
+
+            $toDate = Carbon::parse($academic_year->start_date);
+            $fromDate = Carbon::parse($academic_year->end_date);
+
+            $days = $toDate->diffInDays($fromDate);
+
+            // return $days;
+
+            // for monthly show
+            $students = User::where('user_type', 'student')
+                ->whereHas('userGradeClasses', function ($query) use ($userData) {
+                    $query->where('grade_id', $userData->grade_id)
+                        ->where('class_id', $userData->class_id);
+                })
+                ->with(['userGradeClasses.attendances' => function ($query) {
+                    $query->whereMonth('created_at', Carbon::now()->month);
+                }])
+                ->get();
+
+                // dd($students->toArray());
+
+                $holidays = Holiday::whereMonth('date', $thisMonth)->pluck('date')->toArray();
+                // dd($holidays);
+
+                // Calculate weekends for the current month
+                $weekends = [];
+                $totalDays = Carbon::now()->daysInMonth;
+                for ($i = 1; $i <= $totalDays; $i++) {
+                    $date = Carbon::createFromDate(Carbon::now()->year, $thisMonth, $i);
+                    if ($date->isWeekend()) {
+                        $weekends[] = $date->format('Y-m-d');
+                    }
+                }
+
+                $schoolOpenDayCount = $totalDays - count($holidays) - count($weekends);
+
+                // dd($schoolOpenDayCount);
+
+
+            foreach ($students as $student) {
+                $totalAttendanceCount = 0;
+                $presentCount = 0;
+
+                foreach ($student->userGradeClasses as $userGradeClass) {
+                    $totalAttendanceCount += $userGradeClass->attendances->count();
+                    $presentCount += $userGradeClass->attendances->where('status', 'present')->count();
+                }
+
+                $student->percentage = $totalAttendanceCount > 0 ? ($presentCount / Carbon::now()->month($thisMonth)->daysInMonth) * 100 : 0;
+            }
+
+
+
+            // dd($students->toArray());
+
+            $dateToShow = Carbon::now();
+
+
+            if ($dateToShow->isWeekend()) {
+                $dateToShow = $dateToShow->previous(Carbon::FRIDAY);
+            }
+
+            $holidays = Holiday::pluck('date')->toArray();
+
+            while ($dateToShow->isWeekend() || in_array($dateToShow->toDateString(), $holidays)) {
+                $dateToShow->subDay();
+            }
+
+            $dateToShow = $dateToShow->toDateString();
+
+            // students daily status
+
+            $studentsDaily = User::where('user_type', 'student')
+            ->whereHas('userGradeClasses', function ($query) use ($userData) {
+                $query->where('grade_id', $userData->grade_id)
+                    ->where('class_id', $userData->class_id);
+            })
+            ->with(['userGradeClasses.attendances' => function ($query) use ($dateToShow) {
+                $query->whereDate('attendance_date', $dateToShow);
+            }])
+            ->get();
+
+
+            // $todayDate = Carbon::today();
+
+            $gradeSelectedId = $userData->grade_id;
+            $classSelectedId = $userData->class_id;
+
+            $startDate = AcademicYear::first()->start_date;
+            $endDate = AcademicYear::first()->end_date;
+            // dd($endDate);
+
+
+            $holidays = Holiday::select('date')->get();
+
+            return view('attendances.attendance_report', compact('gradeName','dateToShow', 'className', 'students','studentsDaily','thisMonth','gradeSelectedId','classSelectedId','startDate','endDate','holidays'));
+
+        }else{
+            abort(403);
+        }
     }
 
 
@@ -396,15 +716,21 @@ class AttendanceController extends Controller
             $totalAttendanceCount = 0;
             $presentCount = 0;
 
+            $year = date('Y');
+
+            $academic_year = AcademicYear::where('academic_year', '=', $year)->first();
+
+            $toDate = Carbon::parse($academic_year->start_date);
+            $fromDate = Carbon::parse($academic_year->end_date);
+
+            $days = $toDate->diffInDays($fromDate);
+
             foreach ($student[0]->userGradeClasses as $userGradeClass) {
                 $totalAttendanceCount += $userGradeClass->attendances->count();
                 $presentCount += $userGradeClass->attendances->where('status', 'present')->count();
             }
 
-            $student->percentage = $totalAttendanceCount > 0 ? ($presentCount / $totalAttendanceCount) * 100 : 0;
-
-
-            Log::info("percentage is " .  $student->percentage);
+            $student->percentage = $totalAttendanceCount > 0 ? ($presentCount / Carbon::now()->month(date('n'))->daysInMonth) * 100 : 0;
 
 
         // Log::info($request->all());
@@ -486,7 +812,7 @@ class AttendanceController extends Controller
             'attendanceStatus' => $attendanceStatus,
             'dayOfWeek' => $filteredDayOfWeek,
             'monthName' => $monthName,
-            'percentage' => $student->percentage
+            'percentage' => number_format($student->percentage,1)
         ]);
 
     }

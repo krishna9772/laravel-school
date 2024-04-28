@@ -24,11 +24,11 @@ class TimetableController extends Controller
         // dd($user->user_type);
 
         // if ($user->can('view') || $user->hasRole('class teacher')) {
-        if($user->user_type == 'admin' || ($user->user_type == 'teacher' && $user->teacher_type == 'classroom')){
+        if($user->hasRole('admin')){
             // $timetables = Timetable::with(['grade', 'class'])->get();
             $timetables = Timetable::get();
 
-        }elseif(($user->user_type == 'teacher' && $user->teacher_type == 'subject') || $user->user_type == 'student'){
+        }elseif($user->hasRole('class teacher') || $user->hasRole('subject teacher') || $user->hasRole('student')){
 
             $teacher_id = Auth::user()->user_id;
             // dd($teacher_id);
@@ -51,21 +51,43 @@ class TimetableController extends Controller
         return view('time_table.list',['timetables' => $timetables]);
     }
 
-    // for subject teacher (can view only timetable)
-    public function subjectTeacherViewTimeTable(){
-        $teacher_id = Auth::user()->user_id;
+    // // for subject teacher (can view only timetable)
+    // public function subjectTeacherViewTimeTable(){
+    //     $teacher_id = Auth::user()->user_id;
 
-        $teacherData = UserGradeClass::where('user_id',$teacher_id)->first();
+    //     $teacherData = UserGradeClass::where('user_id',$teacher_id)->first();
 
-        $timetable = Timetable::where('grade_id',$teacherData->grade_id)->where('class_id',$teacherData->class_id)->get();
-        // dd($timetable->toArray());
+    //     $timetable = Timetable::where('grade_id',$teacherData->grade_id)->where('class_id',$teacherData->class_id)->get();
+    //     // dd($timetable->toArray());
 
-        // return view('')
-    }
+    //     // return view('')
+    // }
 
     public function addNewTimeTable(){
-        $grades = Grade::with('classes')->get();
-        return view('time_table.new_time_table',compact('grades'));
+
+        $user = Auth::user();
+
+        if($user->hasRole('admin')){
+
+            $grades = Grade::with('classes')->get();
+            return view('time_table.new_time_table',compact('grades'));
+
+        }elseif($user->hasRole('class teacher')){
+
+            $grades = Grade::with('classes')->get();
+
+            $userData = UserGradeClass::where('user_id',$user->user_id)->first();
+
+            $gradeName = Grade::where('id',$userData->grade_id)->value('grade_name');
+            $className = Classes::where('id',$userData->class_id)->value('class_name');
+
+            return view('time_table.new_time_table',compact('grades','userData','gradeName','className'));
+
+        }else{
+            abort(403);
+        }
+
+
     }
 
 
@@ -85,6 +107,9 @@ class TimetableController extends Controller
             'file' => $fileName,
         ]);
 
+        Session::put('message','Successfully added !');
+        Session::put('alert-type','success');
+
         return redirect()->route('timetables.list');
 
     }
@@ -92,35 +117,76 @@ class TimetableController extends Controller
 
     public function update(Request $request){
 
-        Log::info($request->all());
+        $user = Auth::user();
 
-        $file = $request->file;
+        if($user->hasRole('admin') || $user()->hasRole('class teacher')){
+            Log::info($request->all());
 
-        if($file != null || $file != ''){
-            $oldFile = Timetable::where('grade_id', $request->grade_select)->where('class_id', $request->class_select)->pluck('file');
+            $file = $request->file;
 
-            Log::info("old file is " . $oldFile);
+            if($file != null || $file != ''){
+                $oldFile = Timetable::where('grade_id', $request->grade_select)->where('class_id', $request->class_select)->pluck('file');
 
-            Storage::delete('public/timetables_files/'.$oldFile);
+                Log::info("old file is " . $oldFile);
 
-            $fileName = uniqid() . '_' . $file->getClientOriginalName();
-            Log::info("file name is " . $fileName);
+                Storage::delete('public/timetables_files/'.$oldFile);
 
-            $file->storeAs('public/timetable_files',$fileName);
+                $fileName = uniqid() . '_' . $file->getClientOriginalName();
+                Log::info("file name is " . $fileName);
 
-            Timetable::where('grade_id', $request->grade_select)->where('class_id', $request->class_select)
-                       ->update([
-                            'file' => $fileName
-                       ]);
+                $file->storeAs('public/timetable_files',$fileName);
 
-            return response()->json('success');
+                Timetable::where('grade_id', $request->grade_select)->where('class_id', $request->class_select)
+                           ->update([
+                                'file' => $fileName
+                            ]);
+
+                Session::put('message','Successfully updated !');
+                Session::put('alert-type','success');
+
+                if($user->hasRole('admin')){
+                    return response()->json('success');
+                }
+
+                if($user->hasRole('class teacher')){
+                    return redirect()->route('timetables.list');
+                }
+
+
+            }
+        }else{
+            abort(403);
         }
+
+
     }
 
 
     public function edit(){
-        $grades = Grade::with('classes')->get();
-        return view('time_table.edit',compact('grades'));
+
+        $user = Auth::user();
+
+        if($user->hasRole('admin')){
+
+            $grades = Grade::with('classes')->get();
+            return view('time_table.edit',compact('grades'));
+
+        }elseif($user->hasRole('class teacher')){
+
+            $grades = Grade::with('classes')->get();
+
+            $userData = UserGradeClass::where('user_id',$user->user_id)->first();
+
+            $gradeName = Grade::where('id',$userData->grade_id)->value('grade_name');
+            $className = Classes::where('id',$userData->class_id)->value('class_name');
+
+            return view('time_table.edit',compact('grades','userData','gradeName','className'));
+
+        }else{
+            abort(403);
+        }
+
+
     }
 
 

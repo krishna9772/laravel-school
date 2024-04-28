@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Auth;
 
 class SearchRequest extends FormRequest
 {
@@ -21,9 +22,14 @@ class SearchRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'grade_select' => 'required',
-            'class_select' => 'required'
-        ];
+        if(Auth::user()->user_type == 'admin'){
+            return [
+                'grade_select' => 'required',
+                'class_select' => 'required'
+            ];
+        }else{
+
+            return [];
+        }
     }
 }

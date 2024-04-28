@@ -107,12 +107,23 @@ Route::middleware(['auth'])->group(function(){
         Route::post('attedances/update-reason-on-cancel-btn',[AttendanceController::class,'updateReasonOnCancelBtn'])->name('attendances.update.reason.on.cancel.btn');
         // Route::get('attendances/get-by-date',[AttendanceController::class,'attendanceByDateInMarkAttendance'])->name('attendances.getByDate.in.mark.attendance');
 
+        Route::get('attendances/mark-attendance/class-teacher',[AttendanceController::class,'markAttendanceForClassTeacher'])->name('attendances.mark.for.class.teacher');
+        // Route::get('attendances/view-report/class-teacher',[AttendanceController::class,'viewReportForClassTeacher'])->name('attendances.view-report.for.class.teacher');
+
+        Route::get('attendances/view-report/class-teacher',[AttendanceController::class,function(){
+            dd('hello world');
+        }])->name('attendances.view-report.for.class.teacher');
+
+
         Route::resource('attendances',AttendanceController::class);
 
         // promote student
         Route::get('promote/search',[PromoteController::class,'searchGradeClass'])->name('promote.search');
         Route::post('promote/search/results',[PromoteController::class,'searchResults'])->name('promote.search.results');
         Route::post('promote/student',[PromoteController::class,'promoteStudent'])->name('promote.student');
+
+        // promote student for class teacher
+        Route::get('class-teacher/promote/student',[PromoteController::class,'promoteStudentForClassTeacher'])->name('promote.student.class.teacher');
 
         // time table
         // Route::get('timetable/list',[TimetableController::class,'list'])->name('timetables.list');
@@ -124,19 +135,9 @@ Route::middleware(['auth'])->group(function(){
         Route::get('get-file-name',[TimetableController::class,'getTimetableFileName'])->name('timetables.get.file.name');
 
         // Route::get('exam-marks/search',[ExamMarkController::class,''])
-        Route::get('exam-marks/search',[ExamMarkController::class,'addNewExamMark'])->name('exam-marks.search');
-        // Route::post('exam-marks/search/results',[ExamMarkController::class,'searchResults'])->name('exam-marks.search.results');
-        Route::post('exam-marks/store',[ExamMarkController::class,'store'])->name('exam-marks.store');
-        Route::get('exam-marks/edit',[ExamMarkController::class,'edit'])->name('exam-marks.edit');
 
-        Route::post('exam-marks/update',[ExamMarkController::class,'update'])->name('exam-marks.update');
-        Route::get('exam-marks/destroy/{gradeId}/{classId}',[ExamMarkController::class,'destroy'])->name('exam-marks.destroy');
+        // timetable crud for class teacher
 
-        Route::get('exam-marks/subjects',[ExamMarkController::class,'allExamSubjects'])->name('exam-marks.subjects');
-
-
-        Route::get('exam-marks/subject/new',[ExamMarkController::class,'getExamSubject'])->name('exam-marks.subject');
-        Route::post('exam-marks/save/subjects',[ExamMarkController::class,'saveExamSubject'])->name('exam-marks.save-subject');
 
 
     });
@@ -154,16 +155,38 @@ Route::middleware(['auth'])->group(function(){
 
         Route::get('classwork/search',[ClassworkController::class,'search'])->name('classworks.search');
         Route::post('classwork/list',[ClassworkController::class,'searchResults'])->name('classworks.search_results');
+
+        // list of classwork for user_type - student
+        Route::get('classworks/user/lists',[ClassworkController::class,'studentorTeacherClassworkList'])->name('classworks.student.teacher.list');
     });
 
 
     Route::middleware(['role:admin|class teacher|student'])->group(function () {
         Route::post('exam-marks/search/results',[ExamMarkController::class,'searchResults'])->name('exam-marks.search.results');
+        // exam mark for class teacher
+        Route::get('exam-marks/class-teacher/results',[ExamMarkController::class,'classTeacherSearchResults'])->name('exam-marks.class.teacher.search.results');
+
+
+        Route::get('exam-marks/search',[ExamMarkController::class,'addNewExamMark'])->name('exam-marks.search');
+        // Route::post('exam-marks/search/results',[ExamMarkController::class,'searchResults'])->name('exam-marks.search.results');
+        Route::post('exam-marks/store',[ExamMarkController::class,'store'])->name('exam-marks.store');
+        Route::get('exam-marks/edit',[ExamMarkController::class,'edit'])->name('exam-marks.edit');
+
+        Route::post('exam-marks/update',[ExamMarkController::class,'update'])->name('exam-marks.update');
+        Route::get('exam-marks/destroy/{gradeId}/{classId}',[ExamMarkController::class,'destroy'])->name('exam-marks.destroy');
+
+        Route::get('exam-marks/subjects',[ExamMarkController::class,'allExamSubjects'])->name('exam-marks.subjects');
+
+
+        Route::get('exam-marks/subject/new',[ExamMarkController::class,'getExamSubject'])->name('exam-marks.subject');
+        Route::post('exam-marks/save/subjects',[ExamMarkController::class,'saveExamSubject'])->name('exam-marks.save-subject');
+
+
+
+        // for user type student
+        Route::get('show-student-exam-marks',[ExamMarkController::class,'showStudentExamMarks'])->name('exam-marks.student.show');
+
     });
-
-
-
-
 
 
 });

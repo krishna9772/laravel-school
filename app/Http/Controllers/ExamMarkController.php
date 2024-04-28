@@ -19,35 +19,113 @@ use Illuminate\Support\Facades\Storage;
 use Validator;
 use Illuminate\Support\Facades\Input;
 use Session;
+use Auth;
 use DB;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
+use PharIo\Manifest\Author;
 
 class ExamMarkController extends Controller
 {
     public function addNewExamMark(){
+
         $grades = Grade::with('classes')->get();
         return view('exam_marks.search_exam_marks',compact('grades'));
     }
 
     public function searchResults(SearchRequest $request){
 
-        $gradeName = Grade::where('id',$request->grade_select)->value('grade_name');
-        $user_grade_id = UserGradeClass::where('grade_id',$request->grade_select)->with('examMarks')->get();
-        $grade = Grade::where('id',$request->grade_select)->with('examSubjects')->get();
-        $gradeResult = $grade[0]->examSubjects;
 
-        $className = Classes::where('id',$request->class_select)->value('class_name');
+        $user = Auth::user();
 
-        $students = User::where('user_type', 'student')
-        ->whereHas('userGradeClasses', function ($query) use ($request) {
-            $query->where('grade_id', $request->grade_select)
-                ->where('class_id', $request->class_select);
-        })
-        ->with('userGradeClasses.examMarks')
-        ->get();
+        if($user->hasRole('admin')){
+
+            $gardeId = $request->grade_select;
+            $classId = $request->class_select;
+
+            $gradeName = Grade::where('id',$request->grade_select)->value('grade_name');
+
+            $grade = Grade::where('id',$request->grade_select)->with('examSubjects')->get();
+            $gradeResult = $grade[0]->examSubjects;
+
+            $className = Classes::where('id',$request->class_select)->value('class_name');
+
+            $students = User::where('user_type', 'student')
+            ->whereHas('userGradeClasses', function ($query) use ($request) {
+                $query->where('grade_id', $request->grade_select)
+                    ->where('class_id', $request->class_select);
+            })
+            ->with('userGradeClasses.examMarks')
+            ->get();
+
+        }
+
+        elseif($user->hasRole('class teacher') || $user->hasRole('student')){
+
+            // $teacherGradeClass = User::where('user_id',$user->user_id)->with('userGradeClasses')->first();
+            // $gradeId = $teacherGradeClass->userGradeClasses[0]->grade_id;
+            // $classId = $teacherGradeClass->userGradeClasses[0]->class_id;
+
+            $userData = UserGradeClass::where('user_id', $user->user_id)->first();
+
+            $gradeId = $userData->grade_id;
+            $classId = $userData->class_id;
+
+            $gradeName = Grade::where('id',$gradeId)->value('grade_name');
+
+            $grade = Grade::where('id',$gradeId)->with('examSubjects')->get();
+            $gradeResult = $grade[0]->examSubjects;
+
+            $className = Classes::where('id',$classId)->value('class_name');
+
+            $students = User::where('user_type', 'student')->where('user_id',Auth::user()->id)
+            ->whereHas('userGradeClasses', function ($query) use ($gradeId,$classId) {
+                $query->where('grade_id', $gradeId)
+                    ->where('class_id', $classId);
+            })
+            ->with('userGradeClasses.examMarks')
+            ->get();
+
+        }
+        else{
+            abort(403);
+        }
 
         return view('exam_marks.new_exam_marks',compact('students','gradeName','className','gradeResult'));
 
     }
+
+
+    public function classTeacherSearchResults(){
+        $user = Auth::user();
+
+        if($user->hasRole('class teacher')){
+            $userData = UserGradeClass::where('user_id', $user->user_id)->first();
+
+            $gradeId = $userData->grade_id;
+            $classId = $userData->class_id;
+
+            $gradeName = Grade::where('id',$gradeId)->value('grade_name');
+
+            $grade = Grade::where('id',$gradeId)->with('examSubjects')->get();
+            $gradeResult = $grade[0]->examSubjects;
+
+            $className = Classes::where('id',$classId)->value('class_name');
+
+            $students = User::where('user_type', 'student')->where('user_id',Auth::user()->id)
+            ->whereHas('userGradeClasses', function ($query) use ($gradeId,$classId) {
+                $query->where('grade_id', $gradeId)
+                    ->where('class_id', $classId);
+            })
+            ->with('userGradeClasses.examMarks')
+            ->get();
+
+            return view('exam_marks.new_exam_marks',compact('students','gradeName','className','gradeResult'));
+
+        }else{
+            abort(403);
+        }
+    }
+
 
     public function store(ExamMarkRequest $request){
 
@@ -74,7 +152,7 @@ class ExamMarkController extends Controller
         // ])->id;
 
         // foreach ($subjectNames as $index => $subject) {
-            
+
         //     SubjectMark::updateOrCreate([
         //         'exam_mark_id' => $exam_id,
         //         'subject' => $subject,
@@ -92,6 +170,7 @@ class ExamMarkController extends Controller
 
 
     public function edit(){
+
         $grades = Grade::with('classes')->get();
         // return view('exam_marks.update_delete',compact('grades'));
 
@@ -181,6 +260,22 @@ class ExamMarkController extends Controller
 
         return response()->json('success');
 
+    }
+
+
+    public function showStudentExamMarks(){
+        $user = Auth::user();
+
+        if($user->hasRole('student')){
+            $user_grade_class_id = UserGradeClass::where('user_id',$user->user_id)->pluck('id');
+
+            $exam_marks = ExamMark::where('user_grade_class_id',$user_grade_class_id)->get();
+
+            // return view('exam_marks.all_exam_subjects')
+
+        }else{
+            abort(403);
+        }
     }
 
 }

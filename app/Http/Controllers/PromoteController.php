@@ -7,6 +7,7 @@ use App\Models\Grade;
 use App\Models\User;
 use App\Models\UserGradeClass;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class PromoteController extends Controller
@@ -21,24 +22,66 @@ class PromoteController extends Controller
 
     public function searchResults(PromoteRequest $request){
 
-        $students = User::select('users.*', 'user_grade_classes.grade_id',
-                    'user_grade_classes.class_id', 'grades.grade_name',
-                    'classes.class_name')
-                ->join('user_grade_classes', 'users.user_id', '=', 'user_grade_classes.user_id')
-                ->join('grades', 'user_grade_classes.grade_id', '=', 'grades.id')
-                ->join('classes', 'user_grade_classes.class_id', '=', 'classes.id')
-                ->where('users.user_type','student')
-                ->where('user_grade_classes.grade_id', $request->gradeSelect)
-                ->where('user_grade_classes.class_id', $request->classSelect)
-                ->where('users.user_type','student')
-                ->get();
-            // dd($students->toArray());
+        $user = Auth::user();
 
-        $grades = Grade::with('classes')->get();
+        if($user->hasRole('admin')){
+            $students = User::select('users.*', 'user_grade_classes.grade_id',
+                        'user_grade_classes.class_id', 'grades.grade_name',
+                        'classes.class_name')
+                    ->join('user_grade_classes', 'users.user_id', '=', 'user_grade_classes.user_id')
+                    ->join('grades', 'user_grade_classes.grade_id', '=', 'grades.id')
+                    ->join('classes', 'user_grade_classes.class_id', '=', 'classes.id')
+                    ->where('users.user_type','student')
+                    ->where('user_grade_classes.grade_id', $request->gradeSelect)
+                    ->where('user_grade_classes.class_id', $request->classSelect)
+                    ->where('users.user_type','student')
+                    ->get();
+                // dd($students->toArray());
 
-        return view('promote.promote',compact('students','grades'));
+            $grades = Grade::with('classes')->get();
+
+            return view('promote.promote',compact('students','grades'));
+        }else{
+            abort(403);
+        }
+
+
 
     }
+
+    // promote student for class teacher
+
+    public function promoteStudentForClassTeacher(){
+        $user = Auth::user();
+
+        if($user->hasRole('class teacher')){
+
+            $userData = UserGradeClass::where('user_id',$user->user_id)->first();
+            $grade_id = $userData->grade_id;
+            $class_id = $userData->class_id;
+
+            $students = User::select('users.*', 'user_grade_classes.grade_id',
+            'user_grade_classes.class_id', 'grades.grade_name',
+            'classes.class_name')
+            ->join('user_grade_classes', 'users.user_id', '=', 'user_grade_classes.user_id')
+            ->join('grades', 'user_grade_classes.grade_id', '=', 'grades.id')
+            ->join('classes', 'user_grade_classes.class_id', '=', 'classes.id')
+            ->where('users.user_type','student')
+            ->where('user_grade_classes.grade_id', $grade_id)
+            ->where('user_grade_classes.class_id', $class_id)
+            ->where('users.user_type','student')
+            ->get();
+    // dd($students->toArray());
+
+            $grades = Grade::with('classes')->get();
+
+            return view('promote.promote',compact('students','grades'));
+
+        }else{
+            abort(403);
+        }
+    }
+
 
     public function promoteStudent(Request $request)
     {

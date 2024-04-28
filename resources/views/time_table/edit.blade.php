@@ -287,8 +287,8 @@
                         data: $(this).serialize(),
                         success: function (response) {
 
-                            if(response == 'success'){
-                                window.location.href = '{{ route('classes.index') }}';
+                            if(response == 'delete success'){
+                                window.location.href = '{{ route('timetables.edit') }}';
                             }
                         },
                         error: function(xhr, status, error) {

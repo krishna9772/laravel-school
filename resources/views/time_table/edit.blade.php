@@ -288,6 +288,9 @@
                         success: function (response) {
 
                             if(response == 'delete success'){
+                                toastr.options.timeOut = 5000;
+                                toastr.success('File deleted successfully!');
+
                                 window.location.href = '{{ route('timetables.edit') }}';
                             }
                         },

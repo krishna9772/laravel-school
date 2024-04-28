@@ -131,8 +131,6 @@ class ExamMarkController extends Controller
 
         Log::info($request->all());
 
-        return $request->user_grade_class_id;
-
         $file = $request->file;
 
         $fileName = uniqid() . '_' . $file->getClientOriginalName();

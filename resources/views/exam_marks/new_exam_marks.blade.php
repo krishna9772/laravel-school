@@ -101,7 +101,7 @@
                             ?>
                             <div class="userList">
                             <tr>
-                                <input type="hidden" name="user_grade_class_id_{{$count}}" value="{{$student->userGradeClasses[0]->id}}">
+                                <input type="hidden" name="user_grade_class_id" id="user_grade_class_id_{{$count}}" value="{{$student->userGradeClasses[0]->id}}">
                                 <td class="text-center col-1">{{ $count++ }}</td>
                                 <td class="text-center">{{$student->user_id}}</td>
                                 <td class="text-center">{{ $student->user_name }}</td>
@@ -272,7 +272,7 @@
             var file_count = e.target.getAttribute('data-count');
             // var file = $(this).closest('tr').find
             var studentId = $(this).closest('tr').find('[name^="student_id"]').val();
-            var user_grade_class_id = $(this).closest('tr').find('[name^="user_grade_class_id_'+file_count+'"]').val();
+            var user_grade_class_id = $('#user_grade_class_id_'+file_count+'').val();
 
 
             // Prepare form data

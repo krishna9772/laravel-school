@@ -95,13 +95,13 @@
                     </thead>
                     <tbody>
                         @php $count = 1 @endphp
-                        @foreach ($students as $student)
+                        @foreach ($students as $key => $student)
                             <?php
                                 // dd('user grade class id is ' . $student->userGradeClasses[0]->id);
                             ?>
                             <div class="userList">
                             <tr>
-                                <input type="hidden" name="user_grade_class_id" value="{{$student->userGradeClasses[0]->id}}">
+                                <input type="hidden" name="user_grade_class_id_{{$count}}" value="{{$student->userGradeClasses[0]->id}}">
                                 <td class="text-center col-1">{{ $count++ }}</td>
                                 <td class="text-center">{{$student->user_id}}</td>
                                 <td class="text-center">{{ $student->user_name }}</td>
@@ -114,7 +114,7 @@
 
                                     <div class="form-group d-flex-column ">
 
-                                        <div class="input-group ml-3">
+                                        <div class="input-group">
                                             @if(Auth::user()->user_type == 'admin')
                                                 <div class="custom-file">
                                                     {{-- <input type="file" class="custom-file-input" id="exampleInputFile">
@@ -123,7 +123,7 @@
                                                     </label> --}}
                                                     {{-- <div class="col-12 col-lg-4"> --}}
                                                         <!-- onchange="loadFile(event)" -->
-                                                        <input type="file" multiple="multiple" name="images[]" id="upload" hidden />
+                                                        <input type="file" multiple="multiple" name="images[]" id="upload" hidden data-count = {{$count}} />
                                                         <label class="file_upload" for="upload" style="background: #E9ECEF;
                                                         padding: 8px 15px;
                                                         border: 1px solid #CED4DA;
@@ -140,12 +140,12 @@
                                                     <a class="nav-icon" href="{{asset('storage/exam_marks_files/'. $student->userGradeClasses[0]->examMarks[0]->file)}}" download>
                                                         <span class="badge badge-success"><i class="fas fa-file-download fa-2x"></i></span>
                                                     </a>
-                                                @else
-                                                    <p class="text-info">No exam data yet.</p>
-
+                                                
                                                 @endif
                                             @else
-                                            <p class="text-info text-bold">No exam data yet</p>
+                                            @can('view exam marks')
+                                                <p class="text-info text-bold">No exam data yet</p>
+                                            @endcan
 
                                             @endisset
 
@@ -175,50 +175,47 @@
                     <div class="modal fade" id="subject_marks">
                       <div class="modal-dialog">
                         <div class="modal-content">
-                                <div class='modal-header'>
-                                    <p class='col-12 modal-title text-center'>
-                                    <span class="ml-5" style="font-size: 17px">Subject Marks</span>
-                                    <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                                        <span aria-hidden='true'>&times;</span>
-                                    </button>
-                                    </p>
-                                </div>
-                                <form id="subjectMarksForm">
-                                    <div class="modal-body py-4">
+                            <div class='modal-header'>
+                                <p class='col-12 modal-title text-center'>
+                                <span class="ml-5" style="font-size: 17px">Subject Marks</span>
+                                <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                                    <span aria-hidden='true'>&times;</span>
+                                </button>
+                                </p>
+                            </div>
+                            <form id="subjectMarksForm">
+                                <div class="modal-body py-4">
 
 
-                                        @php
-                                            $count = 1;
-                                            @endphp
-                                    <div class="row">
+                                    @php
+                                        $count = 1;
+                                        @endphp
+                                <div class="row">
 
-                                        @foreach($gradeResult as $row)
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <input type="text" class="form-control" name="subjects[]" id="subjects" placeholder="eg: English" value={{$row->subject}} readonly>
-                                                        <input type="hidden" name="user_grade_class_id" value="{{$student->userGradeClasses[0]->id}}">
+                                    @foreach($gradeResult as $row)
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" name="subjects[]" id="subjects" placeholder="eg: English" value={{$row->subject}} readonly>
+                                                <input type="hidden" name="user_grade_class_id" value="{{$student->userGradeClasses[0]->id}}">
 
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-3">
-                                                    <div class="form-group required">
-                                                        <input type="text" class="form-control" name="marks[]" id="marks" placeholder="eg: 80" onkeypress='validate(event)' required>
-                                                    </div>
-                                                </div>
-                                        @endforeach
-                                    </div>
-
-                                        <div class="modal-footer  justify-content-center ">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                            <button type="button" class="btn btn-danger" id="saveExamSubject">Save</a>
+                                            </div>
                                         </div>
 
+                                        <div class="col-md-3">
+                                            <div class="form-group required">
+                                                <input type="text" class="form-control" name="marks[]" id="marks" placeholder="eg: 80" onkeypress='validate(event)' required>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                    <div class="modal-footer  justify-content-center ">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                        <button type="button" class="btn btn-danger" id="saveExamSubject">Save</a>
                                     </div>
-                                </form>
 
-
-
+                                </div>
+                            </form>
                         </div>
                       <!-- /.modal-content -->
                       </div>
@@ -272,9 +269,11 @@
 
         $(document).on('change', 'input[type="file"]', function(e) {
             var file = e.target.files[0];
+            var file_count = e.target.getAttribute('data-count');
             // var file = $(this).closest('tr').find
             var studentId = $(this).closest('tr').find('[name^="student_id"]').val();
-            var user_grade_class_id = $(this).closest('tr').find('[name^="user_grade_class_id"]').val();
+            var user_grade_class_id = $(this).closest('tr').find('[name^="user_grade_class_id_'+file_count+'"]').val();
+
 
             // Prepare form data
             var formData = new FormData();
@@ -290,8 +289,14 @@
                 contentType: false,
                 success: function(response) {
 
-                    toastr.options.timeOut = 5000;
-                    window.location.reload();
+                    if(response == 'success')
+                    {
+
+                        toastr.options.timeOut = 5000;
+                        toastr.success('File uploaded successfully!');
+
+                        window.location.reload();
+                    }
                 },
                 error: function(xhr, status, error) {
                     toastr.options.timeOut = 5000;

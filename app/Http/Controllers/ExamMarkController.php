@@ -131,11 +131,14 @@ class ExamMarkController extends Controller
 
         Log::info($request->all());
 
+        return $request->user_grade_class_id;
+
         $file = $request->file;
 
         $fileName = uniqid() . '_' . $file->getClientOriginalName();
 
         $file->storeAs('public/exam_marks_files',$fileName);
+        
 
         ExamMark::updateOrCreate([
             'user_grade_class_id' => $request->user_grade_class_id,

@@ -80,6 +80,7 @@ class AttendanceController extends Controller
         }])
         ->get();
 
+<<<<<<< HEAD
         $currentDate = new DateTime();
 
         $academicYears = AcademicYear::all(); // Assuming AcademicYear::all() returns all academic years
@@ -126,6 +127,16 @@ class AttendanceController extends Controller
         //     echo "No academic year found for the current date.";
         // }
 
+=======
+        if(AcademicYear::first() == '')
+        {
+            return redirect()->route('academic-years.index')->with("message","Please fill academic settings first")->with("alert-type","warning");
+        }
+
+        $startDate = AcademicYear::first()->start_date;
+
+        $endDate = AcademicYear::first()->end_date;
+>>>>>>> b055e1ba81de42107628aa42242e490a073fca87
 
         $holidays = Holiday::select('date')->get();
 
@@ -137,6 +148,12 @@ class AttendanceController extends Controller
     }
 
     public function viewReport(AttendanceSearchRequest $request){
+
+        if(AcademicYear::first() == '')
+        {
+            return redirect()->route('academic-years.index')->with("message","Please fill academic settings first")->with("alert-type","warning");
+        }
+
         $gradeName = Grade::where('id',$request->grade_select)->value('grade_name');
         $className = Classes::where('id',$request->class_select)->value('class_name');
 
@@ -193,7 +210,11 @@ class AttendanceController extends Controller
                 $presentCount += $userGradeClass->attendances->where('status', 'present')->count();
             }
 
+<<<<<<< HEAD
             $student->percentage = $schoolOpenDayCount > 0 ? ($presentCount / $schoolOpenDayCount) * 100 : 0;
+=======
+            $student->percentage = $totalAttendanceCount > 0 ? ($presentCount / Carbon::now()->month($thisMonth)->daysInMonth) * 100 : 0;
+>>>>>>> b055e1ba81de42107628aa42242e490a073fca87
         }
 
 

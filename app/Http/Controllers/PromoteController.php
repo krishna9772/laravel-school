@@ -30,6 +30,7 @@ class PromoteController extends Controller
                 ->where('users.user_type','student')
                 ->where('user_grade_classes.grade_id', $request->gradeSelect)
                 ->where('user_grade_classes.class_id', $request->classSelect)
+                ->where('users.user_type','student')
                 ->get();
             // dd($students->toArray());
 

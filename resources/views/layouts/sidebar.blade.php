@@ -260,30 +260,31 @@
 
                     </a>
                     <ul class="nav nav-treeview">
-                    @can(['manage classworks'])
+                    @if(Auth::user()->can(['manage classworks']) || Auth::user()->hasRole('subject teacher'))
+                        <li class="nav-item">
+                            <a href="{{route('classworks.index')}}" class="nav-link {{ Route::is('classworks.index') ? 'active'  : '' }}">
+                                @if(Route::is('classworks.index'))
+                                    <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                                @else
+                                    <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                                @endif
+                            <p>List</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{route('classworks.create')}}" class="nav-link {{ Route::is('classworks.create') ? 'active'  : '' }}">
+                                @if(Route::is('classworks.create'))
+                                    <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
+                                @else
+                                    <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
+                                @endif
+                            <p>New</p>
+                            </a>
+                        </li>
+                    @endif
+                     
 
-                    <li class="nav-item">
-                        <a href="{{route('classworks.index')}}" class="nav-link {{ Route::is('classworks.index') ? 'active'  : '' }}">
-                            @if(Route::is('classworks.index'))
-                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
-                            @else
-                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
-                            @endif
-                        <p>List</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{route('classworks.create')}}" class="nav-link {{ Route::is('classworks.create') ? 'active'  : '' }}">
-                            @if(Route::is('classworks.create'))
-                                <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
-                            @else
-                                <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
-                            @endif
-                        <p>New</p>
-                        </a>
-                    </li>
-                    @endcan
-                        @can('view classworks')
+                        {{-- @can('view classworks')
                         <li class="nav-item">
                             <a href="{{route('classworks.student.teacher.list')}}" class="nav-link {{ Route::is('classworks.student.teacher.list') ? 'active'  : '' }}">
                                 @if(Route::is('classworks.student.teacher.list'))
@@ -294,20 +295,7 @@
                                 <p>List</p>
                             </a>
                         </li>
-                        @endcan
-
-                        @can('edit classworks')
-                        <li class="nav-item">
-                            <a href="{{route('classworks.student.teacher.list')}}" class="nav-link {{ Route::is('classworks.student.teacher.list') ? 'active'  : '' }}">
-                                @if(Route::is('classworks.student.teacher.list'))
-                                    <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
-                                @else
-                                    <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->
-                                @endif
-                                <p>List</p>
-                            </a>
-                        </li>
-                        @endcan
+                        @endcan --}}
 
                     {{-- <li class="nav-item">
                         <a href="#" class="nav-link {{ Route::is('classworks.edit') ? 'active'  : '' }}">

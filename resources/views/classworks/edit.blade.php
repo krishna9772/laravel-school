@@ -120,7 +120,7 @@
                                     <div class="input-group">
                                       <div class="custom-file">
 
-                                        <input type="hidden" name="file[]" id="" value="{{asset('storage/classwork_files/' . $classwork->file)}}">
+                                        <input type="hidden" name="old_file[]" id="" value="{{asset('storage/classwork_files/' . $classwork->file)}}">
 
                                         <input type="file" class="custom-file-input" name="file[]" id="exampleInputFile" value="{{asset('storage/classwork_files/' . $classwork->file)}}">
                                         <label class="custom-file-label" for="exampleInputFile">{{$classwork->file}}</label>

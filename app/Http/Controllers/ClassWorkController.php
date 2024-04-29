@@ -135,6 +135,11 @@ class ClassworkController extends Controller
             Session::put('message','Successfully added !');
             Session::put('alert-type','success');
 
+        if(Auth::user()->hasRole('subject teacher'))
+        {
+            return redirect()->route('classworks.index');
+        }
+
         return redirect()->route('classworks.search');
     }
 

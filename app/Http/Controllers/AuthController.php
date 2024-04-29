@@ -25,18 +25,10 @@ class AuthController extends Controller
 
         if(Auth::attempt($credentials)){
 
-            // dd(Auth::user()->id);
-
-            // $userDetails = UserGradeClass::where('user_id',Auth::user()->user_id)->first();
-
             $userDetails = User::where('user_id',Auth::user()->user_id)->with('userGradeClasses')->get();
-
-            // dd($userDetails->toArray());
 
             return redirect('/');
 
-            // return redirect('/')->with(['userDetails' => $userDetails]);
-            // return redirect('/',compact('userDetails'));
         } else {
             return back()->withErrors(['error' => 'The Credentials Do Not Match Our Records']);
         }
@@ -44,19 +36,9 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request){
 
-        // $user_id = Str::random(8);
-
-        // if (User::where('user_id', $user_id)->exists()) {
-        //     $user_id = Str::random(8);
-        // }
-
         $highestId = intval(User::max('user_id')) ?? 0;
 
-        // Log::info("higheest id" . $highestId);
-
-        // Increment the highest user ID and pad it with leading zeros
         $user_id = str_pad($highestId + 1, 5, '0', STR_PAD_LEFT);
-        // Log::info($user_id);
 
         $user = User::create([
             'user_id' => $user_id,

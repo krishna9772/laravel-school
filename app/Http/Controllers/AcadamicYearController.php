@@ -24,23 +24,13 @@ class AcadamicYearController extends Controller
     }
 
     public function store(AcademicYearRequest $request){
-        // dd($request->all());
-
-        // AcademicYear::updateOrCreate([
-        //         'id' => $request->academic_id
-        //     ],[
-        //         'academic_year' => $request->academic_year,
-        //         'start_date' => $request->start_date,
-        //         'end_date' => $request->end_date
-        // ]);
-
+       
         AcademicYear::create([
             'academic_year' => $request->academic_year,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date
         ]);
 
-        // return redirect()->route('academic-years.index');
         return response()->json('success');
 
     }

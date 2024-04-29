@@ -14,8 +14,6 @@ class DashboardController extends Controller
 {
     public function index(){
 
-        // $users = User::get();
-
         if(Auth::check()){
 
             $studentCount = User::where('user_type','student')->count();

@@ -582,18 +582,18 @@
                                 <p>Add Exam Mark</p>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a href="{{route('exam-marks.edit')}}" class="nav-link {{ Route::is('exam-marks.edit') ? 'active'  : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Edit</p>
                                 </a>
-                            </li>
+                            </li> --}}
                         @endif
 
                         @if (Auth::user()->hasRole('class teacher'))
                             <li class="nav-item">
                                 <a href="{{route('exam-marks.class.teacher.search.results')}}" class="nav-link {{ Route::is('exam-marks.class.teacher.search.results') ? 'active' : (Route::is('exam-marks.class.teacher.search.results') ? 'active' : '' )}}">
-                                    @if(Route::is('exam-marks.class.teacher.search.results'))
+                                    @if(Route::is('exam-marks.class.teacher.search.results') || Route::is('exam-marks.class.teacher.search.results'))
                                         <i class="fas fa-dot-circle nav-icon"></i> <!-- First icon when active -->
                                     @else
                                         <i class="far fa-circle nav-icon"></i> <!-- Second icon when not active -->

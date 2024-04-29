@@ -130,15 +130,6 @@ class AttendanceController extends Controller
             }
 
 
-
-
-            // Now you can use $academicYear as needed
-            // if ($academicYear) {
-            //     echo "The current academic year is: " . $academicYear->start_date . " to " . $academicYear->end_date;
-            // } else {
-            //     echo "No academic year found for the current date.";
-            // }
-
             if(AcademicYear::first() == '')
             {
                 return redirect()->route('academic-years.index')->with("message","Please fill academic settings first")->with("alert-type","warning");
@@ -151,8 +142,6 @@ class AttendanceController extends Controller
 
             $academicYears = AcademicYear::all(); // Assuming AcademicYear::all() returns all academic years
 
-            // dd($academicYears);
-            // Initialize variables to hold the academic year
             $academicYear = null;
 
             // $startDate = AcademicYear::first()->start_date;
@@ -878,36 +867,7 @@ class AttendanceController extends Controller
 
     }
 
-    // public function viewReport(){
-    //     $gr
-    // }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    // public function store(Request $request)
-    // {
-    //     // dd($request->all());
-
-    //     Log::info($request->all());
-
-    //     $studentIds = $request->student_id;
-    //     $userGradeClassIds = $request->user_grade_class_id;
-    //     $statuses = $request->status;
-    //     $reasons = $request->reason;
-
-    //     foreach ($studentIds as $index => $studentId) {
-    //         $attendance = new Attendance;
-    //         $attendance->user_grade_class_id = $userGradeClassIds[$index];
-    //         $attendance->status = $statuses[$studentId];
-    //         $attendance->reason = $reasons[$index] ?? null;
-    //         $attendance->save();
-    //     }
-
-    //     return response()->json('success');
-    // }
-
-
+   
     public function store(Request $request)
     {
         // dd($request->all());

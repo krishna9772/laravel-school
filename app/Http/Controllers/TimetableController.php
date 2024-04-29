@@ -19,15 +19,12 @@ use Ramsey\Uuid\Type\Time;
 class TimetableController extends Controller
 {
 
-    // for admins and class teacher
     public function list(){
 
         $user = Auth::user();
         // dd($user->user_type);
 
-        // if ($user->can('view') || $user->hasRole('class teacher')) {
         if($user->hasRole('admin')){
-            // $timetables = Timetable::with(['grade', 'class'])->get();
             $timetables = Timetable::get();
 
         }elseif($user->hasRole('class teacher') || $user->hasRole('subject teacher') || $user->hasRole('student')){
@@ -53,17 +50,6 @@ class TimetableController extends Controller
         return view('time_table.list',['timetables' => $timetables]);
     }
 
-    // // for subject teacher (can view only timetable)
-    // public function subjectTeacherViewTimeTable(){
-    //     $teacher_id = Auth::user()->user_id;
-
-    //     $teacherData = UserGradeClass::where('user_id',$teacher_id)->first();
-
-    //     $timetable = Timetable::where('grade_id',$teacherData->grade_id)->where('class_id',$teacherData->class_id)->get();
-    //     // dd($timetable->toArray());
-
-    //     // return view('')
-    // }
 
     public function addNewTimeTable(){
 

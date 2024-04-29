@@ -22,35 +22,7 @@ class HolidayController extends Controller
         return view('academic_year.holidays',compact('academicYears','holidays'));
     }
 
-    // public function store(HolidayRequest $request){
-    //     Log::info($request->all());
-
-    //     $academic_id = $request->academic_id;
-    //     $names = $request->name;
-    //     $dates = $request->date;
-    //     $holiday_ids = $request->holiday_id;
-
-    //     foreach($names as $index => $name){
-    //         if(isset($holiday_ids[$index])) {
-    //             Holiday::where('id', $holiday_ids[$index])->update([
-    //                 'name' => $name,
-    //                 'date' => $dates[$index],
-    //             ]);
-    //         } else {
-    //             Holiday::create([
-    //                 'academic_id' => $academic_id,
-    //                 'name' => $name,
-    //                 'date' => $dates[$index],
-    //             ]);
-    //         }
-    //     }
-
-    //     Session::put('message','Successfully added !');
-    //     Session::put('alert-type','success');
-
-    //     return response()->json('success');
-
-    // }
+    
 
     public function store(HolidayRequest $request){
         Log::info($request->all());

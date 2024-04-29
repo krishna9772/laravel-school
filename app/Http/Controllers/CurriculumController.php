@@ -139,23 +139,6 @@ class CurriculumController extends Controller
 
         $grades = Grade::all();
 
-        // $teachers = User::where('user_type','teacher')
-        //             ->where('teacher_type','subject')->get();
-        //             ->with('userGradeClasses.')
-
-                    // $grades = Grade::with(['classes', 'curricula' => function($query) {
-                    //     $query->where('status', '1');
-                    // }])
-                    // ->get();
-
-        // $teachers = User::with(['userGradeClasses' => function($query){
-        //     $query->where('grade_id',$id)
-        // }])->where('user_type','teacher')
-        // ->where('teacher_type','subject')
-        // ->get();
-
-        // ;
-
         $teachers = User::where('user_type', 'teacher')
         ->where('teacher_type', 'subject')
         ->with(['userGradeClasses' => function($query) use ($id) {
@@ -179,20 +162,6 @@ class CurriculumController extends Controller
         $curriculumNames = $request->curriculum_name;
         $teacherIds = $request->teacher_id;
 
-        // foreach($names as $index => $name){
-            //         if(isset($holiday_ids[$index])) {
-            //             Holiday::where('id', $holiday_ids[$index])->update([
-            //                 'name' => $name,
-            //                 'date' => $dates[$index],
-            //             ]);
-            //         } else {
-            //             Holiday::create([
-            //                 'academic_id' => $academic_id,
-            //                 'name' => $name,
-            //                 'date' => $dates[$index],
-            //             ]);
-            //         }
-            //     }
 
         foreach($curriculumNames as $index => $curriculumName){
             if(isset($curriculumIds[$index])){
@@ -208,27 +177,9 @@ class CurriculumController extends Controller
                     'user_id' => $teacherIds[$index],
                     'grade_id' => $request->grade_id,
                     'curriculum_name' => $curriculumName,
-
-                    // 'user_id' => $teacherIds[$index],
-                    // 'grade_id' => $request->grade_id,
-                    // 'curriculum_name' => $curriculumName,
-
                 ]);
             }
         }
-
-        // foreach ($curriculumIds as $index => $curriculumId) {
-        //     Curriculum::updateOrCreate(
-        //         ['id' => $curriculumId],
-        //         [
-        //             'user_id' => $teacherIds[$index],
-        //             'grade_id' => $request->grade_id,
-        //             'curriculum_name' => $curriculumNames[$index],
-        //             'status' => '1',
-        //             'deleted_at' => null
-        //         ]
-        //     );
-        // }
 
         Session::put('message','Successfully updated !');
         Session::put('alert-type','success');
@@ -246,14 +197,6 @@ class CurriculumController extends Controller
 
         return response()->json('success');
     }
-
-
-    // public function getMaxId()
-    // {
-    //     $maxId = Curriculum::max('id');
-
-    //     return $maxId;
-    // }
 
 
     public function destroy(string $id)

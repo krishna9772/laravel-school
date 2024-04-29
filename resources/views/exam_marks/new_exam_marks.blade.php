@@ -94,7 +94,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @php $count = 1 @endphp
+                        @php $count = 0 @endphp
                         @foreach ($students as $key => $student)
                             <?php
                                 // dd('user grade class id is ' . $student->userGradeClasses[0]->id);
@@ -123,8 +123,8 @@
                                                     </label> --}}
                                                     {{-- <div class="col-12 col-lg-4"> --}}
                                                         <!-- onchange="loadFile(event)" -->
-                                                        <input type="file" name="images[]" class="fileupload_{{$count}}" id="upload" hidden data-count = {{$student->userGradeClasses[0]->id}} />
-                                                        <label class="file_upload" for="upload" style="background: #E9ECEF;
+                                                        <input type="file" name="file_{{$count}}" class="fileupload_{{$count}}" id="upload_{{$count}}" hidden data-count = {{$student->userGradeClasses[0]->id}} />
+                                                        <label class="file_upload" for="upload_{{$count}}" style="background: #E9ECEF;
                                                         padding: 8px 15px;
                                                         border: 1px solid #CED4DA;
                                                         border-radius: 5px;
@@ -137,7 +137,7 @@
 
                                             @isset($student->userGradeClasses[0]->examMarks[0]->file)
                                                 @if($student->userGradeClasses[0]->examMarks[0]->file != '')
-                                                    <a class="nav-icon" href="{{asset('storage/exam_marks_files/'. $student->userGradeClasses[0]->examMarks[0]->file)}}" download>
+                                                    <a class="nav-icon" href="{{asset('storage/exam_marks_files/'. $student->userGradeClasses[0]->examMarks[0]->file)}}" id="student_grade_class_{{$student->userGradeClasses[0]->id}}" download>
                                                         <span class="badge badge-success"><i class="fas fa-file-download fa-2x"></i></span>
                                                     </a>
                                                 
@@ -250,6 +250,7 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
 
 
         // $("#SubjectMarkSave").on('click',function(){
@@ -472,59 +473,101 @@
         });
     }
 
+    for(i=1; i<= $('#studentsTable tr').length; i++){
+
+        $('#upload_'+i).on('change',function(e){
+            var file = e.target.files[0];
+            var user_grade_class_id = e.target.getAttribute('data-count');
+
+            //Prepare form data
+            var formData = new FormData();
+            formData.append('file', file);
+            formData.append('user_grade_class_id', user_grade_class_id);
+
+            $.ajax({
+                url: '{{route('exam-marks.store')}}',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+
+                    if(response.status == 'success')
+                    {
+
+                        toastr.options.timeOut = 5000;
+                        toastr.success('File uploaded successfully!');
+                        // $("#studentsTable").load(window.location + " #studentsTable");
+                        window.location.reload();
+
+
+                    }
+                },
+                error: function(xhr, status, error) {
+                    toastr.options.timeOut = 5000;
+                    toastr.success('Error file uploading!');
+                    {{Session::forget('message')}}
+                    console.error('Error uploading file:', error);
+                }
+            });
+        });
+
+    }
+
+
 
     function fileUpload()
     {
             var tip = [];
 
-            for(i=1; i<= 3; i++){
-                tip = document.querySelectorAll(".fileupload_"+i+"");
-            }
+            for(i=1; i<= $('#studentsTable tr').length; i++){
+                tip = document.querySelectorAll(".fileupload_"+i+"");            
 
-            tip.forEach((item) => {
-                item.addEventListener("change", (e) => {
-                    var file = e.target.files[0];
-                    var file_count = e.target.attr('data-count');
+                tip.forEach((item) => {
+                    item.addEventListener("change", (e) => {
+                        var file = e.target.files[0];
+                        var file_count = e.target.attr('data-count');
 
-                    // var file = $(this).closest('tr').find
-                    var user_grade_class_id = $('#user_grade_class_id_'+file_count+'').val();
+                        // var file = $(this).closest('tr').find
+                        var user_grade_class_id = $('#user_grade_class_id_'+file_count+'').val();
 
-                    console.log(file_count);
+                        // Prepare form data
+                        var formData = new FormData();
+                        formData.append('file', file);
+                        formData.append('user_grade_class_id', user_grade_class_id);
 
-                    // Prepare form data
-                    var formData = new FormData();
-                    formData.append('file', file);
-                    formData.append('user_grade_class_id', user_grade_class_id);
+                        $.ajax({
+                            url: '{{route('exam-marks.store')}}',
+                            type: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function(response) {
 
-                    $.ajax({
-                        url: '{{route('exam-marks.store')}}',
-                        type: 'POST',
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        success: function(response) {
+                                if(response == 'success')
+                                {
 
-                            if(response == 'success')
-                            {
+                                    toastr.options.timeOut = 5000;
+                                    toastr.success('File uploaded successfully!');
 
+                                    window.location.reload();
+
+                                    // $("#student_grade_class_"+file_count).attr('href',flagsUrl + response.fileName));
+                                }
+                            },
+                            error: function(xhr, status, error) {
                                 toastr.options.timeOut = 5000;
-                                toastr.success('File uploaded successfully!');
-
-                                window.location.reload();
+                                toastr.success('Error file uploading!');
+                                {{Session::forget('message')}}
+                                console.error('Error uploading file:', error);
                             }
-                        },
-                        error: function(xhr, status, error) {
-                            toastr.options.timeOut = 5000;
-                            toastr.success('Error file uploading!');
-                            {{Session::forget('message')}}
-                            console.error('Error uploading file:', error);
-                        }
+                        });
                     });
                 });
-            });
+            }
         }
 
-        fileUpload();
+        // fileUpload();
 
 </script>
 @endsection

@@ -61,9 +61,6 @@ class ExamMarkController extends Controller
 
         elseif($user->hasRole('class teacher') || $user->hasRole('student')){
 
-            // $teacherGradeClass = User::where('user_id',$user->user_id)->with('userGradeClasses')->first();
-            // $gradeId = $teacherGradeClass->userGradeClasses[0]->grade_id;
-            // $classId = $teacherGradeClass->userGradeClasses[0]->class_id;
 
             $userData = UserGradeClass::where('user_id', $user->user_id)->first();
 
@@ -161,38 +158,17 @@ class ExamMarkController extends Controller
             'file' => $fileName,
         ]);
 
-        return "go";
-
-        // $subjectNames = $request->subjects;
-        // $marks = $request->marks;
-
-
-        // $exam_id = ExamMark::updateOrCreate([
-        //     'user_grade_class_id' => $request->user_grade_class_id,
-        // ])->id;
-
-        // foreach ($subjectNames as $index => $subject) {
-
-        //     SubjectMark::updateOrCreate([
-        //         'exam_mark_id' => $exam_id,
-        //         'subject' => $subject,
-        //         'marks' => $marks[$index],
-
-        //     ]);
-
-        // }
 
         Session::put('message','Successfully added !');
         Session::put('alert-type','success');
 
-        return response()->json('success');
+        return response()->json(['status' => 'success', 'fileName' => $fileName]);
     }
 
 
     public function edit(){
 
         $grades = Grade::with('classes')->get();
-        // return view('exam_marks.update_delete',compact('grades'));
 
         return view('exam_marks.search_exam_marks',compact('grades'));
     }
@@ -290,8 +266,6 @@ class ExamMarkController extends Controller
             $user_grade_class_id = UserGradeClass::where('user_id',$user->user_id)->pluck('id');
 
             $exam_marks = ExamMark::where('user_grade_class_id',$user_grade_class_id)->get();
-
-            // return view('exam_marks.all_exam_subjects')
 
         }else{
             abort(403);

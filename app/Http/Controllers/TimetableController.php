@@ -131,7 +131,7 @@ class TimetableController extends Controller
 
                 Log::info("old file is " . $oldFile);
 
-                Storage::delete('public/timetables_files/'.$oldFile);
+                Storage::delete('storage/timetables_files/'.$oldFile);
 
                 $fileName = uniqid() . '_' . $file->getClientOriginalName();
                 Log::info("file name is " . $fileName);

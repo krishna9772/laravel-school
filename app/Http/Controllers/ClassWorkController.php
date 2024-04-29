@@ -34,6 +34,7 @@ class ClassworkController extends Controller
     public function index()
     {
 
+
         $user = Auth::user();
 
         if($user->hasRole('admin')){
@@ -77,22 +78,31 @@ class ClassworkController extends Controller
 
     public function create()
     {
-        $grades = Grade::with(['classes', 'curricula' => function($query) {
-            $query->where('status', '1');
-        }])
-        ->get();
 
-        $teacherGradeClass = User::where('user_id',Auth::user()->user_id)->with('userGradeClasses')->first();
-        // dd($teacherGradeClass->toArray());
-        // $curriculumId = Curriculum::where('user_id',Auth::user()->user_id)->pluck('id');
-        // dd($teacherGradeClass->userGradeClasses[0]->grade_id);
+        $user = Auth::user();
 
-        $curriculums  = Curriculum::where('user_id',Auth::user()->id)->get();
-        // dd($curriculumIds);
+        if($user->hasRole('admin')){
+            $grades = Grade::with(['classes', 'curricula' => function($query) {
+                $query->where('status', '1');
+            }])
+            ->get();
+
+            $teacherGradeClass = User::where('user_id',Auth::user()->user_id)->with('userGradeClasses')->first();
+            // dd($teacherGradeClass->toArray());
+            // $curriculumId = Curriculum::where('user_id',Auth::user()->user_id)->pluck('id');
+            // dd($teacherGradeClass->userGradeClasses[0]->grade_id);
+
+            $curriculums  = Curriculum::where('user_id',Auth::user()->id)->get();
+            // dd($curriculumIds);
 
 
 
-        return view('classworks.new_classwork',compact('grades','teacherGradeClass','curriculums'));
+            return view('classworks.new_classwork',compact('grades','teacherGradeClass','curriculums'));
+        }else{
+            abort(403,'User Does Not Have The Right Roles');
+        }
+
+
     }
 
     public function store(ClassworkRequest $request)

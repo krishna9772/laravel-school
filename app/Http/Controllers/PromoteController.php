@@ -2,22 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\PromoteRequest;
-use App\Models\Grade;
 use App\Models\User;
-use App\Models\UserGradeClass;
+use App\Models\Grade;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\UserGradeClass;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\PromoteRequest;
+use Illuminate\Support\Facades\Session;
 
 class PromoteController extends Controller
 {
 
     public function searchGradeClass(){
 
-        $grades = Grade::with('classes')->get();
+        $user = Auth::user();
 
-        return view('promote.search',compact('grades'));
+        if($user->hasRole('admin')){
+
+            $grades = Grade::with('classes')->get();
+
+            return view('promote.search',compact('grades'));
+        }else{
+            abort(403);
+        }
+
+
     }
 
     public function searchResults(PromoteRequest $request){
@@ -86,17 +96,36 @@ class PromoteController extends Controller
     public function promoteStudent(Request $request)
     {
 
-        $selectedUserIds = $request->selected_students;
+        $user = Auth::user();
 
-        foreach ($selectedUserIds as $userId) {
+        if($user->hasRole('admin') || $user->hasRole('class teacher')){
+            $selectedUserIds = $request->selected_students;
 
-            UserGradeClass::where('user_id',$userId)->update([
-                'grade_id' => $request->gradeSelect,
-                'class_id' => $request->classSelect
-            ]);
+            foreach ($selectedUserIds as $userId) {
+
+                UserGradeClass::where('user_id',$userId)->update([
+                    'grade_id' => $request->gradeSelect,
+                    'class_id' => $request->classSelect
+                ]);
+            }
+
+            Session::put('message','Successfully promoted !');
+            Session::put('alert-type','success');
+
+            if($user->hasRole('admin')){
+                return redirect()->route('promote.search');
+            }
+
+            if($user->hasRole('class teacher')){
+                return redirect()->route('promote.student.class.teacher');
+            }
+
+
+        }else{
+            abort(403);
         }
 
-        return redirect()->route('promote.search');
+
     }
 
 }

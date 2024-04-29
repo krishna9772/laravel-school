@@ -57,6 +57,8 @@ class ExamMarkController extends Controller
             ->with('userGradeClasses.examMarks')
             ->get();
 
+            // dd($students->toArray());
+
         }
 
         elseif($user->hasRole('class teacher') || $user->hasRole('student')){
@@ -136,7 +138,7 @@ class ExamMarkController extends Controller
         $fileName = uniqid() . '_' . $file->getClientOriginalName();
 
         $file->storeAs('public/exam_marks_files',$fileName);
-        
+
 
         ExamMark::updateOrCreate([
             'user_grade_class_id' => $request->user_grade_class_id,

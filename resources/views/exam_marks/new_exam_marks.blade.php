@@ -56,6 +56,15 @@
         outline: 1px solid red;
     }
 
+    .file_upload {
+        background: #E9ECEF;
+        padding: 8px 15px;
+        border: 1px solid #CED4DA;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+
   </style>
 @endsection
 
@@ -85,6 +94,7 @@
                 <table id="studentsTable" class="w-100 my-3 table table-striped" >
                     <thead>
                         <tr>
+                            {{-- <th></th> --}}
                             <th class="text-center">No</th>
                             <th class="text-center">Student ID</th>
                             <th class="text-center">Student Name</th>
@@ -101,11 +111,16 @@
                             ?>
                             <div class="userList">
                             <tr>
-                                <input type="hidden" name="user_grade_class_id" id="user_grade_class_id_{{$count}}" value="{{$student->userGradeClasses[0]->id}}">
-                                <td class="text-center col-1">{{ $count++ }}</td>
+                                {{-- <td>
+                                    <input type="text" name="user_grade_class_id" id="user_grade_class_id_" value="{{$student->userGradeClasses[0]->id}}">
+                                </td> --}}
+
+                                {{-- <input type="hidden" id="count" value="{{$count}}"> --}}
+
+                                <td class="text-center col-1">{{ $count }}</td>
                                 <td class="text-center">{{$student->user_id}}</td>
                                 <td class="text-center">{{ $student->user_name }}</td>
-                                <td class="text-center">{{$student->father_name}}</td>
+                                <td class="text-center">{{$student->father_name ?? '-'}}</td>
                                 <td class="col-3 text-center">
 
                                     <?php
@@ -116,21 +131,22 @@
 
                                         <div class="input-group">
                                             @if(Auth::user()->user_type == 'admin')
-                                                <div class="custom-file">
+                                                <div class="custom-file w-75">
                                                     {{-- <input type="file" class="custom-file-input" id="exampleInputFile">
                                                     <label class="custom-file-label" for="exampleInputFile">
                                                         {{ $student->userGradeClasses[0]->examMarks[0]->file ?? 'Choose File' }}
                                                     </label> --}}
                                                     {{-- <div class="col-12 col-lg-4"> --}}
                                                         <!-- onchange="loadFile(event)" -->
-                                                        <input type="file" multiple="multiple" name="images[]" id="upload" hidden data-count = {{$count}} />
-                                                        <label class="file_upload" for="upload" style="background: #E9ECEF;
-                                                        padding: 8px 15px;
-                                                        border: 1px solid #CED4DA;
-                                                        border-radius: 5px;
-                                                        cursor: pointer;">Upload</label>
-                                                        <span class="small text-muted" id="fileCount"></span>
-                                                    {{-- </div> --}}
+                                                        {{-- <input type="text" name="" id="" value="{{$student->userGradeClasses[0]->id}}"> --}}
+                                                        {{-- <input type="file" id="upload"  onchange="uploadFile(this, {{$student->userGradeClasses[0]->id}})" class="file-input"/> --}}
+
+                                                        <div class="col-lg-4">
+                                                        {{-- <input type="text" name="" id="" value="{{$student->userGradeClasses[0]->id}}"> --}}
+                                                            <input type="file" id="upload" onchange="uploadFile(this, {{$student->userGradeClasses[0]->id}})" style="opacity: 0; position: absolute;"/>
+                                                            <label class="file_upload" for="upload">Upload</label>
+                                                            <span class="small text-muted" id="fileCount"></span>
+                                                        </div>
 
                                                 </div>
                                             @endif
@@ -140,7 +156,7 @@
                                                     <a class="nav-icon" href="{{asset('storage/exam_marks_files/'. $student->userGradeClasses[0]->examMarks[0]->file)}}" download>
                                                         <span class="badge badge-success"><i class="fas fa-file-download fa-2x"></i></span>
                                                     </a>
-                                                
+
                                                 @endif
                                             @else
                                             @can('view exam marks')
@@ -168,6 +184,9 @@
 
                             </tr>
                         </div>
+
+                        <?php  $count++; ?>
+
                         @endforeach
                     </tbody>
                 </table>
@@ -241,6 +260,47 @@
 
 <script>
 
+// document.getElementById('uploadLabel').addEventListener('click', function() {
+//     // alert('hello world');
+//     document.getElementById('upload').click();
+// });
+
+function uploadFile(input, userGradeClassId) {
+
+        // console.log(userGradeClassId);
+        var file = input.files[0];
+
+        var formData = new FormData();
+        formData.append('file', file);
+        formData.append('user_grade_class_id', userGradeClassId);
+
+        $.ajax({
+            url: '{{route('exam-marks.store')}}',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+
+                if(response == 'success')
+                {
+
+                    toastr.options.timeOut = 5000;
+                    toastr.success('File uploaded successfully!');
+
+                    window.location.reload();
+                }
+            },
+            error: function(xhr, status, error) {
+                toastr.options.timeOut = 5000;
+                toastr.success('Error file uploading!');
+                {{Session::forget('message')}}
+                console.error('Error uploading file:', error);
+            }
+        });
+
+    }
+
       $(document).ready(function() {
 
     //    document.getElementById('month-value').textContent = document.getElementById('time').getAttribute('data-value');
@@ -262,20 +322,26 @@
 
         );
 
+
+
+
         $('.custom-file-input').change(function() {
               var filename = $(this).val().split('\\').pop();
               $(this).next('.custom-file-label').html(filename);
           });
 
-        $(document).on('change', 'input[type="file"]', function(e) {
+          $('input[type="file dfsa"]').change(function(e) {
             var file = e.target.files[0];
+
+            var count =  $(this).closest('tr').find('#count').val();
+            alert(count);
             var file_count = e.target.getAttribute('data-count');
             // var file = $(this).closest('tr').find
-            var studentId = $(this).closest('tr').find('[name^="student_id"]').val();
-            var user_grade_class_id = $('#user_grade_class_id_'+file_count+'').val();
+            var user_grade_class_id = $(this).closest('tr').find('[id^="user_grade_class_id_"]').val();
+            // var user_grade_class_id = $('#user_grade_class_id_'+file_count+'').val();
 
+            alert(user_grade_class_id);
 
-            // Prepare form data
             var formData = new FormData();
             formData.append('file', file);
             formData.append('student_id', studentId);

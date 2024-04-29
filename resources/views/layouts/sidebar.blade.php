@@ -601,12 +601,12 @@
                                 <p>Add Exam Mark</p>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a href="{{route('exam-marks.edit')}}" class="nav-link {{ Route::is('exam-marks.edit') ? 'active'  : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Edit</p>
                                 </a>
-                            </li>
+                            </li> --}}
                         @endif
                     @endcan
 

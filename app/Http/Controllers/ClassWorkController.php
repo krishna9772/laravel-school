@@ -249,7 +249,7 @@ class ClassworkController extends Controller
 
             $teacherData = UserGradeClass::where('user_id',$teacher_id)->first();
 
-            $grades = Grade::where('grade_id',$teacherData->grade_id)
+            $grades = Grade::where('id',$teacherData->grade_id)
                 ->with(['classes', 'curricula' => function($query) {
                 $query->where('status', '1');
             }])

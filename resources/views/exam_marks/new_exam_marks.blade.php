@@ -106,7 +106,7 @@
                                 <td class="text-center">{{$student->user_id}}</td>
                                 <td class="text-center">{{ $student->user_name }}</td>
                                 <td class="text-center">{{$student->father_name}}</td>
-                                <td class="col-3 text-center">
+                                <td class="col-3 text-center" data-count={{$count}}>
 
                                     <?php
                                         // dd($student->userGradeClasses[0]->examMarks[0]->file);
@@ -115,7 +115,7 @@
                                     <div class="form-group d-flex-column ">
 
                                         <div class="input-group">
-                                            @if(Auth::user()->user_type == 'admin')
+                                            @if(Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'teacher')
                                                 <div class="custom-file">
                                                     {{-- <input type="file" class="custom-file-input" id="exampleInputFile">
                                                     <label class="custom-file-label" for="exampleInputFile">
@@ -123,13 +123,13 @@
                                                     </label> --}}
                                                     {{-- <div class="col-12 col-lg-4"> --}}
                                                         <!-- onchange="loadFile(event)" -->
-                                                        <input type="file" multiple="multiple" name="images[]" id="upload" hidden data-count = {{$count}} />
+                                                        <input type="file" name="images[]" class="fileupload_{{$count}}" id="upload" hidden data-count = {{$student->userGradeClasses[0]->id}} />
                                                         <label class="file_upload" for="upload" style="background: #E9ECEF;
                                                         padding: 8px 15px;
                                                         border: 1px solid #CED4DA;
                                                         border-radius: 5px;
                                                         cursor: pointer;">Upload</label>
-                                                        <span class="small text-muted" id="fileCount"></span>
+                                                        <span class="small text-muted" id="fileCount" onclick="alert(hello)"></span>
                                                     {{-- </div> --}}
 
                                                 </div>
@@ -245,7 +245,6 @@
 
     //    document.getElementById('month-value').textContent = document.getElementById('time').getAttribute('data-value');
 
-
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -267,45 +266,44 @@
               $(this).next('.custom-file-label').html(filename);
           });
 
-        $(document).on('change', 'input[type="file"]', function(e) {
-            var file = e.target.files[0];
-            var file_count = e.target.getAttribute('data-count');
-            // var file = $(this).closest('tr').find
-            var studentId = $(this).closest('tr').find('[name^="student_id"]').val();
-            var user_grade_class_id = $('#user_grade_class_id_'+file_count+'').val();
+        // $(document).on('change', 'input[type="file"]', function(e) {
+        //     var file = e.target.files[0];
+        //     var file_count = e.target.getAttribute('data-count');
+        //     // var file = $(this).closest('tr').find
+        //     var user_grade_class_id = $('#user_grade_class_id_'+file_count+'').val();
 
+        //     console.log(studentId);
 
-            // Prepare form data
-            var formData = new FormData();
-            formData.append('file', file);
-            formData.append('student_id', studentId);
-            formData.append('user_grade_class_id', user_grade_class_id);
+        //     // Prepare form data
+        //     var formData = new FormData();
+        //     formData.append('file', file);
+        //     formData.append('user_grade_class_id', user_grade_class_id);
 
-            $.ajax({
-                url: '{{route('exam-marks.store')}}',
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
+        //     $.ajax({
+        //         url: '{{route('exam-marks.store')}}',
+        //         type: 'POST',
+        //         data: formData,
+        //         processData: false,
+        //         contentType: false,
+        //         success: function(response) {
 
-                    if(response == 'success')
-                    {
+        //             if(response == 'success')
+        //             {
 
-                        toastr.options.timeOut = 5000;
-                        toastr.success('File uploaded successfully!');
+        //                 toastr.options.timeOut = 5000;
+        //                 toastr.success('File uploaded successfully!');
 
-                        window.location.reload();
-                    }
-                },
-                error: function(xhr, status, error) {
-                    toastr.options.timeOut = 5000;
-                    toastr.success('Error file uploading!');
-                    {{Session::forget('message')}}
-                    console.error('Error uploading file:', error);
-                }
-            });
-        });
+        //                 window.location.reload();
+        //             }
+        //         },
+        //         error: function(xhr, status, error) {
+        //             toastr.options.timeOut = 5000;
+        //             toastr.success('Error file uploading!');
+        //             {{Session::forget('message')}}
+        //             console.error('Error uploading file:', error);
+        //         }
+        //     });
+        // });
 
 
         $(document).on("click", "#cancelBtn", function() {
@@ -473,6 +471,60 @@
         return elem !== value;
         });
     }
+
+
+    function fileUpload()
+    {
+            var tip = [];
+
+            for(i=1; i<= 3; i++){
+                tip = document.querySelectorAll(".fileupload_"+i+"");
+            }
+
+            tip.forEach((item) => {
+                item.addEventListener("change", (e) => {
+                    var file = e.target.files[0];
+                    var file_count = e.target.attr('data-count');
+
+                    // var file = $(this).closest('tr').find
+                    var user_grade_class_id = $('#user_grade_class_id_'+file_count+'').val();
+
+                    console.log(file_count);
+
+                    // Prepare form data
+                    var formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('user_grade_class_id', user_grade_class_id);
+
+                    $.ajax({
+                        url: '{{route('exam-marks.store')}}',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+
+                            if(response == 'success')
+                            {
+
+                                toastr.options.timeOut = 5000;
+                                toastr.success('File uploaded successfully!');
+
+                                window.location.reload();
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            toastr.options.timeOut = 5000;
+                            toastr.success('Error file uploading!');
+                            {{Session::forget('message')}}
+                            console.error('Error uploading file:', error);
+                        }
+                    });
+                });
+            });
+        }
+
+        fileUpload();
 
 </script>
 @endsection

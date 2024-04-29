@@ -111,13 +111,30 @@ class ExamMarkController extends Controller
 
             $className = Classes::where('id',$classId)->value('class_name');
 
-            $students = User::where('user_type', 'student')->where('user_id',Auth::user()->id)
-            ->whereHas('userGradeClasses', function ($query) use ($gradeId,$classId) {
-                $query->where('grade_id', $gradeId)
-                    ->where('class_id', $classId);
-            })
-            ->with('userGradeClasses.examMarks')
-            ->get();
+            if(Auth::user()->user_type == 'student')
+            {
+
+                $students = User::where('user_type', 'student')->where('user_id',Auth::user()->id)
+                ->whereHas('userGradeClasses', function ($query) use ($gradeId,$classId) {
+                    $query->where('grade_id', $gradeId)
+                        ->where('class_id', $classId);
+                })
+                ->with('userGradeClasses.examMarks')
+                ->get();
+
+            }else if(Auth::user()->user_type == 'teacher'){
+
+                $students = User::where('user_type', 'student')
+                ->whereHas('userGradeClasses', function ($query) use ($gradeId,$classId) {
+                    $query->where('grade_id', $gradeId)
+                        ->where('class_id', $classId);
+                })
+                ->with('userGradeClasses.examMarks')
+                ->get();
+
+
+            }
+            
 
             return view('exam_marks.new_exam_marks',compact('students','gradeName','className','gradeResult'));
 
@@ -143,6 +160,8 @@ class ExamMarkController extends Controller
         ],[
             'file' => $fileName,
         ]);
+
+        return "go";
 
         // $subjectNames = $request->subjects;
         // $marks = $request->marks;

@@ -113,7 +113,7 @@
                                     @foreach ($data as $curriculum)
                                         <li class="list-group-item">
                                             <span class="float-left">{{$curriculum->curriculum_name }}</span>
-                                            <span class="float-right">{{$curriculum->user->user_name }}</span>
+                                            <span class="float-right">{{$curriculum->user ? $curriculum->user->user_name : '' }}</span>
                                         </li>
                                     @endforeach
                                     {{-- @foreach ($data as $user)

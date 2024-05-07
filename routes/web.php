@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Contracts\Role;
 
 // login, register
-Route::get('login',[AuthController::class,'loginPage'])->name('loginPage');
+Route::get('login-register',[AuthController::class,'loginPage'])->name('loginPage');
 Route::post('login',[AuthController::class,'login'])->name('login');
 Route::get('register',[AuthController::class,'registerPage'])->name('registerPage');
 Route::post('register',[AuthController::class,'register'])->name('register');

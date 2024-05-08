@@ -19,7 +19,18 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    public function login(LoginRequest $request){
+    public function login(Request $request){
+
+        $validatedData = $request->validate([
+            'email' => 'required',
+            'password' => 'required|min:8',
+            ],
+            [
+            'email.required'=> 'Email is required', // custom message
+            'password.required'=> 'Password is required', // custom message
+            'password.min' => 'Password Should be Minimum of 8 Character'
+            ]
+        );
 
         $credentials = $request->only('email','password');
 
